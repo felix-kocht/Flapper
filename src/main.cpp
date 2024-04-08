@@ -1,23 +1,55 @@
 #include <Arduino.h>
-#define onboardLED 13
+#include <Math.h>   
+#include <Servo.h>  
+#include "ServoInit.h"  
+#include "utils.h"  
 
-// put function declarations here:
-int myFunction(int x, int y);
+// parameters: Mode(false = angle, true = speed), Pin, initial angle/speed, minimum angle/speed, maximum angle/speed
+ServoParams heave_servo_params = {true, 9, 500, 1500, 2500}; // heave servo (Pin 9, speed control)
+ServoParams pitch_servo_right_params = {false, 8, 0, 90, 180}; // pitch servo right (Pin 8, angle control)
+ServoParams pitch_servo_left_params = {false, 7, 0, 90, 180}; // pitch servo left (Pin 7, angle control)
+ServoParams camber_servo_right_params = {false, 6, 0, 90, 180}; // camber servo right (Pin 6, angle control)
+ServoParams camber_servo_left_params = {false, 5, 0, 90, 180}; // camber servo left (Pin 5, angle control)
+
+// Create servo instances
+Servo heave_servo;
+Servo pitch_servo_right;
+Servo pitch_servo_left;
+Servo camber_servo_right;
+Servo camber_servo_left;
+
+//control variables
+unsigned long start_time = 0;
+float target_pos_heave = 0;
+float target_pos_pitch_right = 0;
+float target_pos_pitch_left = 0;
+float target_pos_camber_right = 0;
+float target_pos_camber_left = 0;
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(onboardLED, OUTPUT);
+    Serial.begin(9600);  // Initialize serial communication
+    start_time = millis();
+    // Initialize servos
+    initServo(heave_servo, heave_servo_params);
+    initServo(pitch_servo_right, pitch_servo_right_params);
+    initServo(pitch_servo_left, pitch_servo_left_params);
+    initServo(camber_servo_right, camber_servo_right_params);
+    initServo(camber_servo_left, camber_servo_left_params);
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  digitalWrite(onboardLED, HIGH);
-  delay(1000);
-  digitalWrite(onboardLED, LOW);
-  delay(1000);
-}
+    // configure to change sine movement of any servo
+    target_pos_heave = sineWave(600, 0.13, 0, millis()-start_time, 1500, 50, 50);
+    target_pos_pitch_right = sineWave(70, 0.13, 0, millis()-start_time, 90, 0, 0);
+    target_pos_pitch_left = sineWave(70, 0.13, M_PI, millis()-start_time, 90, 0, 0);
+    target_pos_camber_right = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
+    target_pos_camber_left = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    // Write target positions to servos
+    heave_servo.writeMicroseconds(target_pos_heave);
+    pitch_servo_right.write(target_pos_pitch_right);
+    pitch_servo_left.write(target_pos_pitch_left);
+    camber_servo_right.write(target_pos_camber_right);
+    camber_servo_left.write(target_pos_camber_left);
 }
