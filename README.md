@@ -8,3 +8,5 @@
 - components (servos, sensors...) are build as classes and can be importet and used
 
 - utils for generally useful functions
+
+- Matlab code is in lib
