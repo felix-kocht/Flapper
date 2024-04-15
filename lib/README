@@ -1,3 +1,7 @@
+## Confusing files
+
+- here lies also code that is not directly related to the executed files on the arduino. Namely a Matlab simulation and outdated code
+
 
 This directory is intended for project specific (private) libraries.
 PlatformIO will compile them to static libraries and link into executable file.

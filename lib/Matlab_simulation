@@ -1,0 +1,130 @@
+close all clear clc
+c = 0.2; %chord length of 10 cm
+s = 0.2; %foil span of 10 cm
+lever = 0.05; %distance of foil from heaving rod h_0 = 0.75*c; %heave amplitude in m
+phi = 90*(2*pi/360); %phase difference between heave and pitch in degrees
+propulsion_option = 1; %control strategy based on desired St and AoA U = 0.1;
+St = 0.3;
+AoA_max = 10; %AoA is equivalent to alpha!
+delta_AoA = 0; %for the truning strategy! freq = St*U/(2*h_0);
+activate_cambering = 1; %setting to 1 will activate camber. The camber will %alternate between extremes, alternating once per cycle.
+datfile_0012 = importdata(’NACA0012.dat’); csvfile_0012 = csvread(’xf−n0012−il−50000−n5.csv’,11,0);
+datfile_6412 = importdata(’NACA6412.dat’);
+csvfile_6412 = csvread(’xf−naca6412−il−50000−n5.csv’,11,0);
+drag_correction_factor = 3; lift_correction_factor = 0.8;
+angles_0012 = transpose(csvfile_0012(:, 1)); AoA_data_bound_high_0012 = max(angles_0012);
+C_l_0012 = transpose(csvfile_0012(:,2))*lift_correction_factor; C_d_0012 = transpose(csvfile_0012(:,3))*drag_correction_factor; C_m_0012 = transpose(csvfile_0012(:,5));
+angles_6412 = transpose(csvfile_6412(:, 1)); AoA_data_bound_high_6412 = max(angles_6412); AoA_data_bound_low_6412 = min(angles_6412);
+C_l_6412 = transpose(csvfile_6412(:,2))*lift_correction_factor; C_d_6412 = transpose(csvfile_6412(:,3))*drag_correction_factor; C_m_6412 = transpose(csvfile_6412(:,5));
+beta_max = atan(pi*St)*360/(2*pi); AoA_left_max = AoA_max + min(0,delta_AoA);
+AoA_right_max = AoA_max − max(0, delta_AoA);
+%the camber is set at the start and after half a period. It can %work to increase the lift force in the direction of the AoA or to %inverse the direction of the force.
+%if AoA_max between −5 and 5: set camber to 0. if it is below −5 %invert the camber and if it is above 5 activate it: camber_left_multiplier = sign(AoA_left_max) *activate_cambering; camber_right_multiplier = sign(AoA_right_max) *activate_cambering;
+theta_0_left = beta_max − AoA_left_max; theta_0_right = beta_max − AoA_right_max;
+nu = 10^(−6); %kinematic viscosity of water rho = 1000;
+Re = U*c/nu;
+%time discretization
+T = 1/freq; %period of motion in s
+time_steps = 6; %number of time steps. Should be even \begin{lstlisting}[language=Matlab,frame=single]
+time_steps = 6; %number of time steps. Should be even to ensure passing of extremum
+k = pi*freq*c/U; delta_t = T/time_steps;
+time = linspace(0, T−delta_t, time_steps);
+h = h_0*sin(2*pi*freq*time − phi);
+v_T = 2*pi*freq*h_0*cos(2*pi*freq*time − phi); %derivative in time of h
+v_rel_flow = [U*ones(1, time_steps); −v_T];
+beta = atan(−v_T/U)*360/(2*pi);
+beta_dot = ones(1, length(beta))./(1+(−v_T/U).^2) *360/(2*pi);
+theta_left = −theta_0_left*sin(2*pi*freq*time);
+theta_left_dot = −2*pi*freq*theta_0_left*cos(2*pi*freq*time); %derivative theta_right = −theta_0_right*sin(2*pi*freq*time);
+theta_right_dot = −2*pi*freq*theta_0_right*cos(2*pi*freq*time); %derivative
+AoA_left = beta − theta_left;
+AoA_left_dot = beta_dot − theta_left_dot;
+AoA_right = beta − theta_right;
+AoA_right_dot = beta_dot − theta_right_dot;
+camber = [0, −ones(1,floor(time_steps/2)−1), 0, ones(1,floor(time_steps/2)−1)]; camber_left = camber*camber_left_multiplier;
+camber_right = camber*camber_right_multiplier;
+lift_vector = [−sin(beta*(2*pi/360));zeros(1,length(beta)); cos(beta*(2*pi/360))]; drag_vector = [cos(beta*(2*pi/360));zeros(1,length(beta)); sin(beta*(2*pi/360))];
+outofbounds_left = zeros(1,time_steps); outofbounds_right = zeros(1,time_steps);
+F_l_left = zeros(1,time_steps); F_d_left = zeros(1, time_steps); F_l_right = zeros(1, time_steps); F_d_right = zeros(1, time_steps);
+for i = 1:time_steps
+if camber_left(i) && AoA_left(i)*camber_left(i) <= AoA_data_bound_high_6412 && AoA_left(i)*camber_left(i)
+>= AoA_data_bound_low_6412
+index_lift = get_angle_index(AoA_left(i)*camber_left(i), angles_6412); index_drag = get_angle_index(AoA_left(i)*camber_left(i), angles_6412);
+F_l_left(i) = C_l_6412(index_lift) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s *camber_left(i); F_d_left(i) = C_d_6412(index_drag) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s;
+elseif camber_left(i) == 0 && abs(AoA_left(i)) <= AoA_data_bound_high_0012 index_lift = get_angle_index(abs(AoA_left(i)), angles_0012);
+index_drag = get_angle_index(abs(AoA_left(i)), angles_0012);
+F_l_left(i) = C_l_0012(index_lift) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s *sign(AoA_left(i)); F_d_left(i) = C_d_0012(index_drag) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s;
+else %camber becomes not interesting, because we have no data for this case outofbounds_left(i) = 1*fackya;
+’index is out of bounds, our data can not cover this case.’
+’Consider changing the parameters, we suggest decreasing Aoa_max snd/or decreasing St ’ end
+if camber_right(i) && AoA_right(i)*camber_right(i) <= AoA_data_bound_high_6412 && AoA_right(i)* camber_right(i) >= AoA_data_bound_low_6412
+index_lift = get_angle_index(AoA_right(i)*camber_right(i), angles_6412); index_drag = get_angle_index(AoA_right(i)*camber_right(i), angles_6412);
+F_l_right(i) = C_l_6412(index_lift) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s *camber_right(i); F_d_right(i) = C_d_6412(index_drag) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s;
+elseif camber_right(i) == 0 && abs(AoA_right(i)) <= AoA_data_bound_high_0012 index_lift = get_angle_index(abs(AoA_right(i)), angles_0012);
+index_drag = get_angle_index(abs(AoA_right(i)), angles_0012);
+F_l_right(i) = C_l_0012(index_lift) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s *sign(AoA_right(i)); F_d_right(i) = C_d_0012(index_drag) *0.5*rho*norm(v_rel_flow(:,i))^2*c*s;
+else
+outofbounds_right(i) = 1;
+’index is out of bounds, our data can not cover this case.’
+’Consider changing the parameters, we suggest decreasing Aoa_max snd/or decreasing St ’ end
+end
+F_vertical_left = F_l_left.*lift_vector(3,:) + F_d_left.*drag_vector(3,:); F_horizontal_left = F_l_left.*lift_vector(1,:) + F_d_left.*drag_vector(1,:);
+F_vertical_right = F_l_right.*lift_vector(3,:) + F_d_right.*drag_vector(3,:); F_horizontal_right = F_l_right.*lift_vector(1,:) + F_d_right.*drag_vector(1,:);
+F_thrust = −F_horizontal_left − F_horizontal_right; F_thrust_average = mean(F_thrust);
+power_output = F_thrust *U; power_output_avg = mean(power_output);
+F_vertical = F_vertical_left + F_vertical_right; power_input = −F_vertical .*v_T; power_input_avg = mean(power_input);
+efficiency = power_output_avg/power_input_avg;
+average_C_thrust = F_thrust_average/(0.5*rho*U^2*c*2*s);
+%the visualizaion of motion and momentary forces follows
+video = VideoWriter(’hydrofoil_3d_fixed_control’); video.FrameRate = time_steps/T;
+open(video);
+f = figure("Visible", false);
+for i = 0:time_steps*1
+j = mod(i, time_steps)+1;
+if camber_left(j)
+shape_left = [1, 0; 0, sign(camber_left(j))]*transpose(datfile_6412.data)*c; else
+shape_left = transpose(datfile_0012.data)*c;
+end
+foil_left = foil_plot(shape_left, theta_left(j)*(2*pi/360), h(j), c);
+if camber_right(j)
+shape_right = [1, 0; 0, sign(camber_right(j))]*transpose(datfile_6412.data)*c; else
+shape_right = transpose(datfile_0012.data)*c;
+end
+foil_right = foil_plot(shape_right, theta_right(j)*(2*pi/360), h(j), c);
+surf([foil_left(1,:);foil_left(1,:)], [(−lever−s)*ones(size(foil_left(1,:)));−lever*ones(size(foil_left(1,:)))],[foil_left(2,:); foil_left(2,:)],’FaceColor’,’g’);
+hold on
+surf([foil_right(1,:);foil_right(1,:)], [lever*ones(size(foil_right(1,:)));(lever+s)*ones(size(foil_right(1,:)))],[foil_right
+(2,:);foil_right(2,:)],’FaceColor’,’g’);
+dim_rep = 2*c;
+axis([−1 1 −1 1 −1 1]*dim_rep)
+F_rep = 1;
+quiver3(0, −lever−s/2, h(j), lift_vector(1, j)*F_l_left(j)*F_rep, lift_vector(2, j)*F_l_left(j)*F_rep, lift_vector(3, j)*
+F_l_left(j)*F_rep);
+quiver3(0, lever+s/2, h(j), lift_vector(1, j)*F_l_right(j)*F_rep, lift_vector(2, j)*F_l_right(j)*F_rep, lift_vector(3, j)*
+F_l_right(j)*F_rep);
+v_rep = c/norm(v_rel_flow(:,j));
+quiver3(−U*v_rep, 0, v_T(j)*v_rep + h(j), U*v_rep, 0, −v_T(j)*v_rep);
+hold off
+frame = getframe(f); writeVideo(video,frame); i
+end
+close(video) close all
+function [index] = get_angle_index(angle, angles)
+%Function takes an angle and gives out the position inside the array angles %of the value closest to angle
+index = 0;
+for i = 1:length(angles)−1
+if abs(angle−angles(i)) < abs(angle−angles(i+1))
+index = i;
+end
+end
+if index == 0 && abs(angle−angles(length(angles))) < 0.5
+index = length(angles);
+else
+’error using get_angle_index function’
+end
+end
+function [foil] = foil_plot(shape, theta, h, c) %UNTITLED2 Summary of this function goes here % Detailed explanation goes here
+rot = [cos(theta), −sin(theta); sin(theta), cos(theta)];
+pitching_about = 1/3;
+foil = rot*(shape − [pitching_about*c*ones(1, size(shape,2)); zeros(1, size(shape,2))]);
+for k = 1:size(shape,2) foil(2,k) = foil(2,k) + h; end
+end
