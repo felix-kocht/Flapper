@@ -1,7 +1,6 @@
 from apriltag import Detector
 import cv2
 
-
 def detect_apriltags(camera_feed):
     # Create AprilTags detector
     # If the library requires parameters, check the correct usage in the library documentation
