@@ -59,7 +59,7 @@ def process_and_print_tags(tags):
         for tag in tags:
             print(
 
-                f"ID: {tag['id']}, Angle: {tag['average_angle']} degrees")
+                f"ID: {tag['id']}, Center: {tag['center']} , Angle: {tag['average_angle']} degrees")
 
 
 def main():
