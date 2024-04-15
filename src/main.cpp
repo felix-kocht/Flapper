@@ -28,6 +28,7 @@ float target_pos_camber_left = 0;
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
+    Serial.println("Starting setup");
     start_time = millis();
     // Initialize servos
     initServo(heave_servo, heave_servo_params);
@@ -39,10 +40,10 @@ void setup() {
 }
 
 void loop() {
-    // configure to change sine movement of any servo
-    target_pos_heave = sineWave(600, 0.13, 0, millis()-start_time, 1500, 50, 50);
-    target_pos_pitch_right = sineWave(70, 0.13, 0, millis()-start_time, 90, 0, 0);
-    target_pos_pitch_left = sineWave(70, 0.13, M_PI, millis()-start_time, 90, 0, 0);
+    // configure to change sine movement of any servo (A,f,phi,t,offset,deadband(min & max))
+    target_pos_heave = sineWave(600, 0.13, 0, millis()-start_time, 1500, 50, 50);//0.13Hz is as fast as Heave servo can go
+    target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, millis()-start_time, 90, 0, 0);
+    target_pos_pitch_left = sineWave(40, 10*0.13, 0, millis()-start_time, 90, 0, 0);
     target_pos_camber_right = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
     target_pos_camber_left = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
 
