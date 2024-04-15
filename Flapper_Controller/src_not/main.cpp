@@ -36,7 +36,6 @@ void setup() {
     initServo(pitch_servo_left, pitch_servo_left_params);
     initServo(camber_servo_right, camber_servo_right_params);
     initServo(camber_servo_left, camber_servo_left_params);
-
 }
 
 void loop() {

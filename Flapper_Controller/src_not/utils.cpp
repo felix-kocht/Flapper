@@ -11,3 +11,5 @@ float sineWave(float amplitude, float frequency, float phase, float time, float 
     }
     return value;
 }
+
+//TODO low pass filter

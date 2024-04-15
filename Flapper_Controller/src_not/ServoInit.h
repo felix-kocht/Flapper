@@ -1,6 +1,5 @@
 #ifndef SERVO_INIT_H
 #define SERVO_INIT_H
-
 #include <Servo.h> // Include servo library
 
 // Define struct to hold servo parameters
