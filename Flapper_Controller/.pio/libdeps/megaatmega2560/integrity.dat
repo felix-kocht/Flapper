@@ -1,0 +1,5 @@
+adafruit/Adafruit BusIO@^1.15.0
+SPI
+adafruit/Adafruit LPS35HW@^1.0.6
+Servo
+Wire

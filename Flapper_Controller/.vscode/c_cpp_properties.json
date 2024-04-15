@@ -1,0 +1,62 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/include",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/src",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/.pio/libdeps/megaatmega2560/Adafruit LPS35HW",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/.pio/libdeps/megaatmega2560/Adafruit BusIO",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/.pio/libdeps/megaatmega2560/Servo/src",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/variants/mega",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/include",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/src",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/.pio/libdeps/megaatmega2560/Adafruit LPS35HW",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/.pio/libdeps/megaatmega2560/Adafruit BusIO",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/.pio/libdeps/megaatmega2560/Servo/src",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/variants/mega",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "/Users/felixkoch/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60114",
+                "ARDUINO_AVR_MEGA2560",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "__AVR_ATmega2560__",
+                ""
+            ],
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++11",
+            "compilerPath": "/Users/felixkoch/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+            "compilerArgs": [
+                "-mmcu=atmega2560",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
