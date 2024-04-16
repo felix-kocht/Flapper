@@ -1,6 +1,7 @@
 from apriltag import Detector
 import cv2
 import math
+import Visual_Detector.SerialManager as SerialManager
 
 
 def camera_stream(camera_index=0):
@@ -58,8 +59,14 @@ def process_and_print_tags(tags):
         print("Detected AprilTags:")
         for tag in tags:
             print(
-
                 f"ID: {tag['id']}, Center: {tag['center']} , Angle: {tag['average_angle']} degrees")
+            # also save the data to a csv file for tag 1
+            if tag['id'] == 1:
+                SerialManager.outgoing(
+                    f"{tag['center'][0]},{tag['center'][1]},{tag['average_angle']}")
+                with open('tag1_data.csv', 'a') as file:
+                    file.write(
+                        f"{tag['center'][0]},{tag['center'][1]},{tag['average_angle']}\n")
 
 
 def main():
