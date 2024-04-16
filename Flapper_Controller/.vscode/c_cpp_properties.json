@@ -10,6 +10,7 @@
             "includePath": [
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/include",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/src",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/SD/src",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit ICM20X",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit Unified Sensor",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit LPS35HW",
@@ -29,6 +30,7 @@
                 "path": [
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/include",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/src",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/SD/src",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit ICM20X",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit Unified Sensor",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit LPS35HW",
