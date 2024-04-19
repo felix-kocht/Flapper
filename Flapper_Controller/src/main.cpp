@@ -18,6 +18,11 @@ Servo pitch_servo_left;
 Servo camber_servo_right;
 Servo camber_servo_left;
 
+//function prototypes
+float setHeave(float target_pos);
+float SerialRead();
+void SerialWrite(float value);
+
 //control variables
 unsigned long start_time = 0;
 float target_pos_heave = 0;
@@ -46,11 +51,33 @@ void loop() {
     target_pos_camber_right = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
     target_pos_camber_left = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
     //target_pos_camber_left = 90;
-
+    target_pos_heave = setHeave(target_pos_heave);
     // Write target positions to servos
     heave_servo.writeMicroseconds(target_pos_heave);
     pitch_servo_right.write(target_pos_pitch_right);
     pitch_servo_left.write(target_pos_pitch_left);
     camber_servo_right.write(target_pos_camber_right);
     camber_servo_left.write(target_pos_camber_left);
+}
+
+float setHeave(float target_pos){
+    float measurement = SerialRead();
+    if (measurement == 0){
+        return target_pos;
+    }
+    float error = target_pos - measurement;
+    float heave = target_pos + 0.1*error;
+    SerialWrite(heave);
+    return heave;
+}
+
+float SerialRead(){
+    if(Serial.available() > 0){
+        return Serial.parseFloat();
+    }
+    return 0;
+}
+
+void SerialWrite(float value){
+    Serial.println(value);
 }
