@@ -44,7 +44,8 @@ void loop() {
     target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, millis()-start_time, 90, 0, 0);
     target_pos_pitch_left = sineWave(40, 10*0.13, 0, millis()-start_time, 90, 0, 0);
     target_pos_camber_right = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
-    target_pos_camber_left = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
+    //target_pos_camber_left = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
+    target_pos_camber_left = 90;
 
     // Write target positions to servos
     heave_servo.writeMicroseconds(target_pos_heave);
