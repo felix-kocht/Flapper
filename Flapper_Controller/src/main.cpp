@@ -41,11 +41,11 @@ void setup() {
 void loop() {
     // configure to change sine movement of any servo (A,f,phi,t,offset,deadband(min & max))
     target_pos_heave = sineWave(600, 0.13, 0, millis()-start_time, 1500, 50, 50);//0.13Hz is as fast as Heave servo can go
-    target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, millis()-start_time, 90, 0, 0);
-    target_pos_pitch_left = sineWave(40, 10*0.13, 0, millis()-start_time, 90, 0, 0);
-    target_pos_camber_right = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
-    //target_pos_camber_left = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
-    target_pos_camber_left = 90;
+    target_pos_pitch_right = sineWave(40, 0.13, M_PI, millis()-start_time, 90, 0, 0);
+    target_pos_pitch_left = sineWave(40, 0.13, 0, millis()-start_time, 90, 0, 0);
+    target_pos_camber_right = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
+    target_pos_camber_left = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
+    //target_pos_camber_left = 90;
 
     // Write target positions to servos
     heave_servo.writeMicroseconds(target_pos_heave);

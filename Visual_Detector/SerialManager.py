@@ -21,3 +21,27 @@ def outgoing(data):
         ser.write(data.encode())  # Send data as bytes
     else:
         print("Serial port is not open.")
+
+
+def incoming():
+    """
+    Reads incoming data from the serial port.
+    Returns:
+    str: The incoming data as a string.
+    """
+    if ser.in_waiting > 0:
+        data = ser.readline().decode().strip()  # Read data as string
+        return data
+    else:
+        return None
+
+
+def manage_data(data):
+    # save incoming data to a csv file
+    new_data = incoming()
+    with open('filtered.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([new_data])
+
+    # send the data out
+    outgoing(data)
