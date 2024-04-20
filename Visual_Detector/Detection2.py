@@ -122,7 +122,7 @@ def main():
         if state is not None:
             heave = state[0]  # Access the first element of state
             SerialManager.manage_data(heave)
-        print(heave)
+            print(heave)
         # Display frame for debugging (optional)
         cv2.imshow('Frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):

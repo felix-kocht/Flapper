@@ -63,19 +63,21 @@ void loop() {
 float setHeave(float target_pos){
     float measurement = SerialRead();
     if (measurement == 0){
-        return target_pos;
+        return 1500;
     }
     float error = target_pos - measurement;
-    float heave =  10*error+1500;
-    SerialWrite(heave);
+    float heave =  (error)+1500;
+    //serially writing measurement, target position, error and heave
+    Serial.println(heave);
     return heave;
 }
 
 float SerialRead(){
     if(Serial.available() > 0){
         return Serial.parseFloat();
+    }else{
+        return 0;
     }
-    return 0;
 }
 
 void SerialWrite(float value){

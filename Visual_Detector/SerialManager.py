@@ -11,14 +11,12 @@ def outgoing(data):
     Args:
     data (str or float): Data to be logged and sent.
     """
+    #shorten the data to 2 decimal places
+    data = round(data, 2)
+
     # Convert data to string if it's not already
     if not isinstance(data, str):
         data = str(data)
-
-    # Save to CSV
-    with open('unfiltered.csv', 'a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([data])
 
     # Send via serial
     if ser.is_open:
@@ -26,15 +24,19 @@ def outgoing(data):
     else:
         print("Serial port is not open.")
 
+    # Save to CSV
+    with open('unfiltered.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([data])
+
+
 
 def incoming():
     """
-    Reads incoming data from the serial port.
-    Returns:
-    str: The incoming data as a string.
+    Reads incoming data (in float format) from the serial port.
     """
     if ser.in_waiting > 0:
-        data = ser.readline().decode().strip()  # Read data as string
+        data = ser.readline().decode().strip()
         return data
     else:
         return None
@@ -44,7 +46,7 @@ def preprocessing(data):
     # scale the incoming data from 100-700 to 0-1
     data = (data - 100) / 600
     # scale data from 0-1 to 1000-2000
-    data = data * 1000 + 1500
+    data = data * 1000 + 1000
     return data
 
 
@@ -58,3 +60,5 @@ def manage_data(data):
 
     # send the data out
     outgoing(data)
+
+
