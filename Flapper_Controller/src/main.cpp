@@ -21,7 +21,6 @@ Servo camber_servo_left;
 //function prototypes
 float setHeave(float target_pos);
 float SerialRead();
-void SerialWrite(float value);
 
 //control variables
 unsigned long start_time = 0;
@@ -44,15 +43,18 @@ void setup() {
 }
 
 void loop() {
+    //setpoints
     // configure to change sine movement of any servo (A,f,phi,t,offset,deadband(min & max))
     target_pos_heave = sineWave(500, 0.13, 0, millis()-start_time, 1500, 50, 50);//0.13Hz is as fast as Heave servo can go at 600 amplitude
     target_pos_pitch_right = sineWave(40, 0.13, M_PI, millis()-start_time, 90, 0, 0);
     target_pos_pitch_left = sineWave(40, 0.13, 0, millis()-start_time, 90, 0, 0);
     target_pos_camber_right = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
     target_pos_camber_left = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
-    //target_pos_camber_left = 90;
+
+    //control
     float target_speed_heave = setHeave(target_pos_heave);
-    // Write target positions to servos
+
+    // Write target values to servos
     heave_servo.writeMicroseconds(target_speed_heave);
     pitch_servo_right.write(target_pos_pitch_right);
     pitch_servo_left.write(target_pos_pitch_left);
@@ -78,8 +80,4 @@ float SerialRead(){
     }else{
         return 0;
     }
-}
-
-void SerialWrite(float value){
-    Serial.println(value);
 }

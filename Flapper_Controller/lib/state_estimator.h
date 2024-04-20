@@ -2,7 +2,7 @@
 #define STATE_ESTIMATOR_H
 
 //struct to hold position
-struct Boatstate {
+struct Macrostate {
     float x;
     float y;
     float v;
@@ -10,7 +10,7 @@ struct Boatstate {
 };
 
 //struct to hold servo angles
-struct ServoAngles {
+struct Microstate {
     float heave;
     float pitch_right;
     float pitch_left;
@@ -19,8 +19,8 @@ struct ServoAngles {
 };
 
 // Function to initialize a servo with specific parameters
-Boatstate getBoatState(); //TODO add sensor parameters for each sensor
+Macrostate getBoatState(); //TODO add sensor parameters for each sensor
 
-ServoAngles getServoAngles(); //TODO add sensor parameters for each sensor
+Microstate getServoAngles(); //TODO add sensor parameters for each sensor
 
 #endif
