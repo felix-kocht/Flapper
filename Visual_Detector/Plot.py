@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# plots data with connecting lines (index and 3 columns)
 
-def plot_data():
+
+def plot_data(filename):
     # Load the data from the CSV file
-    data = pd.read_csv('state_data5.csv', header=None)
+    data = pd.read_csv(filename, header=None)
     data.columns = ['counter', 'h', 'p1', 'c1']
     # Plot the data
     fig, axs = plt.subplots(3, 1, figsize=(10, 10))
@@ -25,11 +27,13 @@ def plot_data():
     plt.tight_layout()
     plt.show()
 
+# plots data points only (index and 3 columns)
 
-def plot_data_points():
+
+def plot_data_points(filename):
     # Load the data from the CSV file
 
-    data = pd.read_csv('state_data4.csv', header=None)
+    data = pd.read_csv(filename, header=None)
     data.columns = ['counter', 'h', 'p1', 'c1']
 
     # Plot the data
@@ -56,8 +60,10 @@ def plot_data_points():
     plt.tight_layout()
     plt.show()
 
+# plots single data vector
 
-def plot_csv(filename):
+
+def plot_vector(filename):
     """
     Plot data from a CSV file.
 
@@ -89,10 +95,9 @@ def plot_csv(filename):
 
 
 # Example usage
-#plot_csv('unfiltered.csv')
-#plt.figure()  # Create a new figure
-#plot_csv('filtered.csv')
-#plt.show()  # Show all plots
+# plot_vector('unfiltered.csv')
+# plt.figure()  # Create a new figure
+# plot_vector('filtered.csv')
+# plt.show()  # Show all plots
+#plot_data("state_data.csv")
 
-
-plot_data()

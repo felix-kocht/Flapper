@@ -1,8 +1,8 @@
 import csv
 import serial
 
-# Setup the serial connection (adjust the port and baud rate according to your setup)
-ser = serial.Serial('/dev/tty.usbmodem101', 9600)  # Example port and baud rate
+# no need to change anything in this file, only the port and baud rate (and maybe the file names to log to)
+ser = serial.Serial('/dev/tty.usbmodem101', 9600)
 
 
 def outgoing(data):
@@ -42,18 +42,9 @@ def incoming():
         return None
 
 
-def preprocessing(data):
-    # scale the incoming data from 0-700 to 0-1
-    data = (data) / 600
-    # scale data from 0-1 to 1000-2000
-    data = data * 1000 + 1000
-    return data
-
-
 def manage_data(data):
     # save incoming data to a csv file
     new_data = incoming()
-    data = preprocessing(data)
     with open('filtered.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([new_data])

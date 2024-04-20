@@ -1,12 +1,30 @@
+from datetime import datetime
+import os
 from apriltag import Detector
 import cv2
 import math
-import SerialManager as SerialManager
+import Plot as Plot
+# import SerialManager as SerialManager
 
 counter = 0
 # calibration = [][]  # for each 5 tags, x offset, y offset, angle offset
 
+# renames any old state_data.csv file so we can reuse the name
 
+
+def setup_csv():
+    # Check if the file exists
+    filename = 'state_data.csv'
+    if os.path.exists(filename):
+        # Rename the existing file with a timestamp
+        new_filename = f"state_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        os.rename(filename, new_filename)
+    # Create a new file and write the header
+    # with open(filename, 'w') as file:
+        # file.write("Counter,Heave amplitude,Angle, Camber\n")
+
+
+# rotate camera, or change camera index here if needed
 def camera_stream(camera_index=0):
     # Open the camera
     cap = cv2.VideoCapture(camera_index)
@@ -26,6 +44,8 @@ def camera_stream(camera_index=0):
     finally:
         # When everything is done, release the capture
         cap.release()
+
+# detects tags and orders them by tag id in a list with the parameters of each: id, center, average_angle
 
 
 def detect_tags_in_frame(frame):
@@ -55,8 +75,6 @@ def detect_tags_in_frame(frame):
 
     return tags
 
-
-def process_and_print_tags(tags):
     if not tags:
         print("No AprilTags detected.")
     else:
@@ -72,6 +90,7 @@ def process_and_print_tags(tags):
                         f"{tag['center'][0]},{tag['center'][1]},{tag['average_angle']}\n")
 
 
+# Calculating the perpendicular distance from tag 4 to the line connecting tags 3 and 5 (relevant for camber calculation)
 def calculate_perpendicular_distance(tag3, tag4, tag5):
     x3, y3 = tag3['center']
     x4, y4 = tag4['center']
@@ -90,6 +109,8 @@ def calculate_perpendicular_distance(tag3, tag4, tag5):
     return c1
 
 
+# takes list of tags and extracts height difference, nose angle and something similar to camber
+# does not work if not all 5 tags are detected
 def get_state(tags):
     global counter
     counter += 1
@@ -108,26 +129,40 @@ def get_state(tags):
     c1 = calculate_perpendicular_distance(tags[2], tags[3], tags[4])
     state.append(c1)
     # write counter and state to csv
-    with open('state_data5.csv', 'a') as file:
+    with open('state_data.csv', 'a') as file:
         file.write(f"{counter},{state[0]},{state[1]},{state[2]}\n")
 
     return state
 
+# adjust here to scale the data to the desired range / dimension (needed by the arduino controller)
+
+
+def preprocessing(data):
+    # scale the incoming data from 0-700 to 0-1
+    data = (data) / 600
+    # scale data from 0-1 to 1000-2000
+    data = data * 1000 + 1000
+    return data
+
 
 def main():
+    setup_csv()
     for frame in camera_stream():
         tags = detect_tags_in_frame(frame)
         # process_and_print_tags(tags)
         state = get_state(tags)
         if state is not None:
             heave = state[0]  # Access the first element of state
-            SerialManager.manage_data(heave)
+            heave = preprocessing(heave)
+            # SerialManager.manage_data(heave)
             print(heave)
         # Display frame for debugging (optional)
         cv2.imshow('Frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cv2.destroyAllWindows()
+    # plot automatically after the program ends
+    Plot.plot_data('state_data.csv')
 
 
 if __name__ == "__main__":
