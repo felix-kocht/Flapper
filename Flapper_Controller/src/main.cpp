@@ -51,9 +51,9 @@ void loop() {
     target_pos_camber_right = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
     target_pos_camber_left = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
     //target_pos_camber_left = 90;
-    target_pos_heave = setHeave(target_pos_heave);
+    float target_speed_heave = setHeave(target_pos_heave);
     // Write target positions to servos
-    heave_servo.writeMicroseconds(target_pos_heave);
+    heave_servo.writeMicroseconds(target_speed_heave);
     pitch_servo_right.write(target_pos_pitch_right);
     pitch_servo_left.write(target_pos_pitch_left);
     camber_servo_right.write(target_pos_camber_right);
@@ -66,7 +66,7 @@ float setHeave(float target_pos){
         return target_pos;
     }
     float error = target_pos - measurement;
-    float heave = target_pos + 0.1*error;
+    float heave =  10*error+1500;
     SerialWrite(heave);
     return heave;
 }

@@ -2,15 +2,19 @@ import csv
 import serial
 
 # Setup the serial connection (adjust the port and baud rate according to your setup)
-ser = serial.Serial('/dev/ttyUSB0', 9600)  # Example port and baud rate
+ser = serial.Serial('/dev/tty.usbmodem101', 9600)  # Example port and baud rate
 
 
 def outgoing(data):
     """
     Saves outgoing data to a CSV file and sends it via serial.
     Args:
-    data (str): A string of data to be logged and sent.
+    data (str or float): Data to be logged and sent.
     """
+    # Convert data to string if it's not already
+    if not isinstance(data, str):
+        data = str(data)
+
     # Save to CSV
     with open('unfiltered.csv', 'a', newline='') as file:
         writer = csv.writer(file)
@@ -36,9 +40,18 @@ def incoming():
         return None
 
 
+def preprocessing(data):
+    # scale the incoming data from 100-700 to 0-1
+    data = (data - 100) / 600
+    # scale data from 0-1 to 1000-2000
+    data = data * 1000 + 1500
+    return data
+
+
 def manage_data(data):
     # save incoming data to a csv file
     new_data = incoming()
+    data = preprocessing(data)
     with open('filtered.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([new_data])

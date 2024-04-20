@@ -1,7 +1,7 @@
 from apriltag import Detector
 import cv2
 import math
-# import Visual_Detector.SerialManager as SerialManager
+import SerialManager as SerialManager
 
 counter = 0
 # calibration = [][]  # for each 5 tags, x offset, y offset, angle offset
@@ -98,7 +98,7 @@ def get_state(tags):
         return None
     state = []  # h,p1,c1,
     # h is height difference between tags 1 and 2
-    
+
     h = tags[1]['center'][1] - tags[0]['center'][1]
     state.append(h)
     # p1 is the angle of tag 3 relative to tag 1
@@ -108,7 +108,7 @@ def get_state(tags):
     c1 = calculate_perpendicular_distance(tags[2], tags[3], tags[4])
     state.append(c1)
     # write counter and state to csv
-    with open('state_data4.csv', 'a') as file:
+    with open('state_data5.csv', 'a') as file:
         file.write(f"{counter},{state[0]},{state[1]},{state[2]}\n")
 
     return state
@@ -119,7 +119,10 @@ def main():
         tags = detect_tags_in_frame(frame)
         # process_and_print_tags(tags)
         state = get_state(tags)
-        print(state)
+        if state is not None:
+            heave = state[0]  # Access the first element of state
+            SerialManager.manage_data(heave)
+        print(heave)
         # Display frame for debugging (optional)
         cv2.imshow('Frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
