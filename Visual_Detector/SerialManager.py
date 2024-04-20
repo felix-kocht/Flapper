@@ -11,16 +11,17 @@ def outgoing(data):
     Args:
     data (str or float): Data to be logged and sent.
     """
-    #shorten the data to 2 decimal places
+    # shorten the data to 2 decimal places
     data = round(data, 2)
 
     # Convert data to string if it's not already
     if not isinstance(data, str):
         data = str(data)
 
-    # Send via serial
+    # Send via serial with a newline character as the delimiter
     if ser.is_open:
-        ser.write(data.encode())  # Send data as bytes
+        ser.write((data + '\n').encode())  # Append '\n' and send data as bytes
+
     else:
         print("Serial port is not open.")
 
@@ -28,7 +29,6 @@ def outgoing(data):
     with open('unfiltered.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([data])
-
 
 
 def incoming():
@@ -43,8 +43,8 @@ def incoming():
 
 
 def preprocessing(data):
-    # scale the incoming data from 100-700 to 0-1
-    data = (data - 100) / 600
+    # scale the incoming data from 0-700 to 0-1
+    data = (data) / 600
     # scale data from 0-1 to 1000-2000
     data = data * 1000 + 1000
     return data
@@ -60,5 +60,3 @@ def manage_data(data):
 
     # send the data out
     outgoing(data)
-
-
