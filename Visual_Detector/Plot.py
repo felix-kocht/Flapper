@@ -89,10 +89,10 @@ def plot_csv(filename):
 
 
 # Example usage
-plot_csv('unfiltered.csv')
-plt.figure()  # Create a new figure
-plot_csv('filtered.csv')
-plt.show()  # Show all plots
+#plot_csv('unfiltered.csv')
+#plt.figure()  # Create a new figure
+#plot_csv('filtered.csv')
+#plt.show()  # Show all plots
 
 
-# plot_data()
+plot_data()
