@@ -45,21 +45,25 @@ void setup() {
 void loop() {
     //setpoints
     // configure to change sine movement of any servo (A,f,phi,t,offset,deadband(min & max))
-    target_pos_heave = sineWave(500, 0.13, 0, millis()-start_time, 1500, 50, 50);//0.13Hz is as fast as Heave servo can go at 600 amplitude
-    target_pos_pitch_right = sineWave(40, 0.13, M_PI, millis()-start_time, 90, 0, 0);
-    target_pos_pitch_left = sineWave(40, 0.13, 0, millis()-start_time, 90, 0, 0);
+    target_pos_heave = sineWave(1200, 0.8, 0, millis()-start_time, 1500, 450, 450);//0.13Hz is as fast as Heave servo can go at 600 amplitude
+    //we now use parameters for maximum speed in both directions
+    target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, millis()-start_time, 90, 0, 0);
+    target_pos_pitch_left = sineWave(40, 10*0.13, 0, millis()-start_time, 90, 0, 0);
     target_pos_camber_right = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
     target_pos_camber_left = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
 
     //control
-    float target_speed_heave = setHeave(target_pos_heave);
+    //float target_speed_heave = setHeave(target_pos_heave);
 
     // Write target values to servos
-    heave_servo.writeMicroseconds(target_speed_heave);
+    heave_servo.writeMicroseconds(target_pos_heave); //change back to target heave speed
     pitch_servo_right.write(target_pos_pitch_right);
     pitch_servo_left.write(target_pos_pitch_left);
     camber_servo_right.write(target_pos_camber_right);
     camber_servo_left.write(target_pos_camber_left);
+
+    //DEBUG
+    Serial.println(target_pos_heave);
 }
 
 float setHeave(float target_pos){

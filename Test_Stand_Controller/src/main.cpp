@@ -3,6 +3,7 @@
 #include "load_cell.h"
 
 //TODO calibration mode or something (there is a seperate sketch for this)
+//Calibration mode should print all 5 values nicely readable continuously (seperate code, filtered or not??... I think filtered is better --> then its quite similar to this, so maybe just a mode?)
 //tutorial: https://learn.sparkfun.com/tutorials/load-cell-amplifier-hx711-breakout-hookup-guide/all
 //hx711 can take 2.7V to 5V
 
