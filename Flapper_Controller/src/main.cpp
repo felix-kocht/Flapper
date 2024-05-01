@@ -24,6 +24,8 @@ float SerialRead();
 
 //control variables
 unsigned long start_time = 0;
+float Kp = 1.0; //proportional gain for controller, maybe a vector makes sense to have different gains for different servos
+float control[5] = {0}; //control output for all 5 servos
 float sine_params[6][5] = {0}; //for all 5 servos, operational parameters for sine wave generation (A,f,phase,offset,deadband(min & max))
 float (*sine_params_ptr)[5] = sine_params; //pointer needed for use in funtions
 float estimates[5] = {0}; //for all 5 servos, estimated angle
@@ -51,11 +53,10 @@ void loop() {
     //macrostate estimate via Serial
 
     //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
-    parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr);
+    parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr); //how should the sinewaves be like?
+    updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
 
-    //TODO: implement the function as below (compact)
-    //target_positions = sineWave(sine_params_ptr, millis() - start_time);
-    targets[0] = sineWave(sine_params_ptr[0][0], sine_params_ptr[0][1], sine_params_ptr[0][2], 
+/*     targets[0] = sineWave(sine_params_ptr[0][0], sine_params_ptr[0][1], sine_params_ptr[0][2], 
                                       sine_params_ptr[0][3], sine_params_ptr[0][4], sine_params_ptr[0][4], 
                                       millis() - start_time);
 
@@ -72,21 +73,36 @@ void loop() {
 
     targets[4] = sineWave(sine_params_ptr[4][0], sine_params_ptr[4][1], sine_params_ptr[4][2], 
                                             sine_params_ptr[4][3], sine_params_ptr[4][4], sine_params_ptr[4][4], 
-                                            millis() - start_time);
+                                            millis() - start_time); */
 
     // Step 2: State estimation
 
-    // estimate_servo_states(estimates_ptr, targets_ptr);
+    for (int i = 0; i < 5; i++){
+        estimates[i] = targets[i]; //just a mock for now
+    }
 
-    //Step 3: control
+    // estimate_servo_states(estimates_ptr, targets_ptr, microstate_estimate, encoder_readings); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
+
+    //Step 3: control (control input is just the error?)
     //float target_speed_heave = setHeave(target_pos_heave);
+    for (int i = 0; i < 5; i++){
+        control[i] = (targets[i]-estimates[i])*Kp; //just a P controller for now
+    }
 
     // Step 4: Write target values to servos
-    heave_servo.writeMicroseconds(targets[0]); //change back to target heave speed
+    //without feedback control
+    /* heave_servo.writeMicroseconds(targets[0]); //change back to target heave speed
     pitch_servo_right.write(targets[1]);
     pitch_servo_left.write(targets[2]);
     camber_servo_right.write(targets[3]);
-    camber_servo_left.write(targets[4]);
+    camber_servo_left.write(targets[4]); */
+
+    //with feedback control (target values in this 2DOF control are target values + controller output)
+    heave_servo.writeMicroseconds(targets[0] + control[0]); //change back to target heave speed
+    pitch_servo_right.write(targets[1] + control[1]);
+    pitch_servo_left.write(targets[2] + control[2]);
+    camber_servo_right.write(targets[3] + control[3]);
+    camber_servo_left.write(targets[4] + control[4]);
 
     //DEBUG
     Serial.println(targets[0]);
