@@ -24,6 +24,8 @@ float SerialRead();
 
 //control variables
 unsigned long start_time = 0;
+float sine_params[6][5] = {0}; //for all 5 servos, (A,f,phase,offset,deadband(min & max))
+float (*sine_params_ptr)[5] = sine_params; //pointer needed for use in funtions
 float target_pos_heave = 0;
 float target_pos_pitch_right = 0;
 float target_pos_pitch_left = 0;
@@ -44,14 +46,31 @@ void setup() {
 
 void loop() {
     //setpoints
-    // configure to change sine movement of any servo (A,f,phi,t,offset,deadband(min & max))
-    target_pos_heave = sineWave(1200, 0.8, 0, millis()-start_time, 1500, 450, 450);//0.13Hz is as fast as Heave servo can go at 600 amplitude
-    //we now use parameters for maximum speed in both directions
-    target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, millis()-start_time, 90, 0, 0);
-    target_pos_pitch_left = sineWave(40, 10*0.13, 0, millis()-start_time, 90, 0, 0);
-    target_pos_camber_right = sineWave(90, 0.13, M_PI, millis()-start_time, 90, 0, 0);
-    target_pos_camber_left = sineWave(90, 0.13, 0, millis()-start_time, 90, 0, 0);
+    /* // configure to change sine movement of any servo (A,f,phase,offset,deadband(min & max), current time in ms)
+    target_pos_heave = sineWave(1200, 0.8, 0, 1500, 450, 450, millis()-start_time);//0.13Hz is as fast as Heave servo can go at 600 amplitude
+    target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, 90, 0, 0, millis()-start_time);
+    target_pos_pitch_left = sineWave(40, 10*0.13, 0, 90, 0, 0, millis()-start_time);
+    target_pos_camber_right = sineWave(90, 0.13, M_PI, 90, 0, 0, millis()-start_time);
+    target_pos_camber_left = sineWave(90, 0.13, 0, 90, 0, 0, millis()-start_time); */
 
+    target_pos_heave = sineWave(sine_params_ptr[0][0], sine_params_ptr[0][1], sine_params_ptr[0][2], 
+                                      sine_params_ptr[0][3], sine_params_ptr[0][4], sine_params_ptr[0][4], 
+                                      millis() - start_time);
+
+    target_pos_pitch_right = sineWave(sine_params_ptr[1][0], sine_params_ptr[1][1], sine_params_ptr[1][2], 
+                                            sine_params_ptr[1][3], sine_params_ptr[1][4], sine_params_ptr[1][4], 
+                                            millis() - start_time);
+    target_pos_pitch_left = sineWave(sine_params_ptr[2][0], sine_params_ptr[2][1], sine_params_ptr[2][2], 
+                                           sine_params_ptr[2][3], sine_params_ptr[2][4], sine_params_ptr[2][4], 
+                                           millis() - start_time);
+
+    target_pos_camber_right = sineWave(sine_params_ptr[3][0], sine_params_ptr[3][1], sine_params_ptr[3][2], 
+                                             sine_params_ptr[3][3], sine_params_ptr[3][4], sine_params_ptr[3][4], 
+                                             millis() - start_time);
+
+    target_pos_camber_left = sineWave(sine_params_ptr[4][0], sine_params_ptr[4][1], sine_params_ptr[4][2], 
+                                            sine_params_ptr[4][3], sine_params_ptr[4][4], sine_params_ptr[4][4], 
+                                            millis() - start_time);
     //control
     //float target_speed_heave = setHeave(target_pos_heave);
 
