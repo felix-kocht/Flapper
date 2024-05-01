@@ -2,7 +2,7 @@
 #include <Math.h>   
 #include <Servo.h>  
 #include "ServoInit.h"  
-#include "utils.h"  
+#include "setpoints.h"  
 
 // parameters: Mode(false = angle, true = speed), Pin, initial angle/speed, minimum angle/speed, maximum angle/speed
 ServoParams heave_servo_params = {true, 9, 500, 1500, 2500}; // heave servo (Pin 9, speed control)
@@ -24,13 +24,12 @@ float SerialRead();
 
 //control variables
 unsigned long start_time = 0;
-float sine_params[6][5] = {0}; //for all 5 servos, (A,f,phase,offset,deadband(min & max))
+float sine_params[6][5] = {0}; //for all 5 servos, operational parameters for sine wave generation (A,f,phase,offset,deadband(min & max))
 float (*sine_params_ptr)[5] = sine_params; //pointer needed for use in funtions
-float target_pos_heave = 0;
-float target_pos_pitch_right = 0;
-float target_pos_pitch_left = 0;
-float target_pos_camber_right = 0;
-float target_pos_camber_left = 0;
+float estimates[5] = {0}; //for all 5 servos, estimated angle
+float (*estimates_ptr) = estimates; //pointer needed for use in funtions
+float targets[5] = {0}; //for all 5 servos, target angle
+float (*targets_ptr) = targets; //pointer needed for use in funtions
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
@@ -45,44 +44,52 @@ void setup() {
 }
 
 void loop() {
-    //setpoints
-    /* // configure to change sine movement of any servo (A,f,phase,offset,deadband(min & max), current time in ms)
-    target_pos_heave = sineWave(1200, 0.8, 0, 1500, 450, 450, millis()-start_time);//0.13Hz is as fast as Heave servo can go at 600 amplitude
-    target_pos_pitch_right = sineWave(40, 10*0.13, M_PI, 90, 0, 0, millis()-start_time);
-    target_pos_pitch_left = sineWave(40, 10*0.13, 0, 90, 0, 0, millis()-start_time);
-    target_pos_camber_right = sineWave(90, 0.13, M_PI, 90, 0, 0, millis()-start_time);
-    target_pos_camber_left = sineWave(90, 0.13, 0, 90, 0, 0, millis()-start_time); */
+    //Step 0: Read sensor values and serial input
+    //Forces via Serial
+    //target thrust and turn_torque via Serial
+    //waterspeed via Sensor
+    //macrostate estimate via Serial
 
-    target_pos_heave = sineWave(sine_params_ptr[0][0], sine_params_ptr[0][1], sine_params_ptr[0][2], 
+    //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
+    parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr);
+
+    //TODO: implement the function as below (compact)
+    //target_positions = sineWave(sine_params_ptr, millis() - start_time);
+    targets[0] = sineWave(sine_params_ptr[0][0], sine_params_ptr[0][1], sine_params_ptr[0][2], 
                                       sine_params_ptr[0][3], sine_params_ptr[0][4], sine_params_ptr[0][4], 
                                       millis() - start_time);
 
-    target_pos_pitch_right = sineWave(sine_params_ptr[1][0], sine_params_ptr[1][1], sine_params_ptr[1][2], 
+    targets[1] = sineWave(sine_params_ptr[1][0], sine_params_ptr[1][1], sine_params_ptr[1][2], 
                                             sine_params_ptr[1][3], sine_params_ptr[1][4], sine_params_ptr[1][4], 
                                             millis() - start_time);
-    target_pos_pitch_left = sineWave(sine_params_ptr[2][0], sine_params_ptr[2][1], sine_params_ptr[2][2], 
+    targets[2] = sineWave(sine_params_ptr[2][0], sine_params_ptr[2][1], sine_params_ptr[2][2], 
                                            sine_params_ptr[2][3], sine_params_ptr[2][4], sine_params_ptr[2][4], 
                                            millis() - start_time);
 
-    target_pos_camber_right = sineWave(sine_params_ptr[3][0], sine_params_ptr[3][1], sine_params_ptr[3][2], 
+    targets[3] = sineWave(sine_params_ptr[3][0], sine_params_ptr[3][1], sine_params_ptr[3][2], 
                                              sine_params_ptr[3][3], sine_params_ptr[3][4], sine_params_ptr[3][4], 
                                              millis() - start_time);
 
-    target_pos_camber_left = sineWave(sine_params_ptr[4][0], sine_params_ptr[4][1], sine_params_ptr[4][2], 
+    targets[4] = sineWave(sine_params_ptr[4][0], sine_params_ptr[4][1], sine_params_ptr[4][2], 
                                             sine_params_ptr[4][3], sine_params_ptr[4][4], sine_params_ptr[4][4], 
                                             millis() - start_time);
-    //control
+
+    // Step 2: State estimation
+
+    // estimate_servo_states(estimates_ptr, targets_ptr);
+
+    //Step 3: control
     //float target_speed_heave = setHeave(target_pos_heave);
 
-    // Write target values to servos
-    heave_servo.writeMicroseconds(target_pos_heave); //change back to target heave speed
-    pitch_servo_right.write(target_pos_pitch_right);
-    pitch_servo_left.write(target_pos_pitch_left);
-    camber_servo_right.write(target_pos_camber_right);
-    camber_servo_left.write(target_pos_camber_left);
+    // Step 4: Write target values to servos
+    heave_servo.writeMicroseconds(targets[0]); //change back to target heave speed
+    pitch_servo_right.write(targets[1]);
+    pitch_servo_left.write(targets[2]);
+    camber_servo_right.write(targets[3]);
+    camber_servo_left.write(targets[4]);
 
     //DEBUG
-    Serial.println(target_pos_heave);
+    Serial.println(targets[0]);
 }
 
 float setHeave(float target_pos){
