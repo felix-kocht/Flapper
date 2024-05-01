@@ -32,6 +32,8 @@ float estimates[5] = {0}; //for all 5 servos, estimated angle
 float (*estimates_ptr) = estimates; //pointer needed for use in funtions
 float targets[5] = {0}; //for all 5 servos, target angle
 float (*targets_ptr) = targets; //pointer needed for use in funtions
+bool encoder_readings[2] = {0}; //for all 2 encoders, on or off
+float microstate_estimate[5] = {0}; //for the microstate, estimated angle
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
@@ -50,7 +52,9 @@ void loop() {
     //Forces via Serial
     //target thrust and turn_torque via Serial
     //waterspeed via Sensor
+    //microstate estimate via Serial
     //macrostate estimate via Serial
+    //encoder readings via Sensor
 
     //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
     parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr); //how should the sinewaves be like?
@@ -76,12 +80,8 @@ void loop() {
                                             millis() - start_time); */
 
     // Step 2: State estimation
-
-    for (int i = 0; i < 5; i++){
-        estimates[i] = targets[i]; //just a mock for now
-    }
-
-    // estimate_servo_states(estimates_ptr, targets_ptr, microstate_estimate, encoder_readings); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
+    bool heave_down = encoder_readings[0];
+    estimate_servo_states(estimates_ptr, targets_ptr, microstate_estimate, heave_down); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
 
     //Step 3: control (control input is just the error?)
     //float target_speed_heave = setHeave(target_pos_heave);
