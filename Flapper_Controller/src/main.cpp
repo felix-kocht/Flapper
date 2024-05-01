@@ -33,7 +33,6 @@ float (*estimates_ptr) = estimates; //pointer needed for use in funtions
 float targets[5] = {0}; //for all 5 servos, target angle
 float (*targets_ptr) = targets; //pointer needed for use in funtions
 bool encoder_readings[2] = {0}; //for all 2 encoders, on or off
-float microstate_estimate[5] = {0}; //for the microstate, estimated angle
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
@@ -81,7 +80,7 @@ void loop() {
 
     // Step 2: State estimation
     bool heave_down = encoder_readings[0];
-    estimate_servo_states(estimates_ptr, targets_ptr, microstate_estimate, heave_down); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
+    estimate_servo_states(estimates_ptr, targets_ptr, heave_down); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
 
     //Step 3: control (control input is just the error?)
     //float target_speed_heave = setHeave(target_pos_heave);

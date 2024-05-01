@@ -72,11 +72,11 @@ void parameter_tuner(float waterspeed, float thrust, float target_thrust, float 
 
 void updateSineWaves(float (*params)[5], float (*targets), float time){
     for (int i = 0; i < 5; i++){
-        *targets[0] = sineWave(params[i][0], params[i][1], params[i][2], params[i][3], params[i][4], params[i][4], time); //is this correct syntax with the star?
+        targets[0] = sineWave(params[i][0], params[i][1], params[i][2], params[i][3], params[i][4], params[i][4], time); //is this correct syntax with the star?
     }
 }
 
-void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), float microstate_estimate[5] = {0}, bool heave_down){
+void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool heave_down){
     //TODO: implement microstate estimate (from Apriltags) into control, if needed
         // estimates_ptr[i] = targets_ptr[i]; //just a mock for now
     if (heave_down){// new cycle starts, estimate will be bottom position, drift is recalculated
