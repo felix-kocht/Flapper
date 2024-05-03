@@ -2,8 +2,8 @@
 #include <assert.h>
 
 // how are these defined exactly?, should i work with camber or servo angle?
-float frequency = 0.8; //ca. 0.875Hz per m/s
-float heave_amplitude = 1200; //speed
+float frequency = 0.3; //Hz, ca. 0.875Hz per m/s
+float heave_amplitude = 1000; //speed
 float pitch_amplitude = 40; //degree
 float camber_amplitude = 90; //degree
 float phase = M_PI/2; //pitch leading heave, in rad
@@ -16,11 +16,11 @@ float model[5] = {0}; //for all 5 servos, model of the system
 int counter = 0;
 int heave_down_cycles = 0;
 int total_heave_down_cycles = 0; 
-int last_total_heave_down_cycles = 20; //TODO calibrate for first iteration
-float drift[5] = {0}; //drift of the system
+int last_total_heave_down_cycles = 2; //TODO calibrate for first iteration
+float drift[5] = {1}; //drift of the system
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
-float sineWave(float amplitude, float frequency, float phase, float offset = 0.0, float deadband_low = 0.0, float deadband_high = 0.0, float time) {
+float sineWave(float time, float amplitude, float frequency, float phase, float offset = 0.0, float deadband_low = 0.0, float deadband_high = 0.0) {
     amplitude = amplitude- deadband_low - deadband_high;
     float value = amplitude * sin(2 * M_PI * frequency * (time/1000) - phase) + offset;
     if (value < offset) {
@@ -72,7 +72,7 @@ void parameter_tuner(float waterspeed, float thrust, float target_thrust, float 
 
 void updateSineWaves(float (*params)[5], float (*targets), float time){
     for (int i = 0; i < 5; i++){
-        targets[0] = sineWave(params[i][0], params[i][1], params[i][2], params[i][3], params[i][4], params[i][4], time); //is this correct syntax with the star?
+        targets[i] = sineWave(time, params[i][0], params[i][1], params[i][2], params[i][3], params[i][4], params[i][4]); 
     }
 }
 
@@ -85,11 +85,11 @@ void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool he
         total_heave_down_cycles = total_heave_down_cycles + 1;
         if (heave_down_cycles >= last_total_heave_down_cycles/2){ // so that it will be at the bottom deadpoint of motion
             heave_down_cycles = -999; //so that it will not be triggered again
-            counter = 0;
             for (int i = 0; i < 5; i++){
-                estimates_ptr[i] = 0; //TODO only accurate after proper calibration of middle_of_sensor
+                estimates_ptr[i] = 1500; //TODO only accurate after proper calibration of middle_of_sensor
                 drift[i] = (targets_ptr[i] + drift[i]*counter) / counter; //calculate new drift: (current error from zero / counter)
             }
+            counter = 0;
         }   
         
     }else{
