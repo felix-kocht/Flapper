@@ -1,7 +1,7 @@
 #include "load_cell.h"
 
 //function to initialize the load cell
-void load_cell_init(HX711 cell,HX711Params hx711_params) {
+void load_cell_init(HX711& cell,HX711Params hx711_params) {
   //initialize the hx711 object
   cell.begin(hx711_params.DOUT, hx711_params.CLK);
   //set the scale

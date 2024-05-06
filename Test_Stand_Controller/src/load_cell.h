@@ -7,10 +7,10 @@ struct HX711Params {
   int DOUT; 
   int CLK; 
   float calibration_factor; 
-  long zero_factor;
+  float zero_factor;
 };
 
-void load_cell_init(HX711 cell,HX711Params hx711_params);
+void load_cell_init(HX711& cell,HX711Params hx711_params);
 
 float get_Fx(float reading_1, float reading_2);
 float get_Mz(float reading_1, float reading_2);
