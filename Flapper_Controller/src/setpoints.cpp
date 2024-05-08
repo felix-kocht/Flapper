@@ -3,7 +3,7 @@
 
 // how are these defined exactly?, should i work with camber or servo angle?
 float frequency = 0.15; //Hz, ca. 0.875Hz per m/s
-float heave_amplitude = 270/2; //speed (half the total possible angle)
+float heave_amplitude = 180/2; //speed (half the total possible angle)
 float pitch_amplitude = 40; //degree
 float camber_amplitude = 90; //degree
 float phase = M_PI/2; //pitch leading heave, in rad
@@ -79,34 +79,41 @@ void updateSineWaves(float (*params)[5], float (*targets), float time){
 void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool heave_down){
     //TODO: implement microstate estimate (from Apriltags) into control, if needed
     // estimates_ptr[i] = targets_ptr[i]; //just a mock for now
-    if (heave_down){// new cycle starts, estimate will be bottom position, drift is recalculated
+    if(estimates_ptr[0] > 270){
+        estimates_ptr[0] = 270;
+    }else if(estimates_ptr[0] < 0){
+        estimates_ptr[0] = 0;
+    }else if (heave_down){// new cycle starts, estimate will be sensor position, drift is recalculated
         // assert(targets_ptr[0] < 100); //calibrate to warn in case of weird values, if triggered: "Suspicious, the heave signal was triggered while we should be far from the bottom."
         heave_down_cycles = heave_down_cycles + 1;
         total_heave_down_cycles = total_heave_down_cycles + 1;
         if (heave_down_cycles >= last_total_heave_down_cycles/2){ // so that it will be at the bottom deadpoint of motion
             heave_down_cycles = -999; //so that it will not be triggered again
             for (int i = 0; i < 5; i++){
-                estimates_ptr[i] = 265; //TODO only accurate for heave motion, not for the other servos
-                drift[i] = -(targets_ptr[i]-estimates_ptr[i])/counter; //calculate new drift: (current error from actual value / counter)
+                estimates_ptr[i] = 270/2+heave_amplitude; //TODO only accurate for heave motion, not for the other servos
+                drift[i] = estimates_ptr[i]-targets_ptr[i]; //calculate new drift: (current error from actual value / counter)
             }
             counter = 0;
         }else{
             for (int i = 0; i < 5; i++){
                 estimates_ptr[i] = targets_ptr[i] + drift[i]; 
+                drift[i] = drift[i] * 0.99; //drift is reduced by 1% per cycle
             }
-        }   
-        
+        }
     }else{
         if (total_heave_down_cycles > 1){
             last_total_heave_down_cycles = total_heave_down_cycles;
         }
         for (int i = 0; i < 5; i++){
             estimates_ptr[i] = targets_ptr[i] + drift[i]; 
+            drift[i] = drift[i] * 0.99; //drift is reduced by 1% per cycle
+            
         }
         heave_down_cycles = 0;
         total_heave_down_cycles = 0;
     }
     counter = counter + 1;
+    
 }
 //reset counter when heave_down is true
 
