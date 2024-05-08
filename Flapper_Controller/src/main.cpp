@@ -80,14 +80,12 @@ void loop() {
     for (int i = 0; i < 5; i++){
         control[i] = (targets[i]-estimates[i])*Kp; //just a P controller for now
     }
-    float write_heave = (control[0]*1)+targets[0];
 
     // Step 4: Write target values to servos
 
     //with feedback control (target values in this 2DOF control are target values + controller output)
     //different for servo 0 (heave) because it is a speed control
-    heave_servo.writeMicroseconds(angletoPWM(write_heave)); //change back to target heave speed
-
+    heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values
     //as there is no feedback sensors yet, we just write the target values
     pitch_servo_right.write(targets[1]); // + control[1]);
     pitch_servo_left.write(targets[2]);// + control[2]);
@@ -105,7 +103,7 @@ void loop() {
     Serial.print(",");
     Serial.print(control[0]);
     Serial.print(",");
-    Serial.print(angletoPWM(write_heave));
+    Serial.print(angletoPWM(targets[0]+control[0]));
     Serial.print("*/");        // Frame finish sequence 
     Serial.println();
 
