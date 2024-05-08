@@ -24,6 +24,7 @@ Servo camber_servo_left;
 //function prototypes
 float setHeave(float target_pos);
 float SerialRead();
+float angletoPWM(float angle);
 
 //control variables
 unsigned long start_time = 0;
@@ -71,6 +72,7 @@ void loop() {
 
     // Step 2: State estimation
     bool heave_down = abs(encoder_readings[0]-1); //1 if obstructed, 0 if not
+    // heave_down = 0; //DEBUG: remove this line
     estimate_servo_states(estimates_ptr, targets_ptr, heave_down); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
 
     //Step 3: control (control input is just the error?)
@@ -84,7 +86,7 @@ void loop() {
 
     //with feedback control (target values in this 2DOF control are target values + controller output)
     //different for servo 0 (heave) because it is a speed control
-    heave_servo.writeMicroseconds(write_heave); //change back to target heave speed
+    heave_servo.writeMicroseconds(angletoPWM(write_heave)); //change back to target heave speed
 
     pitch_servo_right.write(targets[1] + control[1]);
     pitch_servo_left.write(targets[2] + control[2]);
@@ -92,8 +94,8 @@ void loop() {
     camber_servo_left.write(targets[4] + control[4]);
 
     //DEBUG: printing targets, control and heave_down for i=0
-    Serial.print("heave_down, Target, estimate, control, write_heave: ");
-    // Serial.print("/*");        // Frame start sequence 
+    // Serial.print("heave_down, Target, estimate, control, write_heave: ");
+    Serial.print("/*");        // Frame start sequence 
     Serial.print(heave_down);
     Serial.print(",");
     Serial.print(targets[0]);
@@ -102,11 +104,14 @@ void loop() {
     Serial.print(",");
     Serial.print(control[0]);
     Serial.print(",");
-    Serial.print(write_heave);
-    // Serial.print("*/");        // Frame finish sequence 
+    Serial.print(angletoPWM(write_heave));
+    Serial.print("*/");        // Frame finish sequence 
     Serial.println();
 
+}
 
+float angletoPWM(float angle){
+    return 500 + angle * 2000 / 270;
 }
 
 float setHeave(float target_pos){

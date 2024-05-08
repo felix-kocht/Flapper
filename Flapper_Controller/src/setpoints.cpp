@@ -2,8 +2,8 @@
 #include <assert.h>
 
 // how are these defined exactly?, should i work with camber or servo angle?
-float frequency = 0.3; //Hz, ca. 0.875Hz per m/s
-float heave_amplitude = 1000; //speed
+float frequency = 0.15; //Hz, ca. 0.875Hz per m/s
+float heave_amplitude = 270/2; //speed (half the total possible angle)
 float pitch_amplitude = 40; //degree
 float camber_amplitude = 90; //degree
 float phase = M_PI/2; //pitch leading heave, in rad
@@ -37,36 +37,36 @@ void parameter_tuner(float waterspeed, float thrust, float target_thrust, float 
     // Set parameters for Heave servo
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[0][1] = frequency;  // Frequency f
-    sine_params_ptr[0][2] = phase-M_PI/2;    // Phase (looks weird because heave servo is continous --> speed signal)
-    sine_params_ptr[0][3] = 1500; // Offset
-    sine_params_ptr[0][4] = 150;  // Deadband
+    sine_params_ptr[0][2] = 0;    // Phase (looks weird because heave servo is continous --> speed signal)
+    sine_params_ptr[0][3] = 270/2; // Offset
+    sine_params_ptr[0][4] = 0;  // Deadband //TODO: if never needed, remove deadband functionality
 
     // Set parameters for Pitch Right servo
     sine_params_ptr[1][0] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
-    sine_params_ptr[1][2] = M_PI;  // Phase
-    sine_params_ptr[1][3] = 90;    // Offset
+    sine_params_ptr[1][2] = phase + M_PI;  // Phase
+    sine_params_ptr[1][3] = 180/2;    // Offset
     sine_params_ptr[1][4] = 0;     // Deadband
 
     // Set parameters for Pitch Left servo
     sine_params_ptr[2][0] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[2][1] = frequency; // Frequency f
-    sine_params_ptr[2][2] = 0;     // Phase
-    sine_params_ptr[2][3] = 90;    // Offset
+    sine_params_ptr[2][2] = phase;     // Phase
+    sine_params_ptr[2][3] = 180/2;    // Offset
     sine_params_ptr[2][4] = 0;     // Deadband
 
     // Set parameters for Camber Right servo
     sine_params_ptr[3][0] = camber_amplitude;    // Amplitude A
     sine_params_ptr[3][1] = frequency;  // Frequency f
-    sine_params_ptr[3][2] = M_PI;  // Phase
-    sine_params_ptr[3][3] = 90;    // Offset
+    sine_params_ptr[3][2] = phase + M_PI;  // Phase
+    sine_params_ptr[3][3] = 180/2;    // Offset
     sine_params_ptr[3][4] = 0;     // Deadband
 
     // Set parameters for Camber Left servo
     sine_params_ptr[4][0] = camber_amplitude;    // Amplitude A
     sine_params_ptr[4][1] = frequency;  // Frequency f
-    sine_params_ptr[4][2] = 0;     // Phase
-    sine_params_ptr[4][3] = 90;    // Offset
+    sine_params_ptr[4][2] = phase;     // Phase
+    sine_params_ptr[4][3] = 180/2;    // Offset
     sine_params_ptr[4][4] = 0;     // Deadband
 }
 
@@ -78,18 +78,22 @@ void updateSineWaves(float (*params)[5], float (*targets), float time){
 
 void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool heave_down){
     //TODO: implement microstate estimate (from Apriltags) into control, if needed
-        // estimates_ptr[i] = targets_ptr[i]; //just a mock for now
+    // estimates_ptr[i] = targets_ptr[i]; //just a mock for now
     if (heave_down){// new cycle starts, estimate will be bottom position, drift is recalculated
-        assert(targets_ptr[0] > 1); //calibrate to warn in case of weird values, if triggered: "Suspicious, the heave signal was triggered while we should be far from the bottom."
+        // assert(targets_ptr[0] < 100); //calibrate to warn in case of weird values, if triggered: "Suspicious, the heave signal was triggered while we should be far from the bottom."
         heave_down_cycles = heave_down_cycles + 1;
         total_heave_down_cycles = total_heave_down_cycles + 1;
         if (heave_down_cycles >= last_total_heave_down_cycles/2){ // so that it will be at the bottom deadpoint of motion
             heave_down_cycles = -999; //so that it will not be triggered again
             for (int i = 0; i < 5; i++){
-                estimates_ptr[i] = 1500; //TODO only accurate after proper calibration of middle_of_sensor
-                drift[i] = (targets_ptr[i] + drift[i]*counter) / counter; //calculate new drift: (current error from zero / counter)
+                estimates_ptr[i] = 265; //TODO only accurate for heave motion, not for the other servos
+                drift[i] = -(targets_ptr[i]-estimates_ptr[i])/counter; //calculate new drift: (current error from actual value / counter)
             }
             counter = 0;
+        }else{
+            for (int i = 0; i < 5; i++){
+                estimates_ptr[i] = targets_ptr[i] + drift[i]; 
+            }
         }   
         
     }else{
@@ -97,7 +101,7 @@ void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool he
             last_total_heave_down_cycles = total_heave_down_cycles;
         }
         for (int i = 0; i < 5; i++){
-            estimates_ptr[i] = targets_ptr[i] + drift[i]*counter; 
+            estimates_ptr[i] = targets_ptr[i] + drift[i]; 
         }
         heave_down_cycles = 0;
         total_heave_down_cycles = 0;
