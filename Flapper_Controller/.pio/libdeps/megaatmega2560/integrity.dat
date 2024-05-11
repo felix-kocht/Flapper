@@ -1,8 +1,9 @@
-SPI
-adafruit/Adafruit LPS35HW@^1.0.6
-Servo
 Wire
-adafruit/Adafruit BusIO@^1.15.0
-arduino-libraries/SD@^1.2.4
-adafruit/Adafruit Unified Sensor@^1.1.4
+Servo
 adafruit/Adafruit ICM20X@^2.0.7
+adafruit/Adafruit INA219@^1.2.3
+SPI
+adafruit/Adafruit BusIO@^1.15.0
+adafruit/Adafruit Unified Sensor@^1.1.4
+arduino-libraries/SD@^1.2.4
+adafruit/Adafruit LPS35HW@^1.0.6

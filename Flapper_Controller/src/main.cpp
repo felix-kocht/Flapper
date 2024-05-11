@@ -3,6 +3,7 @@
 #include <Servo.h>  
 #include "ServoInit.h"  
 #include "setpoints.h"  
+#include "Powerchip.h"
 
 // parameters: Mode(false = angle, true = speed), Pin, initial angle/speed, minimum angle/speed, maximum angle/speed
 ServoParams heave_servo_params = {true, 9, 500, 1500, 2500}; // heave servo (Pin 9, speed control)
@@ -37,6 +38,8 @@ float (*estimates_ptr) = estimates; //pointer needed for use in funtions
 float targets[5] = {0}; //for all 5 servos, target angle
 float (*targets_ptr) = targets; //pointer needed for use in funtions
 bool encoder_readings[2] = {0}; //for all 2 encoders, on or off
+float average_consumption = 0; //average power consumption
+int maincounter = 0; //counter for average consumption
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
@@ -49,30 +52,22 @@ void setup() {
     initServo(pitch_servo_left, pitch_servo_left_params);
     initServo(camber_servo_right, camber_servo_right_params);
     initServo(camber_servo_left, camber_servo_left_params);
+    setupINA219();
 }
 
 void loop() {
     //Step 0: Read sensor values and serial input
-    //Forces via Serial
-    //target thrust and turn_torque via Serial
-    //waterspeed via Sensor
-    //microstate estimate via Serial
-    //macrostate estimate via Serial
-    //encoder readings via Sensor
-    //Learning: takes 25 cycles to actually comprehend the value from serial input
-
+    float consumption = getPower();
     encoder_readings[0] = digitalRead(encoder_pin);
-  
-    // Print the state to the Serial Monitor
-    //Serial.println(sensorState);
 
     //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
     parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr); //how should the sinewaves be like?, just mock values for now
     updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
 
     // Step 2: State estimation
+    average_consumption = (average_consumption*maincounter + consumption)/(maincounter+1); //just a mock for now
     bool heave_down = abs(encoder_readings[0]-1); //1 if obstructed, 0 if not
-    // heave_down = 0; //DEBUG: remove this line
+    heave_down = 0; //DEBUG: remove this line if using sensor
     estimate_servo_states(estimates_ptr, targets_ptr, heave_down); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
 
     //Step 3: control (control input is just the error?)
@@ -87,10 +82,10 @@ void loop() {
     //different for servo 0 (heave) because it is a speed control
     heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values
     //as there is no feedback sensors yet, we just write the target values
-    pitch_servo_right.write(targets[1]); // + control[1]);
-    pitch_servo_left.write(targets[2]);// + control[2]);
-    camber_servo_right.write(targets[3]);// + control[3]);
-    camber_servo_left.write(targets[4]);// + control[4]);
+    pitch_servo_right.write(45);//targets[1]); // + control[1]);
+    pitch_servo_left.write(90+45);//targets[2]);// + control[2]);
+    //camber_servo_right.write(targets[3]);// + control[3]);
+    //camber_servo_left.write(targets[4]);// + control[4]);
 
     //DEBUG: printing targets, control and heave_down for i=0
     // Serial.print("heave_down, Target, estimate, control, write_heave: ");
@@ -103,10 +98,11 @@ void loop() {
     Serial.print(",");
     Serial.print(control[0]);
     Serial.print(",");
-    Serial.print(angletoPWM(targets[0]+control[0]));
+    Serial.print(average_consumption);
     Serial.print("*/");        // Frame finish sequence 
     Serial.println();
 
+    maincounter++;
 }
 
 float angletoPWM(float angle){

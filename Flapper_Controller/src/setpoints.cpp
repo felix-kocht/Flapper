@@ -2,9 +2,9 @@
 #include <assert.h>
 
 // how are these defined exactly?, should i work with camber or servo angle?
-float frequency = 0.15; //Hz, ca. 0.875Hz per m/s
-float heave_amplitude = 180/2; //speed (half the total possible angle)
-float pitch_amplitude = 40; //degree
+float frequency = 0.6; //Hz, ca. 0.875Hz per m/s
+float heave_amplitude = 100/2; //speed (half the total possible angle)
+float pitch_amplitude = 60; //degree
 float camber_amplitude = 90; //degree
 float phase = M_PI/2; //pitch leading heave, in rad
 // float camber_phase = 0; //heave leading camber, in rad
@@ -38,21 +38,21 @@ void parameter_tuner(float waterspeed, float thrust, float target_thrust, float 
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[0][1] = frequency;  // Frequency f
     sine_params_ptr[0][2] = 0;    // Phase (looks weird because heave servo is continous --> speed signal)
-    sine_params_ptr[0][3] = 270/2; // Offset
+    sine_params_ptr[0][3] = 270/2+20; // Offset
     sine_params_ptr[0][4] = 0;  // Deadband //TODO: if never needed, remove deadband functionality
 
     // Set parameters for Pitch Right servo
     sine_params_ptr[1][0] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
-    sine_params_ptr[1][2] = phase + M_PI;  // Phase
-    sine_params_ptr[1][3] = 180/2;    // Offset
+    sine_params_ptr[1][2] = phase;  // Phase
+    sine_params_ptr[1][3] = 180/2 - 10;    // Offset //TODO: dont hardcode offset
     sine_params_ptr[1][4] = 0;     // Deadband
 
     // Set parameters for Pitch Left servo
     sine_params_ptr[2][0] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[2][1] = frequency; // Frequency f
-    sine_params_ptr[2][2] = phase;     // Phase
-    sine_params_ptr[2][3] = 180/2;    // Offset
+    sine_params_ptr[2][2] = phase + M_PI;     // Phase
+    sine_params_ptr[2][3] = 180/2 - 10;    // Offset //TODO: dont hardcode offset
     sine_params_ptr[2][4] = 0;     // Deadband
 
     // Set parameters for Camber Right servo
