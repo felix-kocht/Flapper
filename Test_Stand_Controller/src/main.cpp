@@ -6,13 +6,14 @@
 //Calibration mode should print all 5 values nicely readable continuously (seperate code, filtered or not??... I think filtered is better --> then its quite similar to this, so maybe just a mode?)
 //tutorial: https://learn.sparkfun.com/tutorials/load-cell-amplifier-hx711-breakout-hookup-guide/all
 //hx711 can take 2.7V to 5V
+//SAMD21 needs USBSerial for printing, because it has multiple Serial ports
 
 /*setup:
-- cell 1: left over rail
+- cell 1: left baseplate
 - cell 2: right over rail
-- cell 3: left on baseplate
+- cell 3: front
 - cell 4: right on baseplate
-- cell 5: at the front of baseplate
+- cell 5: left over rail
 - using 10JHz sampling rate for now, 80Hz can be used too */
 
 //parameters: DAT, CLK, calibration_factor, zero_factor
@@ -41,15 +42,10 @@ void setup() {
   SerialUSB.println("Starting setup");
   // initialize each hx711 object
   load_cell_init(cell_1, cell_1_params);
-  SerialUSB.println("Cell 1 initialized");
   load_cell_init(cell_2, cell_2_params);
-  SerialUSB.println("Cell 2 initialized");
   load_cell_init(cell_3, cell_3_params);
-  SerialUSB.println("Cell 3 initialized");
   load_cell_init(cell_4, cell_4_params);
-  SerialUSB.println("Cell 4 initialized");
   load_cell_init(cell_5, cell_5_params);
-  SerialUSB.println("Cell 5 initialized");
 }
 
 void loop() {
@@ -69,14 +65,21 @@ void loop() {
   // calculate the actual forces
   // print the values to the serial monitor
   // Serial.println(readings[0][1]); //for debug
-  SerialUSB.println("Printing readings, left, right, base left, base right, front:");
+  SerialUSB.print("/*");  
+  //Printing readings, left, right, base left, base right, front
   SerialUSB.println(readings[0][0]); //for debug
+  SerialUSB.print(",");
   SerialUSB.println(readings[1][0]); //for debug
+  SerialUSB.print(",");
   SerialUSB.println(readings[2][0]); //for debug
+  SerialUSB.print(",");
   SerialUSB.println(readings[3][0]); //for debug
+  SerialUSB.print(",");
   SerialUSB.println(readings[4][0]); //for debug
+  SerialUSB.print("*/");        // Frame finish sequence 
+  SerialUSB.println();
   push_by_2(); //shifts entire array by 2 (making x => x-1, x-1 => x-2, same for y)
-  delay(1000);
+  delay(100);
 }
 
 void push_by_2() {

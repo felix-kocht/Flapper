@@ -82,10 +82,10 @@ void loop() {
     //different for servo 0 (heave) because it is a speed control
     heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values
     //as there is no feedback sensors yet, we just write the target values
-    pitch_servo_right.write(45);//targets[1]); // + control[1]);
-    pitch_servo_left.write(90+45);//targets[2]);// + control[2]);
-    //camber_servo_right.write(targets[3]);// + control[3]);
-    //camber_servo_left.write(targets[4]);// + control[4]);
+    pitch_servo_right.write(targets[1]); // + control[1]);
+    pitch_servo_left.write(targets[2]);// + control[2]);
+    camber_servo_right.write(targets[3]);// + control[3]);
+    camber_servo_left.write(targets[4]);// + control[4]);
 
     //DEBUG: printing targets, control and heave_down for i=0
     // Serial.print("heave_down, Target, estimate, control, write_heave: ");

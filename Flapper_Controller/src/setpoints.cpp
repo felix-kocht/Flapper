@@ -2,8 +2,8 @@
 #include <assert.h>
 
 // how are these defined exactly?, should i work with camber or servo angle?
-float frequency = 0.6; //Hz, ca. 0.875Hz per m/s
-float heave_amplitude =90; //speed (half the total possible angle)
+float frequency = 0.5; //Hz, ca. 0.875Hz per m/s
+float heave_amplitude =0; //speed (half the total possible angle)
 float pitch_amplitude = 60; //degree
 float camber_amplitude = 90; //degree
 float phase = M_PI/2; //pitch leading heave, in rad
