@@ -52,12 +52,12 @@ void setup() {
     initServo(pitch_servo_left, pitch_servo_left_params);
     initServo(camber_servo_right, camber_servo_right_params);
     initServo(camber_servo_left, camber_servo_left_params);
-    setupINA219();
+   // setupINA219();
 }
 
 void loop() {
     //Step 0: Read sensor values and serial input
-    float consumption = getPower();
+    //float consumption = getPower();
     encoder_readings[0] = digitalRead(encoder_pin);
 
     //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
@@ -65,7 +65,7 @@ void loop() {
     updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
 
     // Step 2: State estimation
-    average_consumption = (average_consumption*maincounter + consumption)/(maincounter+1); //just a mock for now
+    //average_consumption = (average_consumption*maincounter + consumption)/(maincounter+1); //just a mock for now
     bool heave_down = abs(encoder_readings[0]-1); //1 if obstructed, 0 if not
     heave_down = 0; //DEBUG: remove this line if using sensor
     estimate_servo_states(estimates_ptr, targets_ptr, heave_down); //should they all be in the format of servo angles ? if yes, preprocess encoder readings.
@@ -98,7 +98,7 @@ void loop() {
     Serial.print(",");
     Serial.print(control[0]);
     Serial.print(",");
-    Serial.print(average_consumption);
+    //Serial.print(average_consumption);
     Serial.print("*/");        // Frame finish sequence 
     Serial.println();
 
