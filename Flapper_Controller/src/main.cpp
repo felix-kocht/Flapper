@@ -85,7 +85,7 @@ void loop() {
     pitch_servo_right.write(targets[1]); // + control[1]);
     pitch_servo_left.write(targets[2]);// + control[2]);
     camber_servo_right.write(targets[3]);// + control[3]);
-    camber_servo_left.write(targets[4]);// + control[4]);
+    camber_servo_left.write(90);//targets[4]);// + control[4]);
 
     //DEBUG: printing targets, control and heave_down for i=0
     // Serial.print("heave_down, Target, estimate, control, write_heave: ");
