@@ -108,7 +108,7 @@ void loop() {
     heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values
     //as there is no feedback sensors yet, we just write the target values
     pitch_servo_right.write(targets[1]); // + control[1]);
-    pitch_servo_left.write(targets[2]);// + control[2]);
+    pitch_servo_left.write(targets[1]);// + control[2]);
     camber_servo_right.write(targets[3]);// + control[3]);
     camber_servo_left.write(targets[4]);// + control[4]);
 
