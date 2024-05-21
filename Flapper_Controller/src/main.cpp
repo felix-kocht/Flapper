@@ -4,6 +4,7 @@
 #include "ServoInit.h"  
 #include "setpoints.h"  
 #include "Powerchip.h"
+#include "ppmreader.h"
 
 // parameters: Mode(false = angle, true = speed), Pin, initial angle/speed, minimum angle/speed, maximum angle/speed
 ServoParams heave_servo_params = {true, 9, 500, 1500, 2500}; // heave servo (Pin 9, speed control)
@@ -40,19 +41,23 @@ float (*targets_ptr) = targets; //pointer needed for use in funtions
 bool encoder_readings[2] = {0}; //for all 2 encoders, on or off
 float average_consumption = 0; //average power consumption
 int maincounter = 0; //counter for average consumption
+float frequency_adjustment = 0.0; //Hz, ca. 0.875Hz per m/s
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication
     Serial.println("Starting setup");
     start_time = millis();
     pinMode(encoder_pin, INPUT);
+    
     // Initialize servos
     initServo(heave_servo, heave_servo_params);
     initServo(pitch_servo_right, pitch_servo_right_params);
     initServo(pitch_servo_left, pitch_servo_left_params);
     initServo(camber_servo_right, camber_servo_right_params);
     initServo(camber_servo_left, camber_servo_left_params);
-   // setupINA219();
+    // setupINA219();
+    setupPPM(); //setup PPM reciever at PIN 2, it will read automatically, using interrupts
+    Serial.println("Setup complete");
 }
 
 void loop() {
@@ -62,6 +67,26 @@ void loop() {
 
     //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
     parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr); //how should the sinewaves be like?, just mock values for now
+
+    // changing sine params based on radio input
+    sine_params_ptr[1][0] = (ppmValues[2]-1000)/10;    // Pitch Amplitude 
+    sine_params_ptr[2][0] = (ppmValues[2]-1000)/10;    // Pitch Amplitude 
+    //adjusting frequency based on radio input
+    if(ppmValues[1] < 1400 || ppmValues[1] > 1648){
+        frequency_adjustment = frequency_adjustment + double(int(ppmValues[1])-1524)/9000.0; // Frequency f
+        //limit frequency adjustment to 0 to 1.5 Hz
+        if(frequency_adjustment > 1.5){
+            frequency_adjustment = 1.5;
+        }else if(frequency_adjustment < 0){
+            frequency_adjustment = 0;
+        }
+    }
+    sine_params_ptr[0][1] = sine_params_ptr[0][1] + frequency_adjustment; // Frequency f 
+    sine_params_ptr[1][1] = sine_params_ptr[1][1] + frequency_adjustment;  // Frequency f
+    sine_params_ptr[2][1] = sine_params_ptr[2][1] + frequency_adjustment;  // Frequency f
+    sine_params_ptr[3][1] = sine_params_ptr[3][1] + frequency_adjustment;  // Frequency f
+    sine_params_ptr[4][1] = sine_params_ptr[4][1] + frequency_adjustment;  // Frequency f
+
     updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
 
     // Step 2: State estimation
@@ -85,7 +110,7 @@ void loop() {
     pitch_servo_right.write(targets[1]); // + control[1]);
     pitch_servo_left.write(targets[2]);// + control[2]);
     camber_servo_right.write(targets[3]);// + control[3]);
-    camber_servo_left.write(90);//targets[4]);// + control[4]);
+    camber_servo_left.write(targets[4]);// + control[4]);
 
     //DEBUG: printing targets, control and heave_down for i=0
     // Serial.print("heave_down, Target, estimate, control, write_heave: ");
@@ -96,7 +121,7 @@ void loop() {
     Serial.print(",");
     Serial.print(estimates[0]);
     Serial.print(",");
-    Serial.print(control[0]);
+    Serial.print(sine_params_ptr[0][1]);//control[0]);
     Serial.print(",");
     //Serial.print(average_consumption);
     Serial.print("*/");        // Frame finish sequence 

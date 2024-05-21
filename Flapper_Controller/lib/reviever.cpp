@@ -3,7 +3,7 @@
 #define PPM_PIN 2  // Replace with your actual PPM pin
 
 volatile unsigned long lastInterruptTime;
-volatile unsigned int ppmValues[4];  // Assuming 4 channels
+volatile unsigned int ppmValuess[4];  // Assuming 4 channels
 volatile byte currentChannel = 0;
 
 void ppmInterrupt();
@@ -20,7 +20,7 @@ void loop() {
     Serial.print("Channel ");
     Serial.print(i + 1);
     Serial.print(": ");
-    Serial.println(ppmValues[i]);
+    Serial.println(ppmValuess[i]);
   }
   delay(1000);  // Adjust delay as needed
 }
@@ -34,7 +34,7 @@ void ppmInterrupt() {
     currentChannel = 0;
   } else {
     if (currentChannel < 4) {
-      ppmValues[currentChannel] = pulseLength;
+      ppmValuess[currentChannel] = pulseLength;
       currentChannel++;
     }
   }
