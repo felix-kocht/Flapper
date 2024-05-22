@@ -17,7 +17,7 @@
 - using 10JHz sampling rate for now, 80Hz can be used too */
 
 //parameters: DAT, CLK, calibration_factor, zero_factor
-const HX711Params cell_1_params = {2,3, -7050.0, 1};
+const HX711Params cell_1_params = {2,3, 30050.0, 1};
 const HX711Params cell_2_params = {4,5, -7050.0, 1};
 const HX711Params cell_3_params = {6,7, -7050.0, 1};
 const HX711Params cell_4_params = {8,9, -7050.0, 1};
