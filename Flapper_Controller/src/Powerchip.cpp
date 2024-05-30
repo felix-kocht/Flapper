@@ -7,19 +7,13 @@ Adafruit_INA219 ina219;
  
 bool setupINA219()
 {
-  Serial.begin(9600);
-  while (!Serial) 
-  {
-    delay(1);
-  }
- 
     ina219.begin();
   // Initialize the INA219.
-  if (! ina219.begin())
+  if (ina219.begin())
   {
-    return false;
-  }else{
     return true;
+  }else{
+    return false;
   }
   // To use a slightly lower 32V, 1A range (higher precision on amps):
   //ina219.setCalibration_32V_1A();

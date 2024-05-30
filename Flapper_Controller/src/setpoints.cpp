@@ -2,7 +2,7 @@
 #include <assert.h>
 
 // how are these defined exactly?, should i work with camber or servo angle?
-float frequency = 0.5; //Hz, ca. 0.875Hz per m/s
+float frequency = 0.8; //Hz, ca. 0.875Hz per m/s
 float heave_amplitude =45; //speed (half the total possible angle)
 float pitch_amplitude = 60; //degree
 float camber_amplitude = 90; //degree
@@ -23,6 +23,37 @@ float drift[5] = {1}; //drift of the system
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
 float sineWave(float time, float amplitude, float frequency, float phase, float offset = 0.0) {
     return amplitude * sin(2 * M_PI * frequency * (time/1000) - phase) + offset;
+}
+
+
+float calculatePhaseShift(float time, float frequency, float value, float slope) {
+    //Step 0: calculate entire passed phase from total start
+    static float total_phase = time/1000 * 2 * M_PI * frequency;
+
+    //Step 1: Calculate phase from last sine restart to now
+    float cycle_phase = asin(value);
+
+    // Adjust based on the slope
+    if (slope < 0) {
+        cycle_phase = M_PI - cycle_phase;
+    }
+
+    //Step 2: Calculate how many full cycles have passed
+    int full_cycles = (total_phase - cycle_phase) / (2 * M_PI); // it is rounded down
+
+    //Step 3: Calculate the remaining shift
+    return total_phase - full_cycles * 2 * M_PI;
+}
+
+void changeFrequency(float new_frequency, float time){
+
+    //extracting the old wall conditions:
+    static float value = sineWave(time, 1, frequency, general_phase, 0);
+    static float slope = sineWave(time + 1, 1, frequency, general_phase, 0)-value; //one ms later to get the slope direction
+
+    general_phase = calculatePhaseShift(time, new_frequency, value, slope); 
+    frequency = new_frequency;
+    
 }
 
 //TODO: work with deviations based on feedback control for thrust and turn_torque

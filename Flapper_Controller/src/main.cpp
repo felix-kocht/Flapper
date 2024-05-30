@@ -7,6 +7,7 @@
 #include "ppmreader.h"
 
 //Wiring: heave: 9, pitch right: 8, pitch left: 7, camber right: 6, camber left: 5, encoder: 4, PPM: 2
+//Change all SerialUSB back to Serial, when going back to an Arduino board
 
 //function prototypes
 void initPeripherals();
@@ -36,9 +37,9 @@ int maincounter = 0; //counter for average consumption
 float frequency_adjustment = 0.0; //Hz, ca. 0.875Hz per m/s
 
 void setup() {
-    // Initialize serial communication
-    Serial.begin(9600);  
-    Serial.println("Starting setup");
+    // Initialize SerialUSB communication
+    SerialUSB.begin(9600);  
+    SerialUSB.println("Starting setup");
     start_time = millis();
     
     // Initialize servos
@@ -47,11 +48,11 @@ void setup() {
     // Initialize peripherals, if present
     initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
 
-    Serial.println("Setup complete");
+    SerialUSB.println("Setup complete");
 }
 
 void loop() {
-    //Step 0: Read sensor values and serial input
+    //Step 0: Read sensor values and SerialUSB input
     if (encoder_present) {
         encoder_readings[0] = digitalRead(encoder_pin);
     }
@@ -86,7 +87,9 @@ void loop() {
         targets[0], 
         estimates[0], 
         sine_params_ptr[0][1],
-        average_consumption
+        power_sensor_present,
+        rc_reciever_present,
+        encoder_present,
     };
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     printFloats(valuesToPrint, length);
@@ -94,31 +97,37 @@ void loop() {
     maincounter++;
 }
 
-void initPeripherals(){
+void initPeripherals(){ //TODO: Check if this works on the arduino as intended
     // Check for Encoder
-    pinMode(encoder_pin, INPUT);
-    if (digitalRead(encoder_pin) == HIGH || digitalRead(encoder_pin) == LOW) {
+    pinMode(encoder_pin, INPUT_PULLDOWN);
+    if (digitalRead(encoder_pin) == LOW) {
+        pinMode(encoder_pin, INPUT_PULLUP);
+        if(digitalRead(encoder_pin) == HIGH){
+            SerialUSB.println("Encoder not detected.");
+            } else {
+        SerialUSB.println("Encoder detected.");
         encoder_present = true;  // Simple check if the pin is responsive
-        Serial.println("Encoder detected.");
+            }
     } else {
-        Serial.println("Encoder not detected.");
+        SerialUSB.println("Encoder detected.");
+        encoder_present = true;  // Simple check if the pin is responsive
     }
 
     // Check for INA219 Power Sensor
     if (setupINA219()) {
         power_sensor_present = true;
-        Serial.println("INA219 power sensor detected.");
+        SerialUSB.println("INA219 power sensor detected.");
     } else {
-        Serial.println("INA219 power sensor not detected.");
+        SerialUSB.println("INA219 power sensor not detected.");
     }
 
     // Check for PPM Receiver
     //setup PPM reciever at PIN 2, it will read automatically, using interrupts
     if (digitalRead(PPM_PIN) == HIGH || digitalRead(PPM_PIN) == LOW) {
         rc_reciever_present = true;
-        Serial.println("PPM receiver detected.");
+        SerialUSB.println("PPM receiver detected.");
     } else {
-        Serial.println("PPM receiver not detected.");
+        SerialUSB.println("PPM receiver not detected.");
     }
 }
 
@@ -132,15 +141,15 @@ void initServos(){
 }
 
 void printFloats(float* values, int length) { //TODO: try if this works
-    Serial.print("/*");  // Frame start sequence
+    SerialUSB.print("/*");  // Frame start sequence
     for (int i = 0; i < length; ++i) {
-        Serial.print(values[i]);
+        SerialUSB.print(values[i]);
         if (i < length - 1) {
-            Serial.print(",");
+            SerialUSB.print(",");
         }
     }
-    Serial.print("*/");  // Frame finish sequence
-    Serial.println();
+    SerialUSB.print("*/");  // Frame finish sequence
+    SerialUSB.println();
 }
 
 void useRC(){
@@ -183,20 +192,20 @@ void useRC(){
     }
 
     float setHeave(float target_pos){
-    float measurement = SerialRead(); 
+    float measurement = SerialUSBRead(); 
     if (measurement == 0){
         return 1500;
     }
     float error = target_pos - measurement;
     float heave =  (error)+1500;
-    //serially writing measurement, target position, error and heave
-    Serial.println(heave);
+    //SerialUSBly writing measurement, target position, error and heave
+    SerialUSB.println(heave);
     return heave;
 }
 //is this even useful (only one instance)?
-float SerialRead(){
-    if(Serial.available() > 0){
-        return Serial.parseFloat(); 
+float SerialUSBRead(){
+    if(SerialUSB.available() > 0){
+        return SerialUSB.parseFloat(); 
     }else{
         return 0;
     }
