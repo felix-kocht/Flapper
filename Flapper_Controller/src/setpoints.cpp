@@ -6,8 +6,9 @@ float frequency = 0.5; //Hz, ca. 0.875Hz per m/s
 float heave_amplitude =45; //speed (half the total possible angle)
 float pitch_amplitude = 60; //degree
 float camber_amplitude = 90; //degree
-float phase = M_PI/2; //pitch leading heave, in rad
-// float camber_phase = 0; //heave leading camber, in rad
+float general_phase = 0; //in rad (needed for changing frequency)
+float pitch_phase = M_PI/2; //pitch leading heave, in rad
+float camber_phase = pitch_phase; //heave leading camber, in rad
 
 //for the sensor fusion
 float alpha_vis = 0.6; //Lübeck observer gain
@@ -20,15 +21,8 @@ int last_total_heave_down_cycles = 2; //TODO calibrate for first iteration
 float drift[5] = {1}; //drift of the system
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
-float sineWave(float time, float amplitude, float frequency, float phase, float offset = 0.0, float deadband_low = 0.0, float deadband_high = 0.0) {
-    amplitude = amplitude- deadband_low - deadband_high;
-    float value = amplitude * sin(2 * M_PI * frequency * (time/1000) - phase) + offset;
-    if (value < offset) {
-        value = value - deadband_low;
-    } else if (value > offset) {
-        value = value+ deadband_high;
-    }
-    return value;
+float sineWave(float time, float amplitude, float frequency, float phase, float offset = 0.0) {
+    return amplitude * sin(2 * M_PI * frequency * (time/1000) - phase) + offset;
 }
 
 //TODO: work with deviations based on feedback control for thrust and turn_torque
@@ -37,42 +31,42 @@ void parameter_tuner(float waterspeed, float thrust, float target_thrust, float 
     // Set parameters for Heave servo
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[0][1] = frequency;  // Frequency f
-    sine_params_ptr[0][2] = 0;    // Phase (looks weird because heave servo is continous --> speed signal)
+    sine_params_ptr[0][2] = general_phase;    // Phase 
     sine_params_ptr[0][3] = 270/2+20; // Offset
     sine_params_ptr[0][4] = 0;  // Deadband //TODO: if never needed, remove deadband functionality
 
     // Set parameters for Pitch Right servo
     sine_params_ptr[1][0] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
-    sine_params_ptr[1][2] = phase;  // Phase
+    sine_params_ptr[1][2] = general_phase + pitch_phase;  // pitch_phase
     sine_params_ptr[1][3] = 180/2 - 10;    // Offset //TODO: dont hardcode offset
     sine_params_ptr[1][4] = 0;     // Deadband
 
     // Set parameters for Pitch Left servo
     sine_params_ptr[2][0] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[2][1] = frequency; // Frequency f
-    sine_params_ptr[2][2] = phase + M_PI;     // Phase
+    sine_params_ptr[2][2] = general_phase + pitch_phase + M_PI;     // pitch_phase
     sine_params_ptr[2][3] = 180/2 - 10;    // Offset //TODO: dont hardcode offset
     sine_params_ptr[2][4] = 0;     // Deadband
 
     // Set parameters for Camber Right servo
     sine_params_ptr[3][0] = camber_amplitude;    // Amplitude A
     sine_params_ptr[3][1] = frequency;  // Frequency f
-    sine_params_ptr[3][2] = phase + M_PI;  // Phase
+    sine_params_ptr[3][2] = general_phase + camber_phase + M_PI;  // pitch_phase
     sine_params_ptr[3][3] = 180/2;    // Offset
     sine_params_ptr[3][4] = 0;     // Deadband
 
     // Set parameters for Camber Left servo
     sine_params_ptr[4][0] = camber_amplitude;    // Amplitude A
     sine_params_ptr[4][1] = frequency;  // Frequency f
-    sine_params_ptr[4][2] = phase;     // Phase
+    sine_params_ptr[4][2] = general_phase + camber_phase;     // pitch_phase
     sine_params_ptr[4][3] = 180/2;    // Offset
     sine_params_ptr[4][4] = 0;     // Deadband
 }
 
 void updateSineWaves(float (*params)[5], float (*targets), float time){
     for (int i = 0; i < 5; i++){
-        targets[i] = sineWave(time, params[i][0], params[i][1], params[i][2], params[i][3], params[i][4], params[i][4]); 
+        targets[i] = sineWave(time, params[i][0], params[i][1], params[i][2], params[i][3]); 
     }
 }
 
