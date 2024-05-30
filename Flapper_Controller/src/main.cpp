@@ -9,7 +9,6 @@
 //Wiring: heave: 9, pitch right: 8, pitch left: 7, camber right: 6, camber left: 5, encoder: 4, PPM: 2
 
 //function prototypes
-float SerialRead();
 void initPeripherals();
 void initServos();
 void printFloats(float* values, int length);
