@@ -1,7 +1,7 @@
 #ifndef POWERCHIP_H
 #define POWERCHIP_H
 
-void setupINA219();
+bool setupINA219();
 
 float getPower();
 

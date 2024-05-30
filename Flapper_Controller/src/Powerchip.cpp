@@ -5,7 +5,7 @@
  
 Adafruit_INA219 ina219;
  
-void setupINA219()
+bool setupINA219()
 {
   Serial.begin(9600);
   while (!Serial) 
@@ -17,18 +17,14 @@ void setupINA219()
   // Initialize the INA219.
   if (! ina219.begin())
   {
-    Serial.println("Failed to find INA219 chip");
-    while (1) 
-    {
-      delay(10);
-    }
+    return false;
+  }else{
+    return true;
   }
   // To use a slightly lower 32V, 1A range (higher precision on amps):
   //ina219.setCalibration_32V_1A();
   // Or to use a lower 16V, 400mA range, call:
   //ina219.setCalibration_16V_400mA();
- 
-  Serial.println("Measuring voltage, current, and power with INA219 ...");
 }
  
 float getPower()
