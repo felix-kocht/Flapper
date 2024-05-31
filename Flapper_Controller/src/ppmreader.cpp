@@ -1,6 +1,8 @@
 #include "PPMReader.h"
 #include <Arduino.h>
 
+//rc reciever
+
 volatile unsigned int ppmValues[4] = {0, 0, 0, 0};
 volatile byte currentChannel = 0;
 volatile unsigned long lastInterruptTime = 0;

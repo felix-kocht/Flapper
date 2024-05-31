@@ -6,7 +6,7 @@
 #include "Powerchip.h"
 #include "ppmreader.h"
 
-//Wiring: heave: 9, pitch right: 8, pitch left: 7, camber right: 6, camber left: 5, encoder: 4, PPM: 2
+//Wiring: heave: 9, pitch right: 8, pitch left: 7, camber right: 6, camber left: 5, encoder: 4, PPM reciever: 2
 //Change all SerialUSB back to Serial, when going back to an Arduino board
 
 //function prototypes
@@ -14,6 +14,7 @@ void initPeripherals();
 void initServos();
 void printFloats(float* values, int length);
 void useRC();
+float angletoPWM(float angle);
 
 //peripheral flags
 bool encoder_present = false;
@@ -45,8 +46,9 @@ void setup() {
     // Initialize servos
     initServos(); //heave, pitch right, pitch left, camber right, camber left
 
+    
     // Initialize peripherals, if present
-    initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
+    //initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
 
     SerialUSB.println("Setup complete");
 }
@@ -75,7 +77,7 @@ void loop() {
     updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
 
     // Step 3: Write target values to servos (without feedback control for now)
-    heave_servo.write(targets[0]);// + control[0]);
+    heave_servo.write(angletoPWM(targets[0]));// + control[0]);
     pitch_servo_right.write(targets[1]); // + control[1]);
     pitch_servo_left.write(targets[1]);// + control[2]);
     camber_servo_right.write(targets[3]);// + control[3]);
@@ -123,8 +125,10 @@ void initPeripherals(){ //TODO: Check if this works on the arduino as intended
 
     // Check for PPM Receiver
     //setup PPM reciever at PIN 2, it will read automatically, using interrupts
+    
     if (digitalRead(PPM_PIN) == HIGH || digitalRead(PPM_PIN) == LOW) {
         rc_reciever_present = true;
+        setupPPM();
         SerialUSB.println("PPM receiver detected.");
     } else {
         SerialUSB.println("PPM receiver not detected.");
@@ -173,13 +177,15 @@ void useRC(){
     sine_params_ptr[4][1] = sine_params_ptr[4][1] + frequency_adjustment;  // Frequency f
 }
 
+float angletoPWM(float angle){
+    return 500 + angle * 2000 / 270;
+}
+
 /* Code for later use:
    //with feedback control (target values in this 2DOF control are target values + controller output)
     heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values
 
-    float angletoPWM(float angle){
-    return 500 + angle * 2000 / 270;
-}
+
     //Step 2: state estimation
     bool heave_down = abs(encoder_readings[0]-1); //1 if obstructed, 0 if not
     heave_down = 0; //DEBUG: remove this line if using sensor

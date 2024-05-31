@@ -17,11 +17,11 @@
 - using 10JHz sampling rate for now, 80Hz can be used too */
 
 //parameters: DAT, CLK, calibration_factor, zero_factor
-const HX711Params cell_1_params = {2,3, 30050.0, 1};
-const HX711Params cell_2_params = {4,5, -7050.0, 1};
-const HX711Params cell_3_params = {6,7, -7050.0, 1};
-const HX711Params cell_4_params = {8,9, -7050.0, 1};
-const HX711Params cell_5_params = {10,11, -7050.0, 1};
+const HX711Params cell_1_params = {2,3, 28700.0, 1};
+const HX711Params cell_2_params = {4,5, 8200.0, 1};
+const HX711Params cell_3_params = {6,7, -9200.0, 1};
+const HX711Params cell_4_params = {8,9, -8300.0, 1};
+const HX711Params cell_5_params = {10,11, -8000.0, 1};
 
 //create hx711 instance
 HX711 cell_1;
@@ -67,15 +67,15 @@ void loop() {
   // Serial.println(readings[0][1]); //for debug
   SerialUSB.print("/*");  
   //Printing readings, left, right, base left, base right, front
-  SerialUSB.println(readings[0][0]); //for debug
+  SerialUSB.println(get_Fx(readings[1][0], readings[4][0])); //for debug
   SerialUSB.print(",");
-  SerialUSB.println(readings[1][0]); //for debug
+  SerialUSB.println(get_Fz( readings[0][0],  readings[2][0],  readings[3][0])); //for debug
   SerialUSB.print(",");
-  SerialUSB.println(readings[2][0]); //for debug
+  SerialUSB.println(get_Mx(readings[0][0],  readings[2][0],  readings[3][0])); //for debug
   SerialUSB.print(",");
-  SerialUSB.println(readings[3][0]); //for debug
+  SerialUSB.println(get_My(readings[0][0],  readings[2][0],  readings[3][0])); //for debug
   SerialUSB.print(",");
-  SerialUSB.println(readings[4][0]); //for debug
+  SerialUSB.println(get_Mz(readings[1][0], readings[4][0])); //for debug
   SerialUSB.print("*/");        // Frame finish sequence 
   SerialUSB.println();
   push_by_2(); //shifts entire array by 2 (making x => x-1, x-1 => x-2, same for y)

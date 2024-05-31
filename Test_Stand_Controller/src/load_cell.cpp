@@ -37,11 +37,11 @@ float get_Fz(float reading_3, float reading_4, float reading_5) {
   return reading_3 + reading_4 + reading_5;
 }
 
-float get_Mx(float reading_3, float reading_4, float reading_5) {
+float get_My(float reading_3, float reading_4, float reading_5) {
   return reading_3 - reading_4;
 }
 
-float get_My(float reading_3, float reading_4, float reading_5) {
+float get_Mx(float reading_3, float reading_4, float reading_5) {
   return reading_5 - (reading_3 + reading_4)/2;
 }
 
