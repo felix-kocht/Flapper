@@ -44,47 +44,52 @@ void setup() {
     start_time = millis();
     
     // Initialize servos
-    initServos(); //heave, pitch right, pitch left, camber right, camber left
+    //initServos(); //heave, pitch right, pitch left, camber right, camber left
 
+    initServo(heave_servo, heave_servo_params);
+    initServo(pitch_servo_right, pitch_servo_right_params);
+    initServo(pitch_servo_left, pitch_servo_left_params);
+    initServo(camber_servo_right, camber_servo_right_params);
+    initServo(camber_servo_left, camber_servo_left_params);
     // Initialize peripherals, if present
-    initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
+    //initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
 
     Serial.println("Setup complete");
 }
 
 void loop() {
     //Step 0: Read sensor values and Serial input
-    if (encoder_present) {
-        encoder_readings[0] = digitalRead(encoder_pin);
-    }
-    if (power_sensor_present) {
-        float consumption = getPower();
-        if(maincounter > 1000){ //average over last 1000 values, unless there are less than 1000 values
-            average_consumption = (average_consumption*1000 + consumption)/(1000+1); 
-        }else{
-        average_consumption = (average_consumption*maincounter + consumption)/(maincounter+1); 
-        }
-    }
+    // if (encoder_present) {
+    //     encoder_readings[0] = digitalRead(encoder_pin);
+    // }
+    // if (power_sensor_present) {
+    //     float consumption = getPower();
+    //     if(maincounter > 1000){ //average over last 1000 values, unless there are less than 1000 values
+    //         average_consumption = (average_consumption*1000 + consumption)/(1000+1); 
+    //     }else{
+    //     average_consumption = (average_consumption*maincounter + consumption)/(maincounter+1); 
+    //     }
+    // }
 
     //Step 1: Setpoint generation, input: waterspeed, thrust, target thrust, turn torque, target turn torque
     parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr); //how should the sinewaves be like?, just mock values for now
 
-    if (rc_reciever_present) {
-        //useRC(); //use radio control to adjust sine parameters
-        serial_frequency(); //DEBUG
-    }
+    // if (rc_reciever_present) {
+    //     useRC(); //use radio control to adjust sine parameters
+    //     //serial_frequency(); //DEBUG
+    // }
 
     updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
 
     // Step 3: Write target values to servos (without feedback control for now)
-    heave_servo.write(angletoPWM(targets[0]));// + control[0]);
-    pitch_servo_right.write(targets[1]); // + control[1]);
-    pitch_servo_left.write(targets[1]);// + control[2]);
+    //heave_servo.write(angletoPWM(targets[0]));// + control[0]);
+    pitch_servo_right.write(60);//targets[1]); // + control[1]);
+    pitch_servo_left.write(targets[2]);// + control[2]);
     camber_servo_right.write(targets[3]);// + control[3]);
     camber_servo_left.write(targets[4]);// + control[4]);  
 
     //Print values: 0,targets, pitch angle, frequency, phase, time
-    float valuesToPrint[] = { 0.0, targets[0], sine_params_ptr[1][0], sine_params_ptr[0][1], general_phase, millis() - start_time};
+    float valuesToPrint[] = { 0.0, targets[2], sine_params_ptr[1][0], sine_params_ptr[0][1], general_phase, (float)millis() - (float)start_time};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     printFloats(valuesToPrint, length);
 
@@ -177,6 +182,7 @@ void serial_frequency(){
     // }
 
 }
+
 /* Code for later use:
    //with feedback control (target values in this 2DOF control are target values + controller output)
     heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values

@@ -2,7 +2,7 @@
     #include <Servo.h>  // Include Servo library
     #include <Math.h>   // Include Math library
     // Servo objects
-    Servo heave_servo;  // Create a Servo object for heave_servo
+Servo heave_servo;  // Create a Servo object for heave_servo
 Servo pitch_servo_right; // Create a Servo object for pitch_servo
 Servo pitch_servo_left;  // Create a Servo object for pitch_servo
 // Trimming and limits (pitching)
