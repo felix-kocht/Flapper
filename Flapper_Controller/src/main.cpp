@@ -7,7 +7,7 @@
 #include "ppmreader.h"
 
 //Wiring: heave: 9, pitch right: 8, pitch left: 7, camber right: 6, camber left: 5, encoder: 4, PPM reciever: 2
-//Change all SerialUSB back to Serial, when going back to an Arduino board
+//Change all Serial back to Serial, when going back to an Arduino board
 
 //function prototypes
 void initPeripherals();
@@ -15,6 +15,7 @@ void initServos();
 void printFloats(float* values, int length);
 void useRC();
 float angletoPWM(float angle);
+void serial_frequency();
 
 //peripheral flags
 bool encoder_present = false;
@@ -35,26 +36,24 @@ float (*targets_ptr) = targets; //pointer needed for use in funtions
 bool encoder_readings[2] = {0}; //for all 2 encoders, on or off
 float average_consumption = 0; //average power consumption
 int maincounter = 0; //counter for average consumption
-float frequency_adjustment = 0.0; //Hz, ca. 0.875Hz per m/s
 
 void setup() {
-    // Initialize SerialUSB communication
-    SerialUSB.begin(9600);  
-    SerialUSB.println("Starting setup");
+    // Initialize Serial communication
+    Serial.begin(9600);  
+    Serial.println("Starting setup");
     start_time = millis();
     
     // Initialize servos
     initServos(); //heave, pitch right, pitch left, camber right, camber left
 
-    
     // Initialize peripherals, if present
-    //initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
+    initPeripherals(); //encoder, power sensor, PPM receiver (add more in the function below if needed)
 
-    SerialUSB.println("Setup complete");
+    Serial.println("Setup complete");
 }
 
 void loop() {
-    //Step 0: Read sensor values and SerialUSB input
+    //Step 0: Read sensor values and Serial input
     if (encoder_present) {
         encoder_readings[0] = digitalRead(encoder_pin);
     }
@@ -71,7 +70,8 @@ void loop() {
     parameter_tuner(0, 0, 0, 0, 0, sine_params_ptr); //how should the sinewaves be like?, just mock values for now
 
     if (rc_reciever_present) {
-        useRC(); //use radio control to adjust sine parameters
+        //useRC(); //use radio control to adjust sine parameters
+        serial_frequency(); //DEBUG
     }
 
     updateSineWaves(sine_params_ptr, targets_ptr, millis() - start_time); //generate the sinewaves
@@ -81,18 +81,10 @@ void loop() {
     pitch_servo_right.write(targets[1]); // + control[1]);
     pitch_servo_left.write(targets[1]);// + control[2]);
     camber_servo_right.write(targets[3]);// + control[3]);
-    camber_servo_left.write(targets[4]);// + control[4]);
+    camber_servo_left.write(targets[4]);// + control[4]);  
 
-    //Print values
-    float valuesToPrint[] = {
-        0.0, //placeholder for heave_down,
-        targets[0], 
-        estimates[0], 
-        sine_params_ptr[0][1],
-        power_sensor_present,
-        rc_reciever_present,
-        encoder_present,
-    };
+    //Print values: 0,targets, pitch angle, frequency, phase, time
+    float valuesToPrint[] = { 0.0, targets[0], sine_params_ptr[1][0], sine_params_ptr[0][1], general_phase, millis() - start_time};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     printFloats(valuesToPrint, length);
 
@@ -101,37 +93,37 @@ void loop() {
 
 void initPeripherals(){ //TODO: Check if this works on the arduino as intended
     // Check for Encoder
-    pinMode(encoder_pin, INPUT_PULLDOWN);
+    pinMode(encoder_pin, INPUT); //TODO: is this a PULLDOWN?
     if (digitalRead(encoder_pin) == LOW) {
         pinMode(encoder_pin, INPUT_PULLUP);
         if(digitalRead(encoder_pin) == HIGH){
-            SerialUSB.println("Encoder not detected.");
+            Serial.println("Encoder not detected.");
             } else {
-        SerialUSB.println("Encoder detected.");
+        Serial.println("Encoder detected.");
         encoder_present = true;  // Simple check if the pin is responsive
             }
     } else {
-        SerialUSB.println("Encoder detected.");
+        Serial.println("Encoder detected.");
         encoder_present = true;  // Simple check if the pin is responsive
     }
 
     // Check for INA219 Power Sensor
     if (setupINA219()) {
         power_sensor_present = true;
-        SerialUSB.println("INA219 power sensor detected.");
+        Serial.println("INA219 power sensor detected.");
     } else {
-        SerialUSB.println("INA219 power sensor not detected.");
+        Serial.println("INA219 power sensor not detected.");
     }
 
     // Check for PPM Receiver
     //setup PPM reciever at PIN 2, it will read automatically, using interrupts
     
-    if (digitalRead(PPM_PIN) == HIGH || digitalRead(PPM_PIN) == LOW) {
+    if (true){ //digitalRead(PPM_PIN) == HIGH || digitalRead(PPM_PIN) == LOW) {
         rc_reciever_present = true;
         setupPPM();
-        SerialUSB.println("PPM receiver detected.");
+        Serial.println("PPM receiver detected.");
     } else {
-        SerialUSB.println("PPM receiver not detected.");
+        Serial.println("PPM receiver not detected.");
     }
 }
 
@@ -145,15 +137,15 @@ void initServos(){
 }
 
 void printFloats(float* values, int length) { //TODO: try if this works
-    SerialUSB.print("/*");  // Frame start sequence
+    Serial.print("/*");  // Frame start sequence
     for (int i = 0; i < length; ++i) {
-        SerialUSB.print(values[i]);
+        Serial.print(values[i]);
         if (i < length - 1) {
-            SerialUSB.print(",");
+            Serial.print(",");
         }
     }
-    SerialUSB.print("*/");  // Frame finish sequence
-    SerialUSB.println();
+    Serial.print("*/");  // Frame finish sequence
+    Serial.println();
 }
 
 void useRC(){
@@ -162,25 +154,29 @@ void useRC(){
     sine_params_ptr[2][0] = (ppmValues[2]-1000)/10;    // Pitch Amplitude 
     //adjusting frequency based on radio input
     if(ppmValues[1] < 1400 || ppmValues[1] > 1648){
-        frequency_adjustment = frequency_adjustment + double(int(ppmValues[1])-1524)/9000.0; // Frequency f
+        float frequency_adjustment = frequency_adjustment + double(int(ppmValues[1])-1524)/9000.0; // Frequency f
         //limit frequency adjustment to 0 to 1.5 Hz
         if(frequency_adjustment > 1.5){
             frequency_adjustment = 1.5;
         }else if(frequency_adjustment < 0){
             frequency_adjustment = 0;
         }
+        changeFrequency(frequency_adjustment, millis() - start_time);
     }
-    sine_params_ptr[0][1] = sine_params_ptr[0][1] + frequency_adjustment; // Frequency f 
-    sine_params_ptr[1][1] = sine_params_ptr[1][1] + frequency_adjustment;  // Frequency f
-    sine_params_ptr[2][1] = sine_params_ptr[2][1] + frequency_adjustment;  // Frequency f
-    sine_params_ptr[3][1] = sine_params_ptr[3][1] + frequency_adjustment;  // Frequency f
-    sine_params_ptr[4][1] = sine_params_ptr[4][1] + frequency_adjustment;  // Frequency f
 }
 
 float angletoPWM(float angle){
     return 500 + angle * 2000 / 270;
 }
 
+void serial_frequency(){
+    // if(Serial.available() > 0){
+    //     int time_before = millis() - start_time;
+    //     float new_frequency = Serial.parseFloat(); 
+    //     changeFrequency(new_frequency, time_before);
+    // }
+
+}
 /* Code for later use:
    //with feedback control (target values in this 2DOF control are target values + controller output)
     heave_servo.writeMicroseconds(angletoPWM(targets[0]+control[0])); //angletoPWM necessary because this servo needs pwm values
@@ -198,20 +194,20 @@ float angletoPWM(float angle){
     }
 
     float setHeave(float target_pos){
-    float measurement = SerialUSBRead(); 
+    float measurement = SerialRead(); 
     if (measurement == 0){
         return 1500;
     }
     float error = target_pos - measurement;
     float heave =  (error)+1500;
-    //SerialUSBly writing measurement, target position, error and heave
-    SerialUSB.println(heave);
+    //Serially writing measurement, target position, error and heave
+    Serial.println(heave);
     return heave;
 }
 //is this even useful (only one instance)?
-float SerialUSBRead(){
-    if(SerialUSB.available() > 0){
-        return SerialUSB.parseFloat(); 
+float SerialRead(){
+    if(Serial.available() > 0){
+        return Serial.parseFloat(); 
     }else{
         return 0;
     }

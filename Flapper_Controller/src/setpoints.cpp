@@ -10,25 +10,15 @@ float general_phase = 0; //in rad (needed for changing frequency)
 float pitch_phase = M_PI/2; //pitch leading heave, in rad
 float camber_phase = pitch_phase; //heave leading camber, in rad
 
-//for the sensor fusion
-float alpha_vis = 0.6; //Lübeck observer gain
-float alpha_heave_encoder = 0.9; //Lübeck observer gain
-float model[5] = {0}; //for all 5 servos, model of the system
-int counter = 0;
-int heave_down_cycles = 0;
-int total_heave_down_cycles = 0; 
-int last_total_heave_down_cycles = 2; //TODO calibrate for first iteration
-float drift[5] = {1}; //drift of the system
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
-float sineWave(float time, float amplitude, float frequency, float phase, float offset = 0.0) {
-    return amplitude * sin(2 * M_PI * frequency * (time/1000) - phase) + offset;
+static float sineWave(float time, float amplitude, float frequency, float phase, float offset = 0.0) {
+    return amplitude * sin(2 * M_PI * frequency * (time/1000.0) - phase) + offset;
 }
 
-
-float calculatePhaseShift(float time, float frequency, float value, float slope) {
+static float calculatePhaseShift(float time, float new_freq, float value, float slope) {
     //Step 0: calculate entire passed phase from total start
-    static float total_phase = time/1000 * 2 * M_PI * frequency;
+    static float total_phase = time/1000.0 * 2 * M_PI * new_freq;
 
     //Step 1: Calculate phase from last sine restart to now
     float cycle_phase = asin(value);
@@ -39,7 +29,7 @@ float calculatePhaseShift(float time, float frequency, float value, float slope)
     }
 
     //Step 2: Calculate how many full cycles have passed
-    int full_cycles = (total_phase - cycle_phase) / (2 * M_PI); // it is rounded down
+    int full_cycles = floor((total_phase - cycle_phase) / (2 * M_PI)); // it is rounded down
 
     //Step 3: Calculate the remaining shift
     return total_phase - full_cycles * 2 * M_PI;
@@ -49,10 +39,15 @@ void changeFrequency(float new_frequency, float time){
 
     //extracting the old wall conditions:
     static float value = sineWave(time, 1, frequency, general_phase, 0);
-    static float slope = sineWave(time + 1, 1, frequency, general_phase, 0)-value; //one ms later to get the slope direction
+    static float slope = sineWave(time + 10, 1, frequency, general_phase, 0)-value; //one ms later to get the slope direction
+
+    //DEBUG
+    value = -0.9;
+    slope = 1;
+
 
     general_phase = calculatePhaseShift(time, new_frequency, value, slope); 
-    frequency = new_frequency;
+    frequency = new_frequency; //writing into the global variable
     
 }
 
@@ -101,45 +96,55 @@ void updateSineWaves(float (*params)[5], float (*targets), float time){
     }
 }
 
-void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool heave_down){
-    //TODO: implement microstate estimate (from Apriltags) into control, if needed
-    // estimates_ptr[i] = targets_ptr[i]; //just a mock for now
-    if(estimates_ptr[0] > 270){
-        estimates_ptr[0] = 270;
-    }else if(estimates_ptr[0] < 0){
-        estimates_ptr[0] = 0;
-    }else if (heave_down){// new cycle starts, estimate will be sensor position, drift is recalculated
-        // assert(targets_ptr[0] < 100); //calibrate to warn in case of weird values, if triggered: "Suspicious, the heave signal was triggered while we should be far from the bottom."
-        heave_down_cycles = heave_down_cycles + 1;
-        total_heave_down_cycles = total_heave_down_cycles + 1;
-        if (heave_down_cycles >= last_total_heave_down_cycles/2){ // so that it will be at the bottom deadpoint of motion
-            heave_down_cycles = -999; //so that it will not be triggered again
-            for (int i = 0; i < 5; i++){
-                estimates_ptr[i] = 270/2+heave_amplitude; //TODO only accurate for heave motion, not for the other servos
-                drift[i] = estimates_ptr[i]-targets_ptr[i]; //calculate new drift: (current error from actual value / counter)
-            }
-            counter = 0;
-        }else{
-            for (int i = 0; i < 5; i++){
-                estimates_ptr[i] = targets_ptr[i] + drift[i]; 
-                drift[i] = drift[i] * 0.99; //drift is reduced by 1% per cycle
-            }
-        }
-    }else{
-        if (total_heave_down_cycles > 1){
-            last_total_heave_down_cycles = total_heave_down_cycles;
-        }
-        for (int i = 0; i < 5; i++){
-            estimates_ptr[i] = targets_ptr[i] + drift[i]; 
-            drift[i] = drift[i] * 0.99; //drift is reduced by 1% per cycle
-            
-        }
-        heave_down_cycles = 0;
-        total_heave_down_cycles = 0;
-    }
-    counter = counter + 1;
-    
-}
-//reset counter when heave_down is true
+// //for the sensor fusion
+// float alpha_vis = 0.6; //Lübeck observer gain
+// float alpha_heave_encoder = 0.9; //Lübeck observer gain
+// float model[5] = {0}; //for all 5 servos, model of the system
+// int counter = 0;
+// int heave_down_cycles = 0;
+// int total_heave_down_cycles = 0; 
+// int last_total_heave_down_cycles = 2; //TODO calibrate for first iteration
+// float drift[5] = {1}; //drift of the system
 
-//TODO low pass filter
+// void estimate_servo_states(float (*estimates_ptr), float (*targets_ptr), bool heave_down){
+//     //TODO: implement microstate estimate (from Apriltags) into control, if needed
+//     // estimates_ptr[i] = targets_ptr[i]; //just a mock for now
+//     if(estimates_ptr[0] > 270){
+//         estimates_ptr[0] = 270;
+//     }else if(estimates_ptr[0] < 0){
+//         estimates_ptr[0] = 0;
+//     }else if (heave_down){// new cycle starts, estimate will be sensor position, drift is recalculated
+//         // assert(targets_ptr[0] < 100); //calibrate to warn in case of weird values, if triggered: "Suspicious, the heave signal was triggered while we should be far from the bottom."
+//         heave_down_cycles = heave_down_cycles + 1;
+//         total_heave_down_cycles = total_heave_down_cycles + 1;
+//         if (heave_down_cycles >= last_total_heave_down_cycles/2){ // so that it will be at the bottom deadpoint of motion
+//             heave_down_cycles = -999; //so that it will not be triggered again
+//             for (int i = 0; i < 5; i++){
+//                 estimates_ptr[i] = 270/2+heave_amplitude; //TODO only accurate for heave motion, not for the other servos
+//                 drift[i] = estimates_ptr[i]-targets_ptr[i]; //calculate new drift: (current error from actual value / counter)
+//             }
+//             counter = 0;
+//         }else{
+//             for (int i = 0; i < 5; i++){
+//                 estimates_ptr[i] = targets_ptr[i] + drift[i]; 
+//                 drift[i] = drift[i] * 0.99; //drift is reduced by 1% per cycle
+//             }
+//         }
+//     }else{
+//         if (total_heave_down_cycles > 1){
+//             last_total_heave_down_cycles = total_heave_down_cycles;
+//         }
+//         for (int i = 0; i < 5; i++){
+//             estimates_ptr[i] = targets_ptr[i] + drift[i]; 
+//             drift[i] = drift[i] * 0.99; //drift is reduced by 1% per cycle
+            
+//         }
+//         heave_down_cycles = 0;
+//         total_heave_down_cycles = 0;
+//     }
+//     counter = counter + 1;
+    
+// }
+// //reset counter when heave_down is true
+
+// //TODO low pass filter
