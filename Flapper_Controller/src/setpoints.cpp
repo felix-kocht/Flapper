@@ -4,7 +4,7 @@
 // how are these defined exactly?, should i work with camber or servo angle?
 float frequency = 0.4; //Hz, ca. 0.875Hz per m/s
 float heave_amplitude =90; //speed (half the total possible angle)
-float pitch_amplitude = 60; //degree
+float pitch_amplitude = 70; //degree
 float camber_amplitude = 90; //degree
 float general_phase = 0; //in rad (needed for changing frequency)
 float pitch_phase = M_PI/2; //pitch leading heave, in rad
