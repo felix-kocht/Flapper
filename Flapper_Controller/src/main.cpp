@@ -2,8 +2,12 @@
 #include <Servo.h>
 #include "setpoints.h"
 
-// Create servo instances
+//Change these:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
+const int BAUD_RATE = 9600;
+//End of changeable parameters
+
+// Create servo instances
 Servo heave_servo;
 Servo pitch_servo_right;
 Servo pitch_servo_left;
@@ -13,6 +17,7 @@ Servo camber_servo_left;
 // Function prototypes
 void init_servos();
 void print_floats(float* values, int length);
+float read_serial_float();
 
 // Control variables
 unsigned long start_time = 0;
@@ -23,8 +28,7 @@ float (*setpoints_ptr) = setpoints; //pointer needed for use in funtions
 
 void setup() {
     // Initialize Serial communication
-    Serial.begin(9600);  
-    Serial.println("Starting setup");
+    Serial.begin(BAUD_RATE);  
     start_time = millis();
     
     // Initialize servos
@@ -35,14 +39,13 @@ void setup() {
 
 void loop() {
     // Simulate sine wave parameters
-    tune_parameters(sine_params_ptr);
-
-    // for (int i = 0; i < 5; i++) {
-    //     setpoints[i] = (i+1)*15; // Mock setpoints, e.g., middle position for demonstration
-    // }
     
-
+    tune_parameters(sine_params_ptr);
     update_sine_waves(sine_params_ptr, setpoints_ptr, millis() - start_time);
+    //only reads once lower end of sine amplitude is reached
+    if (setpoints[1] < 11) { //TODO: should not be hardcoded, could be a problem if not all 5 servos are in phase (?)
+        read_serial_float();
+    }
 
     // Write target values to servos (without feedback control for now)
     heave_servo.write(setpoints[0]);
@@ -75,4 +78,12 @@ void print_floats(float* values, int length) {
     }
     Serial.print("*/");  // Frame finish sequence
     Serial.println();
+}
+
+float read_serial_float(){
+    if(Serial.available() > 0){
+        int time_before = millis() - start_time;
+        float new_frequency = Serial.parseFloat(); 
+        changeFrequency(new_frequency, time_before);
+    }
 }
