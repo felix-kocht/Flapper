@@ -2,7 +2,7 @@
 #include <Math.h>
 #include "setpoints.h"
 
-//Change these: 
+//Changeable parameters:
 static float frequency = 0.4; //Hz, ca. 0.875Hz per m/s
 static float heave_amplitude =90; //speed (half the total possible angle)
 static float pitch_amplitude = 70; //degree

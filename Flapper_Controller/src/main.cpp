@@ -2,8 +2,11 @@
 #include <Servo.h>
 #include "setpoints.h"
 
-//Change these:
+//Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
+const int NUM_PERIPHERALS = 5;
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Encoder, Powersensor, PPM reciever, SD Card, Waterspeed Sensor...
+const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
 const int BAUD_RATE = 9600;
 //End of changeable parameters
 
@@ -33,6 +36,13 @@ void setup() {
     
     // Initialize servos
     init_servos();
+
+    // Initialize peripherals
+    for (int i = 0; i < NUM_PERIPHERALS; i++) {
+        if (PERIPHERALS_CONNECTED[i]) {
+            //TODO: Initialize peripheral at relevant pin
+        }
+    }
     
     Serial.println("Setup complete");
 }
@@ -80,9 +90,10 @@ void print_floats(float* values, int length) {
     Serial.println();
 }
 
+//TODO: Idea: reset time anytime it is changed?
 float read_serial_float(){
+    int time_before = millis() - start_time;
     if(Serial.available() > 0){
-        int time_before = millis() - start_time;
         float new_frequency = Serial.parseFloat(); 
         changeFrequency(new_frequency, time_before);
     }

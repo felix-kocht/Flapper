@@ -1,13 +1,12 @@
-## Confusing files
+*ACTUAL README:*
 
-Actual ReadMe: 
+- there are changeable parameters in main.cpp and in setpoints.cpp
+- the naming follows the PEP-8 Convention
+- in lib lies also code that is not directly related to the executed files on the arduino. Namely a Matlab simulation and outdated code
 
-the naming follows the PEP-8 Convention
 
 
-
-- here lies also code that is not directly related to the executed files on the arduino. Namely a Matlab simulation and outdated code
-
+*END OF ACTUAL README*
 
 This directory is intended for project specific (private) libraries.
 PlatformIO will compile them to static libraries and link into executable file.
