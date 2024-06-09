@@ -5,8 +5,10 @@
 //Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Encoder, Powersensor, PPM reciever, SD Card, Waterspeed Sensor...
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card, Waterspeed Sensor...
 const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
+//const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
+//const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 9600;
 //End of changeable parameters
 
@@ -20,7 +22,7 @@ Servo camber_servo_left;
 // Function prototypes
 void init_servos();
 void print_floats(float* values, int length);
-float read_serial_float();
+void read_serial_float();
 
 // Control variables
 unsigned long start_time = 0;
@@ -95,7 +97,8 @@ void print_floats(float* values, int length) {
     Serial.println();
 }
 
-float read_serial_float(){
+//TODO: adapt or duplicate for values other than just frequency
+void read_serial_float(){
     if(Serial.available() > 0){
         float new_frequency = Serial.parseFloat(); 
         changeFrequency(new_frequency, 0);
