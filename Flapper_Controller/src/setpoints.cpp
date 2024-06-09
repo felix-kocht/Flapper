@@ -17,15 +17,6 @@ static float generate_sine_wave(float time, float amplitude, float frequency, fl
     return amplitude * sin(2 * M_PI * frequency * (time/1000.0) - phase) + offset;
 }
 
-// static float gradient_descent(float start_value,float time,float new_frequency){
-//     float result = 1;
-//     while (result > -0.8){
-//         start_value = start_value - 0.1;
-//         result = generate_sine_wave(time, 1, new_frequency, start_value, 0); 
-//     }
-//     return start_value;
-// }
-
 void update_sine_waves(float (*params)[5], float (*targets), float time){
     for (int i = 0; i < 5; i++){
         targets[i] = generate_sine_wave(time, params[0][i], params[1][i], params[2][i], params[3][i]); 
@@ -66,14 +57,7 @@ void tune_parameters(float (*sine_params_ptr)[5]){
 
 //TODO: make it work, so that it always starts at the lower end of the amplitude
 void changeFrequency(float new_frequency, int time){
-    //static float shift = gradient_descent(0.0,time,new_frequency); // moving the sine wave so that it always starts at the lower end of its amplitude
-
-    static float shift = -3*M_PI/2 + (time/1000)*2*M_PI*new_frequency; // moving the sine wave so that it always starts at the lower end of its amplitude
-
-    general_phase =  shift; //(shift - 2*M_PI*floor(shift/(2*M_PI))); //removing full circles
-
     frequency = new_frequency;
 }
 
-//finds phase with the lowest value for a normal sine wave at the new frequency at the current time
 

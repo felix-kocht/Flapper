@@ -5,8 +5,10 @@
 //Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Encoder, Powersensor, PPM reciever, SD Card, Waterspeed Sensor...
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card, Waterspeed Sensor...
 const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
+//const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
+//const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 9600;
 //End of changeable parameters
 
@@ -20,10 +22,11 @@ Servo camber_servo_left;
 // Function prototypes
 void init_servos();
 void print_floats(float* values, int length);
-float read_serial_float();
+void read_serial_float();
 
 // Control variables
 unsigned long start_time = 0;
+unsigned long change_time = 0; //time when frequency was changed
 float sine_params[4][5] = {0}; //4 parameters for sine wave (A,f,phase,offset), for all 5 servos,
 float (*sine_params_ptr)[5] = sine_params; //pointer needed for use in funtions
 float setpoints[5] = {0};
@@ -33,6 +36,7 @@ void setup() {
     // Initialize Serial communication
     Serial.begin(BAUD_RATE);  
     start_time = millis();
+    change_time = start_time;
     
     // Initialize servos
     init_servos();
@@ -49,13 +53,16 @@ void setup() {
 
 void loop() {
     // Simulate sine wave parameters
-    
     tune_parameters(sine_params_ptr);
-    update_sine_waves(sine_params_ptr, setpoints_ptr, millis() - start_time);
-    //only reads once lower end of sine amplitude is reached
+
     if (setpoints[1] < 11) { //TODO: should not be hardcoded, could be a problem if not all 5 servos are in phase (?)
         read_serial_float();
     }
+
+    
+    update_sine_waves(sine_params_ptr, setpoints_ptr, millis() - change_time);
+    //only reads once lower end of sine amplitude is reached
+
 
     // Write target values to servos (without feedback control for now)
     heave_servo.write(setpoints[0]);
@@ -90,11 +97,11 @@ void print_floats(float* values, int length) {
     Serial.println();
 }
 
-//TODO: Idea: reset time anytime it is changed?
-float read_serial_float(){
-    int time_before = millis() - start_time;
+//TODO: adapt or duplicate for values other than just frequency
+void read_serial_float(){
     if(Serial.available() > 0){
         float new_frequency = Serial.parseFloat(); 
-        changeFrequency(new_frequency, time_before);
+        changeFrequency(new_frequency, 0);
+        change_time = millis();
     }
 }
