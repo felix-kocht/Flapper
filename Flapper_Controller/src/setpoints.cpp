@@ -68,9 +68,9 @@ void tune_parameters(float (*sine_params_ptr)[5]){
 void changeFrequency(float new_frequency, int time){
     //static float shift = gradient_descent(0.0,time,new_frequency); // moving the sine wave so that it always starts at the lower end of its amplitude
 
-    static float shift = -3*M_PI/2 + (time/1000)*2*M_PI*new_frequency; // moving the sine wave so that it always starts at the lower end of its amplitude
+    // static float shift = -3*M_PI/2 + (time/1000)*2*M_PI*new_frequency; // moving the sine wave so that it always starts at the lower end of its amplitude
 
-    general_phase =  shift; //(shift - 2*M_PI*floor(shift/(2*M_PI))); //removing full circles
+    // general_phase =  shift; //(shift - 2*M_PI*floor(shift/(2*M_PI))); //removing full circles
 
     frequency = new_frequency;
 }
