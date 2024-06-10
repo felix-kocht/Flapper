@@ -3,10 +3,10 @@
 #include "setpoints.h"
 
 //Changeable parameters:
-static float frequency = 0.4; //Hz, ca. 0.875Hz per m/s
-static float heave_amplitude =90; //speed (half the total possible angle)
-static int heave_offset = 270/2; //offset for heave
-static float pitch_amplitude = 70; //degree
+static float frequency = 0.0; //Hz, ca. 0.875Hz per m/s
+static float heave_amplitude = 40; //speed (half the total possible angle)
+static int heave_offset = 270/2-40; //offset for heave
+static float pitch_amplitude = 40; //degree
 static float camber_amplitude = 90; //degree
 //we assume pitch to be the reference phase ( )
 const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
@@ -36,12 +36,12 @@ void tune_parameters(float (*sine_params_ptr)[5]){
   // Set parameters for Pitch Right servo
     sine_params_ptr[0][1] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
-    sine_params_ptr[2][1] = pitch_phase + M_PI;  // pitch_phase
+    sine_params_ptr[2][1] = pitch_phase;  // pitch_phase
     sine_params_ptr[3][1] = 180/2;    // Offset //TODO: dont hardcode offset
   // Set parameters for Pitch Left servo
     sine_params_ptr[0][2] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][2] = frequency; // Frequency f
-    sine_params_ptr[2][2] = pitch_phase;     // pitch_phase
+    sine_params_ptr[2][2] = pitch_phase + M_PI;     // pitch_phase
     sine_params_ptr[3][2] = 180/2;    // Offset //TODO: dont hardcode offset
 
     // Set parameters for Camber Right servo
