@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import time
-import dashboard  # Import the dashboard module we defined
+import Visual_Detector.likely_useless.dashboard as dashboard  # Import the dashboard module we defined
 
 
 def generate_data(num_samples=100, filename='data.csv'):
