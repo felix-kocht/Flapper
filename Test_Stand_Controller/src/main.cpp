@@ -32,12 +32,13 @@ HX711 cell_5;
 
 //function prototypes
 void push_by_2();
+void print_floats(float* values, int length);
 
 //variables to hold the readings
 float readings[5][6] = {0}; //for each of the 5 cells: y,x,y-1,x-1,y-2,x-2 
 
 void setup() {
-  // initialize serial communication at 57600 bits per second:
+  // initialize serial communication at 9600 bits per second:
   SerialUSB.begin(9600);
   SerialUSB.println("Starting setup");
   // initialize each hx711 object
@@ -63,23 +64,17 @@ void loop() {
   readings[3][0] = filter(readings[3][1], readings[3][2], readings[3][3], readings[3][4], readings[3][5]);
   readings[4][0] = filter(readings[4][1], readings[4][2], readings[4][3], readings[4][4], readings[4][5]);
   // calculate the actual forces
+  float Fx = get_Fx(readings[1][0], readings[4][0]);
+  float Fz = get_Fz(readings[0][0], readings[2][0], readings[3][0]);
+  float Mx = get_Mx(readings[0][0], readings[2][0], readings[3][0]);
+  float My = get_My(readings[0][0], readings[2][0], readings[3][0]);
+  float Mz = get_Mz(readings[1][0], readings[4][0]);
+
   // print the values to the serial monitor
-  // Serial.println(readings[0][1]); //for debug
-  SerialUSB.print("/*");  
-  //Printing readings, left, right, base left, base right, front
-  SerialUSB.println(get_Fx(readings[1][0], readings[4][0])); //for debug
-  SerialUSB.print(",");
-  SerialUSB.println(get_Fz( readings[0][0],  readings[2][0],  readings[3][0])); //for debug
-  SerialUSB.print(",");
-  SerialUSB.println(get_Mx(readings[0][0],  readings[2][0],  readings[3][0])); //for debug
-  SerialUSB.print(",");
-  SerialUSB.println(get_My(readings[0][0],  readings[2][0],  readings[3][0])); //for debug
-  SerialUSB.print(",");
-  SerialUSB.println(get_Mz(readings[1][0], readings[4][0])); //for debug
-  SerialUSB.print("*/");        // Frame finish sequence 
-  SerialUSB.println();
-  push_by_2(); //shifts entire array by 2 (making x => x-1, x-1 => x-2, same for y)
-  delay(100);
+  float valuesToPrint[] = {Fx, Fz, Mx, My, Mz};
+  int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
+  print_floats(valuesToPrint, length);
+  delay(100); 
 }
 
 void push_by_2() {
@@ -89,4 +84,16 @@ void push_by_2() {
       readings[i][j+2] = readings[i][j];
     }
   }
+}
+
+void print_floats(float* values, int length) {
+    SerialUSB.print("/*");  // Frame start sequence
+    for (int i = 0; i < length; ++i) {
+        SerialUSB.print(values[i]);
+        if (i < length - 1) {
+            SerialUSB.print(",");
+        }
+    }
+    SerialUSB.print("*/");  // Frame finish sequence
+    SerialUSB.println();
 }

@@ -35,12 +35,12 @@ void tune_parameters(float (*sine_params_ptr)[5]){
     sine_params_ptr[0][1] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
     sine_params_ptr[2][1] = general_phase + pitch_phase;  // pitch_phase
-    sine_params_ptr[3][1] = 180/2 - 10;    // Offset //TODO: dont hardcode offset
+    sine_params_ptr[3][1] = 180/2;    // Offset //TODO: dont hardcode offset
   // Set parameters for Pitch Left servo
     sine_params_ptr[0][2] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][2] = frequency; // Frequency f
     sine_params_ptr[2][2] = general_phase + pitch_phase + M_PI;     // pitch_phase
-    sine_params_ptr[3][2] = 180/2 - 10;    // Offset //TODO: dont hardcode offset
+    sine_params_ptr[3][2] = 180/2;    // Offset //TODO: dont hardcode offset
 
     // Set parameters for Camber Right servo
     sine_params_ptr[0][3] = camber_amplitude;    // Amplitude A

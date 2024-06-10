@@ -1,6 +1,5 @@
 import serial
 import time
-import time
 
 # Adjust these variables to match your setup
 # Change this to your actual serial port (e.g., 'COM3' on Windows)
