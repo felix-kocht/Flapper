@@ -31,6 +31,7 @@ float sine_params[4][5] = {0}; //4 parameters for sine wave (A,f,phase,offset), 
 float (*sine_params_ptr)[5] = sine_params; //pointer needed for use in funtions
 float setpoints[5] = {0};
 float (*setpoints_ptr) = setpoints; //pointer needed for use in funtions
+float heave_lowpoint = 0; //initialized so that it always starts at the lower end of the amplitude
 
 void setup() {
     // Initialize Serial communication
@@ -47,15 +48,19 @@ void setup() {
             //TODO: Initialize peripheral at relevant pin
         }
     }
+
+    heave_lowpoint = get_minimum_heave();
     
     Serial.println("Setup complete");
+
+
 }
 
 void loop() {
     // Simulate sine wave parameters
     tune_parameters(sine_params_ptr);
 
-    if (setpoints[1] < 11) { //TODO: should not be hardcoded, could be a problem if not all 5 servos are in phase (?)
+    if (setpoints[0] < (heave_lowpoint + 1)) { //TODO: should not be hardcoded, could be a problem if not all 5 servos are in phase (?)
         read_serial_float();
     }
 

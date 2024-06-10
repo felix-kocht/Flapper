@@ -5,11 +5,13 @@
 //Changeable parameters:
 static float frequency = 0.4; //Hz, ca. 0.875Hz per m/s
 static float heave_amplitude =90; //speed (half the total possible angle)
+static int heave_offset = 270/2; //offset for heave
 static float pitch_amplitude = 70; //degree
 static float camber_amplitude = 90; //degree
-static float general_phase = 0; //in rad (needed for changing frequency)
-static float pitch_phase = M_PI/2; //pitch leading heave, in rad
-static float camber_phase = pitch_phase; //heave leading camber, in rad
+//we assume pitch to be the reference phase ( )
+const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
+static float pitch_phase = 0; //TODO define
+static float camber_phase = 0; //TODO define
 //End of changeable parameters
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
@@ -29,29 +31,29 @@ void tune_parameters(float (*sine_params_ptr)[5]){
     // Set parameters for Heave servo
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[1][0] = frequency;  // Frequency f
-    sine_params_ptr[2][0] = general_phase;    // Phase 
-    sine_params_ptr[3][0] = 270/2+20; // Offset
+    sine_params_ptr[2][0] = HEAVE_PHASE;    // Phase 
+    sine_params_ptr[3][0] = heave_offset;    // Offset
   // Set parameters for Pitch Right servo
     sine_params_ptr[0][1] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
-    sine_params_ptr[2][1] = general_phase + pitch_phase;  // pitch_phase
+    sine_params_ptr[2][1] = pitch_phase + M_PI;  // pitch_phase
     sine_params_ptr[3][1] = 180/2;    // Offset //TODO: dont hardcode offset
   // Set parameters for Pitch Left servo
     sine_params_ptr[0][2] = pitch_amplitude;    // Amplitude A
     sine_params_ptr[1][2] = frequency; // Frequency f
-    sine_params_ptr[2][2] = general_phase + pitch_phase + M_PI;     // pitch_phase
+    sine_params_ptr[2][2] = pitch_phase;     // pitch_phase
     sine_params_ptr[3][2] = 180/2;    // Offset //TODO: dont hardcode offset
 
     // Set parameters for Camber Right servo
     sine_params_ptr[0][3] = camber_amplitude;    // Amplitude A
     sine_params_ptr[1][3] = frequency;  // Frequency f
-    sine_params_ptr[2][3] = general_phase + camber_phase + M_PI;  // pitch_phase
+    sine_params_ptr[2][3] = camber_phase + M_PI;  // pitch_phase
     sine_params_ptr[3][3] = 180/2;    // Offset
 
     // Set parameters for Camber Left servo
     sine_params_ptr[0][4] = camber_amplitude;    // Amplitude A
     sine_params_ptr[1][4] = frequency;  // Frequency f
-    sine_params_ptr[2][4] = general_phase + camber_phase;     // pitch_phase
+    sine_params_ptr[2][4] = camber_phase;     // pitch_phase
     sine_params_ptr[3][4] = 180/2;    // Offset
 }
 
@@ -60,4 +62,7 @@ void changeFrequency(float new_frequency, int time){
     frequency = new_frequency;
 }
 
+float get_minimum_heave(){
+    return heave_offset - heave_amplitude;
+}
 

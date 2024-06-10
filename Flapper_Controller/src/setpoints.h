@@ -7,4 +7,6 @@ void tune_parameters(float (*sine_params_ptr)[5]);
 
 void changeFrequency(float new_frequency, int time);
 
+float get_minimum_heave();
+
 #endif
