@@ -6,14 +6,13 @@ from threading import Thread
 # Variables to set by user
 csvfile1 = 'output1.csv'
 csvfile2 = 'output2.csv'
-port1 = '/dev/cu.usbserial-110'  # usbserial-110'  # Replace with your port
+port1 = '/dev/cu.usbserial-110'  # Replace with your port
 port2 = '/dev/cu.usbmodem1201'  # Replace with your port
 baudrate = 9600
 parse_pattern = "utf-8"  # Adjust based on your data format
 sample_rate = 10  # Adjust based on your data rate in Hz
 starttime = time.time()
 
-# Class definition for an IO manager
 # Class definition for an IO manager
 
 
@@ -31,6 +30,9 @@ class IOManager:
             return data
         return None
 
+    def write(self, data):
+        self.serial_connection.write(data.encode(self.parse_pattern))
+
 # Function to clean data
 
 
@@ -45,6 +47,17 @@ def save_to_csv(csvfile, data):
     with open(csvfile, 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([time.time() - starttime] + data)
+
+# Function to handle user input and send to port1
+
+
+def user_input_handler(io_manager1):
+    while True:
+        user_input = input(
+            "Enter data to send to serial device on port1 (type 'exit' to stop): ")
+        if user_input.lower() == 'exit':
+            break
+        io_manager1.write(user_input)
 
 # Main function
 
@@ -64,32 +77,18 @@ def main():
     # Create threads to read from each IO manager
     thread1 = Thread(target=read_from_device, args=(io_manager1,))
     thread2 = Thread(target=read_from_device, args=(io_manager2,))
+    input_thread = Thread(target=user_input_handler, args=(io_manager1,))
 
     # Start the threads
     thread1.start()
     thread2.start()
+    input_thread.start()
 
     # Join the threads to ensure they keep running
     thread1.join()
     thread2.join()
+    input_thread.join()
 
 
 if __name__ == "__main__":
     main()
-
-# imports
-
-# variables to set by user
-#   csvfile to save to
-#   list of instructions to send to io managers (and when)
-#       e.g. set of paramters and correspoding duration (or send-out time) for each serial device
-#   class definitino stuff for io manager
-
-# class definition for an io manager
-#   port, baudrate, parse pattern,
-#   read
-#   write
-
-# function to save to csv file
-
-# main function, creating 2 / 3 io managers
