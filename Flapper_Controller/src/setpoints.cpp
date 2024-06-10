@@ -6,7 +6,7 @@
 static float frequency = 0.0; //Hz, ca. 0.875Hz per m/s
 static float heave_amplitude = 40; //speed (half the total possible angle)
 static int heave_offset = 270/2-40; //offset for heave
-static float pitch_amplitude = 40; //degree
+static float pitch_amplitude = 60; //degree
 static float camber_amplitude = 90; //degree
 //we assume pitch to be the reference phase ( )
 const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore

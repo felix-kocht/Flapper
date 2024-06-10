@@ -77,7 +77,7 @@ void loop() {
     camber_servo_left.write(setpoints[4]);
 
     // Print values for debugging
-    float valuesToPrint[] = { setpoints[0], setpoints[1], setpoints[2], setpoints[3], setpoints[4], (float)millis() - (float)start_time };
+    float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], setpoints[3], setpoints[4]};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
 }
