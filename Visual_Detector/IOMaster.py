@@ -10,7 +10,7 @@ port1 = '/dev/cu.usbserial-110'  # Replace with your port
 port2 = '/dev/cu.usbmodem1201'  # Replace with your port
 baudrate = 9600
 parse_pattern = "utf-8"  # Adjust based on your data format
-sample_rate = 10  # Adjust based on your data rate in Hz
+sample_rate = 1  # Adjust based on your data rate in Hz
 starttime = time.time()
 
 # Class definition for an IO manager
