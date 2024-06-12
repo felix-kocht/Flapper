@@ -113,7 +113,7 @@ void read_serial_float() {
 
         // Split the input string by commas
         int index = 0;
-        float values[7] = {0.0,40,60,90,0,0,0}; // Adjust the size according to the number of expected float values
+        float values[7] = {0.0,40,60,90,0,0,0}; // Adjust according to default values
         char* token = strtok(inputChars, ",");
 
         while (token != NULL && index < 5) { // Parse up to 5 float values
@@ -138,16 +138,3 @@ void read_serial_float() {
         }
     }
 }
-
-//TODO: adapt or duplicate for values other than just frequency
-// void read_serial_float(){
-//     if(Serial.available() > 0){
-//         //read all of the values
-//         float new_frequency = Serial.parseFloat(); 
-//         float unused = 0;
-//         change_frequency(new_frequency);
-//         //change_rest();
-//         heave_lowpoint = get_minimum_heave();
-//         change_time = millis();
-//     }
-// }

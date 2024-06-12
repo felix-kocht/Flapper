@@ -3,16 +3,18 @@
 #include "setpoints.h"
 
 //Changeable parameters:
+const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
+const float MAX_HEAVE_AMP = 45; //safety measure to avoid destruction
+const float MAX_FREQ = 1.2; //safety measure to avoid destruction
+const int HEAVE_OFFSET = 270/2-40; //offset for heave
+
 static float frequency = 0.0; //Hz, ca. 0.875Hz per m/s
 static float heave_amplitude = 40; //degree (half the total possible angle)
-static int heave_offset = 270/2-40; //offset for heave
 static float pitch_amplitude = 60; //degree
 static float camber_amplitude = 90; //degree
-//we assume pitch to be the reference phase ( )
-const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
 static float pitch_phase = 0; //TODO define
 static float camber_phase = 0; //TODO define
-static float turn_factor = 0; //-2 to 2, 0 is straight, -2 is full left, 2 is full right
+static float turn_factor = 0; //0 is straight, -2 is full left, 2 is full right, more is mayhem
 //End of changeable parameters
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
@@ -43,7 +45,7 @@ void tune_parameters(float (*sine_params_ptr)[5]){
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[1][0] = frequency;  // Frequency f
     sine_params_ptr[2][0] = HEAVE_PHASE;    // Phase 
-    sine_params_ptr[3][0] = heave_offset;    // Offset
+    sine_params_ptr[3][0] = HEAVE_OFFSET;    // Offset
   // Set parameters for Pitch Right servo
     sine_params_ptr[0][1] = pitch_amplitude * right_turn_factor;    // Amplitude A
     sine_params_ptr[1][1] = frequency; // Frequency f
@@ -71,10 +73,17 @@ void tune_parameters(float (*sine_params_ptr)[5]){
 //TODO: make it work, so that it always starts at the lower end of the amplitude
 void change_frequency(float new_frequency){
     frequency = new_frequency;
+    if (new_frequency > MAX_FREQ){ //limiting to max frequency
+        frequency = MAX_FREQ;
+    }
+    
 }
 
 void change_rest(float heave_amplitude2, float pitch_amplitude2, float camber_amplitude2, float pitch_phase2, float camber_phase2, float turn_factor2){
     heave_amplitude = heave_amplitude2;
+    if (heave_amplitude > MAX_HEAVE_AMP){ //limiting to max heave
+        heave_amplitude = MAX_HEAVE_AMP;
+    }
     pitch_amplitude = pitch_amplitude2;
     camber_amplitude = camber_amplitude2;
     pitch_phase = pitch_phase2;
@@ -83,6 +92,6 @@ void change_rest(float heave_amplitude2, float pitch_amplitude2, float camber_am
 }
 
 float get_minimum_heave(){
-    return heave_offset - heave_amplitude;
+    return HEAVE_OFFSET - heave_amplitude;
 }
 
