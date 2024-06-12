@@ -102,11 +102,52 @@ void print_floats(float* values, int length) {
     Serial.println();
 }
 
-//TODO: adapt or duplicate for values other than just frequency
-void read_serial_float(){
-    if(Serial.available() > 0){
-        float new_frequency = Serial.parseFloat(); 
-        changeFrequency(new_frequency, 0);
-        change_time = millis();
+void read_serial_float() {
+    if (Serial.available() > 0) {
+        String input = Serial.readStringUntil('\n'); // Read the input until newline character
+        input.trim(); // Remove any leading or trailing whitespace
+
+        // Create a mutable copy of the input string
+        char inputChars[input.length() + 1];
+        input.toCharArray(inputChars, input.length() + 1);
+
+        // Split the input string by commas
+        int index = 0;
+        float values[7] = {0.0,40,60,90,0,0,0}; // Adjust the size according to the number of expected float values
+        char* token = strtok(inputChars, ",");
+
+        while (token != NULL && index < 5) { // Parse up to 5 float values
+            values[index] = atof(token);
+            token = strtok(NULL, ",");
+            index++;
+        }
+
+        if (index > 0) {
+            // Assuming the first float value is for changing frequency
+            change_frequency(values[0]);
+
+            // If there are more values, handle them as needed
+            if (index > 1) {
+                // Example: Use the second float value for another function
+                change_rest(values[1], values[2], values[3], values[4], values[5], values[6]);
+            }
+
+            // Update heave_lowpoint and change_time
+            heave_lowpoint = get_minimum_heave();
+            change_time = millis();
+        }
     }
 }
+
+//TODO: adapt or duplicate for values other than just frequency
+// void read_serial_float(){
+//     if(Serial.available() > 0){
+//         //read all of the values
+//         float new_frequency = Serial.parseFloat(); 
+//         float unused = 0;
+//         change_frequency(new_frequency);
+//         //change_rest();
+//         heave_lowpoint = get_minimum_heave();
+//         change_time = millis();
+//     }
+// }
