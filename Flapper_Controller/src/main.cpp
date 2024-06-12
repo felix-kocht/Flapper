@@ -9,7 +9,7 @@ const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, 
 const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
-const int BAUD_RATE = 9600;
+const int BAUD_RATE = 19200;
 //End of changeable parameters
 
 // Create servo instances
@@ -80,6 +80,7 @@ void loop() {
     float valuesToPrint[] = {setpoints[0], millis()-change_time, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
+    delay(20);
 }
 
 void init_servos() {
