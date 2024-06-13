@@ -77,7 +77,7 @@ void loop() {
     camber_servo_left.write(setpoints[4]);
 
     // Print values for debugging: Heave, Power consumption, noise
-    float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], millis()-change_time, 0};
+    float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], 0, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
     delay(20);
