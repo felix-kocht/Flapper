@@ -1,12 +1,6 @@
 import pandas as pd
 
 
-def calculate_efficiency(merged_df):
-    # Placeholder for the actual efficiency calculation
-    efficiency = 1  # just a dummy value
-    return efficiency
-
-
 def calculate_statistics(merged_df):
     stats = {
         'average': merged_df.mean(),
@@ -30,11 +24,7 @@ merged_df['Angle of attack'] = merged_df['Heave_pos'] * \
     0.1  # Dummy calculation for illustration
 merged_df['Inflow velocity'] = merged_df['Power_consumption'] * \
     0.05  # Dummy calculation for illustration
-
-# Calculate efficiency and append it to the metadata
-efficiency = calculate_efficiency(merged_df)
-efficiency_row = pd.DataFrame([['Efficiency:', efficiency]])
-metadata = pd.concat([metadata, efficiency_row], ignore_index=True)
+merged_df['Efficiency'] = merged_df['Fx'] / merged_df['Power_consumption']
 
 # Calculate statistics and prepare them for insertion
 statistics = calculate_statistics(merged_df)
@@ -54,7 +44,7 @@ with open(output_file, 'w') as f:
     f.write('Statistical Evaluation:\n')
 
 # Write the header to the output CSV
-header = pd.DataFrame(columns= merged_df.columns.tolist())
+header = pd.DataFrame(columns=merged_df.columns.tolist())
 header.to_csv(output_file, mode='a', index=False, header=True)
 
 # Write the statistics rows
