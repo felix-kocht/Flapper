@@ -19,7 +19,7 @@ header_line2 = ["Time", "Fx", "Fz",
                 "Mx", "My", "Mz"]  # Header line for CSV2
 # Metadata keys
 metadata_keys = [
-    "used_foils", "waterspeed", "Frequency", "heave_amp", "pitch_amp", "camb_amp", "pitch_phase", "camber_phase", "turn_rate", "test_duration", "duration"]
+    "Used Foils:", "Waterspeed:", "Frequency:", "Heave Amplitude:", "Pitch Amplitude:", "Camber Amplitude", "Pitch Phase", "Camber Phase", "Turn Rate", "Test Duration"]
 port1 = '/dev/cu.usbserial-110'  # Replace with your port
 port2 = '/dev/cu.usbmodem1201'  # Replace with your port
 baudrate = 19200
