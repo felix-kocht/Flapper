@@ -1,12 +1,13 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include "setpoints.h"
+#include "powerchip.h"
 
 //Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card, Waterspeed Sensor...
-const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card (11,12,13), Waterspeed Sensor... 
+const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, false, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 19200;
@@ -23,6 +24,7 @@ Servo camber_servo_left;
 void init_servos();
 void print_floats(float* values, int length);
 void read_serial_float();
+void init_peripheral(int i);
 
 // Control variables
 unsigned long start_time = 0;
@@ -45,29 +47,32 @@ void setup() {
     // Initialize peripherals
     for (int i = 0; i < NUM_PERIPHERALS; i++) {
         if (PERIPHERALS_CONNECTED[i]) {
-            //TODO: Initialize peripheral at relevant pin
+            init_peripheral(i);
         }
     }
 
     heave_lowpoint = get_minimum_heave();
     
     Serial.println("Setup complete");
-
-
 }
 
 void loop() {
+    float power_reading = 0;
     // Simulate sine wave parameters
     tune_parameters(sine_params_ptr);
 
-    if (setpoints[0] < (heave_lowpoint + 1)) { //TODO: should not be hardcoded, could be a problem if not all 5 servos are in phase (?)
+    // Read serial input at every loop
+    if (setpoints[0] < (heave_lowpoint + 1)) {
         read_serial_float();
     }
 
-    
+    //Use peripherals //TODO: add others in a structured way
+    if (PERIPHERALS_CONNECTED[1]) {
+            power_reading = getPower();
+        }
+
     update_sine_waves(sine_params_ptr, setpoints_ptr, millis() - change_time);
     //only reads once lower end of sine amplitude is reached
-
 
     // Write target values to servos (without feedback control for now)
     heave_servo.write(setpoints[0]);
@@ -77,7 +82,7 @@ void loop() {
     camber_servo_left.write(setpoints[4]);
 
     // Print values for debugging: Heave, Power consumption, noise
-    float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], 0, 0};
+    float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], power_reading, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
     delay(20);
@@ -137,5 +142,27 @@ void read_serial_float() {
             heave_lowpoint = get_minimum_heave();
             change_time = millis();
         }
+    }
+}
+
+void init_peripheral(int i) {
+    switch (i) {
+        case 0:
+            // Initialize pulley motor
+            break;
+        case 1:
+            setupINA219();
+            break;
+        case 2:
+            // Initialize PPM receiver
+            break;
+        case 3:
+            // Initialize SD card
+            break;
+        case 4:
+            // Initialize waterspeed sensor
+            break;
+        default:
+            break;
     }
 }

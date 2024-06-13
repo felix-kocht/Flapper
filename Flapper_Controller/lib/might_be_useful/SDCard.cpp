@@ -7,7 +7,7 @@ char fileName[] = "demoFile.txt"; // SD library only supports up to 8.3 names
 char buff[BUFFER_SIZE+2] = "";  // Added two to allow a 2 char peek for EOF state
 uint8_t index = 0;
 
-const uint8_t chipSelect = 8;
+const uint8_t chipSelect = 4;
 
 enum states: uint8_t { NORMAL, E, EO };
 uint8_t state = NORMAL;
