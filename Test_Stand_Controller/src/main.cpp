@@ -39,7 +39,7 @@ float readings[5][6] = {0}; //for each of the 5 cells: y,x,y-1,x-1,y-2,x-2
 
 void setup() {
   // initialize serial communication at 9600 bits per second:
-  SerialUSB.begin(9600);
+  SerialUSB.begin(19200);
   SerialUSB.println("Starting setup");
   // initialize each hx711 object
   load_cell_init(cell_1, cell_1_params);
