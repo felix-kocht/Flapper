@@ -3,19 +3,32 @@ import csv
 import time
 import threading
 from threading import Thread
+import os
 
 # Variables to set by user
+target_folder = 'output_data'  # Target folder where data should be saved
 csvfile1 = 'output1.csv'
 csvfile2 = 'output2.csv'
-port1 = '/dev/cu.usbserial-1110'  # Replace with your port
-port2 = '/dev/cu.usbmodem11201'  # Replace with your port
+testrun_file = 'testrun.csv'
+port1 = '/dev/cu.usbserial-110'  # Replace with your port
+port2 = '/dev/cu.usbmodem1201'  # Replace with your port
+sample_rate = 10  # Adjust based 0.4 on your data rate in Hz
+
+# Variables to leave as default
 baudrate = 19200
 parse_pattern = "utf-8"  # Adjust based on your data format
-sample_rate = 10  # Adjust based 0.4 on your data rate in Hz
 starttime = time.time()
-
-testrun_file = 'testrun.csv'
 tests_completed = threading.Event()
+
+# Ensure target folder exists
+if not os.path.exists(target_folder):
+    os.makedirs(target_folder)
+
+# Update file paths to include the target folder
+csvfile1 = os.path.join(target_folder, csvfile1)
+csvfile2 = os.path.join(target_folder, csvfile2)
+#testrun_file = os.path.join(target_folder, testrun_file)
+
 # Class definition for an IO manager
 
 
@@ -55,16 +68,6 @@ def save_to_csv(csvfile, data):
 # Function to handle user input and send to port1
 
 
-# def user_input_handler(io_manager1, test_cases):
-#     time.sleep(1)
-#     for case in test_cases:
-#         user_input = case[0]  # Adjust based on your needs
-#         io_manager1.write(user_input)
-#         print(f"Waiting for {5} seconds")
-#         time.sleep(2)  # Adjust the sleep time as necessary
-#     print("All test cases completed.")
-
-
 def run_test_cases(io_manager1, test_cases):
     global tests_completed
     time.sleep(1)
@@ -89,7 +92,6 @@ def load_test_cases(filename):
         test_cases = [row for row in reader]
     return test_cases
 
-
 # Main function
 
 
@@ -105,13 +107,12 @@ def main():
                 save_to_csv(io_manager.csvfile, cleaned_data)
             time.sleep(1/sample_rate)  # Adjust the sleep time as necessary
 
-      # Load test cases
+    # Load test cases
     test_cases = load_test_cases(testrun_file)
 
     # Create threads to read from each IO manager
     thread1 = Thread(target=read_from_device, args=(io_manager1,))
     thread2 = Thread(target=read_from_device, args=(io_manager2,))
-    # input_thread = Thread(target=run_test_cases, args=(io_manager1, test_cases))
     input_thread = Thread(target=run_test_cases,
                           args=(io_manager1, test_cases))
 
