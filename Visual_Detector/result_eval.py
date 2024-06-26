@@ -1,5 +1,6 @@
 import pandas as pd
 import math 
+import os
 
 
 def calculate_statistics(merged_df):
@@ -9,6 +10,13 @@ def calculate_statistics(merged_df):
     }
     return stats
 
+
+files = [f for f in os.listdir('output_data') if os.path.isfile(os.path.join('output_data', f))]
+file_pairs = len(files) / 2
+
+# for i in range(1, int(file_pairs) + 1):
+#     df1 = pd.read_csv(f'output_data/output{i}_1.csv', skiprows=10)
+#     df2 = pd.read_csv(f'output_data/output{i}_2.csv', skiprows=10)
 
 # Read the CSV files, skipping the first few rows with key-value pairs
 df1 = pd.read_csv('output_data/output1_1.csv', skiprows=10)
@@ -29,7 +37,10 @@ waterspeed = pd.to_numeric(metadata.iloc[1, 1])
 for i in range(len(merged_df['Time'])):
     heave_speed = (pd.to_numeric(merged_df['Heave_pos']).diff(
     ).iloc[i] / pd.to_numeric(merged_df['Time']).diff().iloc[i])/720 #720 converts degree in m/s, depends on gear ratio
-    nue = math.atan(heave_speed / waterspeed)
+    if waterspeed == 0:
+        nue = 90 #in degrees
+    else:
+        nue = math.atan2(heave_speed / waterspeed)
     gamma = 0.1  #TODO: get from camber amount and pitch angle
     alpha = nue - gamma
     merged_df.at[i, 'Inflow velocity'] = math.sqrt(
@@ -68,3 +79,5 @@ merged_df.iloc[1:].to_csv(output_file, mode='a',
                           index=False, float_format='%.3f')
 
 print(f"Merged CSV written to {output_file}")
+
+
