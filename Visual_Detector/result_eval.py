@@ -31,20 +31,21 @@ for i in range(1, int(file_pairs) + 1):
     merged_df = pd.merge_asof(df1, df2, on='Time')
 
     # Add new columns with computed values
-    merged_df['Angle of attack'] = merged_df['Heave_pos'] * \
-        0.1  # Dummy calculation for illustration
     waterspeed = pd.to_numeric(metadata.iloc[1, 1])
     for i in range(len(merged_df['Time'])):
+        # Calculate the inflow velocity
         heave_speed = (pd.to_numeric(merged_df['Heave_pos']).diff(
         ).iloc[i] / pd.to_numeric(merged_df['Time']).diff().iloc[i])/720  # 720 converts degree in m/s, depends on gear ratio
+        merged_df.at[i, 'Inflow_velocity'] = math.sqrt(
+            waterspeed**2 + heave_speed**2)
+        
+        # Calculate the angle of attack
         if waterspeed == 0:
-            nue = 90  # in degrees
+            nue = merged_df['Pitch_right'].iloc[i]
         else:
             nue = math.atan2(heave_speed / waterspeed)
         gamma = 0.1  # TODO: get from camber amount and pitch angle
-        alpha = nue - gamma
-        merged_df.at[i, 'Inflow velocity'] = math.sqrt(
-            waterspeed**2 + heave_speed**2)
+        merged_df.at[i,'Angle_of_attack'] = nue - gamma
     merged_df['Efficiency'] = merged_df['Fx'] / merged_df['Power_consumption']
 
     # Calculate statistics and prepare them for insertion
