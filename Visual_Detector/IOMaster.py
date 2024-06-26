@@ -7,7 +7,7 @@ import os
 
 # Variables to set by user
 target_folder = 'output_data'  # Target folder where data should be saved
-testrun_file = 'testrun.csv'
+testrun_file = 'test_instructions.csv'
 used_foils = 'stiff_foils'
 waterspeed = '0.0'
 

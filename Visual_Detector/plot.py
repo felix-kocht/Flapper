@@ -46,7 +46,8 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
     plt.grid(True)
     plt.show()
 
+
 # Example usage:
-# plot_columns_with_scaling('/mnt/data/test_case3.csv', ['Heave_pos', 'Pitch_right'], title='Heave Position and Pitch Right over Time')
-# Example usage:
-plot_columns('test_cases/test_case1.csv', ['Heave_pos', 'Inflow_velocity','Angle_of_attack','Fx'], title='Heave and Pitch')
+plot_columns('test_cases/test_case1.csv', ['Heave_pos', 'Inflow_velocity','Angle_of_attack','Fx'], title='Heave, fluid stuff, and force')
+
+#TODO: add multiple different unit values to the y-axis
