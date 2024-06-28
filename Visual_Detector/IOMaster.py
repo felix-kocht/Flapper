@@ -20,8 +20,8 @@ header_line2 = ["Time", "Fx", "Fz",
 # Metadata keys
 metadata_keys = [
     "Used Foils:", "Waterspeed:", "Frequency:", "Heave Amplitude:", "Pitch Amplitude:", "Camber Amplitude", "Pitch Phase", "Camber Phase", "Turn Rate", "Test Duration"]
-port1 = '/dev/cu.usbserial-110'  # Replace with your port
-port2 = '/dev/cu.usbmodem1201'  # Replace with your port
+port1 = '/dev/cu.usbserial-130'  # Replace with your port
+port2 = '/dev/cu.usbmodem1401'  # Replace with your port
 baudrate = 19200
 parse_pattern = "utf-8"  # Adjust based on your data format
 starttime = time.time()

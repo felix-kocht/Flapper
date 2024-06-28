@@ -25,7 +25,7 @@ for i in range(1, int(file_pairs) + 1):
         f'output_data/output1_{i}.csv', nrows=10, header=None)
 
     # Create the output CSV content
-    output_file = (f'test_cases/test_case{i}.csv')
+    output_file = (f'test_cases/test_stand_wiggles{i}.csv')
 
     # Merge the dataframes based on the Time column
     merged_df = pd.merge_asof(df1, df2, on='Time')
