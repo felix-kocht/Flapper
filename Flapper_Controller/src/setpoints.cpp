@@ -4,7 +4,7 @@
 
 //Changeable parameters:
 const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
-const float MAX_HEAVE_AMP = 45; //safety measure to avoid destruction
+const float MAX_HEAVE_AMP = 40; //safety measure to avoid destruction
 const float MAX_FREQ = 1.2; //safety measure to avoid destruction
 const int HEAVE_OFFSET = 270/2-40; //offset for heave
 
