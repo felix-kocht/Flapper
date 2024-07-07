@@ -1,4 +1,5 @@
 import numpy as np
+import time #just for testing
 from skopt.space import Real
 from skopt import gp_minimize
 
@@ -18,7 +19,7 @@ initial_guess = {
     'camber phase': 0,
 }
 
-max_tests = 4
+max_tests = 6
 test_durations = 5
 
 # state space, all ranging from 0 to 1
@@ -52,14 +53,15 @@ def initialize_parameters():
 
 # Placeholder functions for demonstration
 def run_physical_test(param1, param2, param3, param4, param5):
-    # Implement the real-world test logic here and return the measured thrust
+    #delay for test duration
+    time.sleep(test_durations/2)
     return 50, 5
 
 # Example of an objective function interfacing with the real-world setup
 def objective(params):
     # Extract parameters
     param1, param2, param3, param4, param5 = params
-
+    print(params)
     thrust, consumption = run_physical_test(param1, param2, param3, param4, param5)
     reward = reward_function(thrust, consumption)
     return -reward  # Minimize the negative reward to maximize the reward
