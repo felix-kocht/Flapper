@@ -53,23 +53,14 @@ def initialize_parameters():
 # Placeholder functions for demonstration
 def run_physical_test(param1, param2, param3, param4, param5):
     # Implement the real-world test logic here and return the measured thrust
-    return 50
-
-def measure_energy_consumption(param1, param2, param3, param4, param5):
-    # Implement the real-world test logic here and return the measured energy consumption
-    return 5
+    return 50, 5
 
 # Example of an objective function interfacing with the real-world setup
 def objective(params):
     # Extract parameters
     param1, param2, param3, param4, param5 = params
 
-    # Interface with the real-world system
-    # Replace the following lines with your actual test code
-    # Function to perform test and get thrust
-    thrust = run_physical_test(param1, param2, param3, param4, param5)
-    consumption = measure_energy_consumption(
-        param1, param2, param3, param4, param5)  # Function to measure energy
+    thrust, consumption = run_physical_test(param1, param2, param3, param4, param5)
     reward = reward_function(thrust, consumption)
     return -reward  # Minimize the negative reward to maximize the reward
 
