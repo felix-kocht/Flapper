@@ -6,7 +6,7 @@
 //Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card (11,12,13), Waterspeed Sensor... 
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card (11,12,13), GPS
 const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, false, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
@@ -160,7 +160,7 @@ void init_peripheral(int i) {
             // Initialize SD card
             break;
         case 4:
-            // Initialize waterspeed sensor
+            // Initialize GPS
             break;
         default:
             break;

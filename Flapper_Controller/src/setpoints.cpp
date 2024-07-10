@@ -4,14 +4,14 @@
 
 //Changeable parameters:
 const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
-const float MAX_HEAVE_AMP = 45; //safety measure to avoid destruction
+const float MAX_HEAVE_AMP = 40; //safety measure to avoid destruction
 const float MAX_FREQ = 1.2; //safety measure to avoid destruction
 const int HEAVE_OFFSET = 270/2-40; //offset for heave
 
 static float frequency = 0.0; //Hz, ca. 0.875Hz per m/s
 static float heave_amplitude = 40; //degree (half the total possible angle)
 static float pitch_amplitude = 60; //degree
-static float camber_amplitude = 90; //degree
+static float camber_amplitude = 60; //degree (tests showed more than 60 could lead to destruction)
 static float pitch_phase = 0; //TODO define
 static float camber_phase = 0; //TODO define
 static float turn_factor = 0; //0 is straight, -2 is full left, 2 is full right, more is mayhem

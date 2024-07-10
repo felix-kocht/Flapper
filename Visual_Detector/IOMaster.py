@@ -5,9 +5,13 @@ import threading
 from threading import Thread
 import os
 
+# ports
+port1 = '/dev/cu.usbserial-10'  # Replace with your port
+port2 = '/dev/cu.usbmodem1101'  # Replace with your port
+
 # Variables to set by user
 target_folder = 'output_data'  # Target folder where data should be saved
-testrun_file = 'testrun.csv'
+testrun_file = 'test_instructions.csv'
 used_foils = 'stiff_foils'
 waterspeed = '0.0'
 
@@ -20,8 +24,7 @@ header_line2 = ["Time", "Fx", "Fz",
 # Metadata keys
 metadata_keys = [
     "Used Foils:", "Waterspeed:", "Frequency:", "Heave Amplitude:", "Pitch Amplitude:", "Camber Amplitude", "Pitch Phase", "Camber Phase", "Turn Rate", "Test Duration"]
-port1 = '/dev/cu.usbserial-110'  # Replace with your port
-port2 = '/dev/cu.usbmodem1201'  # Replace with your port
+
 baudrate = 19200
 parse_pattern = "utf-8"  # Adjust based on your data format
 starttime = time.time()
@@ -85,7 +88,8 @@ def run_test_cases(io_manager1, test_cases):
     global tests_completed
     global case_number
     time.sleep(1)
-    for i, case in enumerate(test_cases, start=1):
+    for i, case in enumerate(test_cases[:-1], start=1):
+        print(f"Running test case {i}")
         # Metadata for this test case
         case_number = i
         metadata_values = [used_foils, waterspeed] + case
@@ -112,6 +116,9 @@ def run_test_cases(io_manager1, test_cases):
         time.sleep(duration)
 
     print("All test cases completed.")
+    data_to_send = "0"  # Send a stop signal
+    print(f"Sending data: {data_to_send}")
+    io_manager1.write(data_to_send)
     tests_completed.set()
 
 # Function to load test cases

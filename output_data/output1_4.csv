@@ -1,0 +1,12 @@
+Used Foils:,stiff_foils
+Waterspeed:,0.0
+Frequency:,0
+Heave Amplitude:,40
+Pitch Amplitude:,60
+Camber Amplitude,90
+Pitch Phase,0
+Camber Phase,0
+Turn Rate,0
+Test Duration,0
+
+Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise
