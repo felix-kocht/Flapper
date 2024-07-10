@@ -54,6 +54,8 @@ def initialize_parameters():
 # Placeholder functions for demonstration
 def run_physical_test(param1, param2, param3, param4, param5):
     #TODO
+    # calls IOMaster.py to run the testrun
+    # calls result_eval.py to evaluate the results of the testrun
     #delay for test duration
     time.sleep(test_durations/2)
     return 50, 5
