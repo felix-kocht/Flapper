@@ -12,8 +12,10 @@ Test Duration,10
 
 Statistical Evaluation:
 Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise,Fx,Fz,Mx,My,Mz,Inflow_velocity,Angle_of_attack,Efficiency
-average,93.502,90.962,89.038,0.413,0.000,-0.150,-1.180,-0.143,-0.059,0.011,0.091,90.862,
-max,134.980,105.000,104.950,4.000,0.000,0.040,0.530,-0.050,0.010,0.040,0.184,104.900,inf
+average,95.008,90.002,89.998,0.381,0.000,-0.169,-1.187,-0.145,-0.060,0.013,0.089,89.902,-inf
+max,134.980,105.000,104.950,4.000,0.000,-0.030,-0.090,-0.050,-0.020,0.040,0.140,104.900,-0.007
+min,55.040,75.050,75.000,0.000,0.000,-0.580,-2.060,-0.310,-0.110,0.000,0.005,74.950,-inf
+std. dev,28.439,10.650,10.650,1.180,0.000,0.124,0.619,0.067,0.029,0.008,0.043,10.650,
 
 Complete Data:
 Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise,Fx,Fz,Mx,My,Mz,Inflow_velocity,Angle_of_attack,Efficiency

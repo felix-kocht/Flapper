@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'):
-    #TODO: user can change these
+    # TODO: user can change these
     scale_factors = {
         'Heave_pos': 1,
         'Pitch_right': 1,
@@ -24,7 +24,7 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
     data = pd.read_csv(file_path, skiprows=13)
 
     # Remove rows with metadata and repeated headers
-    data_cleaned = data.drop([0, 1, 2, 3])
+    data_cleaned = data.drop([0, 1, 2, 3, 4, 5, 6])
 
     # Convert appropriate columns to numeric, ignoring errors for non-numeric rows
     data_cleaned = data_cleaned.apply(pd.to_numeric, errors='ignore')
@@ -48,6 +48,7 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
 
 
 # Example usage:
-plot_columns('test_cases/test_case1.csv', ['Heave_pos', 'Inflow_velocity','Angle_of_attack','Fx'], title='Heave, fluid stuff, and force')
+plot_columns('test_cases/Jul_10_0.4_30_90_0_0_0.csv',
+             ['Heave_pos', 'Fx', 'Fz', 'Mx', 'My', 'Mz'], title='Various Parameters over Time')
 
-#TODO: add multiple different unit values to the y-axis
+# TODO: add multiple different unit values to the y-axis
