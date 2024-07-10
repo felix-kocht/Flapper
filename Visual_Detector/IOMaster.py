@@ -88,7 +88,7 @@ def run_test_cases(io_manager1, test_cases):
     global tests_completed
     global case_number
     time.sleep(1)
-    for i, case in enumerate(test_cases[:-1], start=1):
+    for i, case in enumerate(test_cases, start=1):#(test_cases[:-1], start=1):
         print(f"Running test case {i}")
         # Metadata for this test case
         case_number = i
@@ -173,3 +173,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+def do_a_test():#parameters
+    return 0

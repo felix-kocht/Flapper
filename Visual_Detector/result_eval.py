@@ -24,8 +24,11 @@ for i in range(1, int(file_pairs) + 1):
     metadata = pd.read_csv(
         f'output_data/output1_{i}.csv', nrows=10, header=None)
 
+    
     # Create the output CSV content
-    output_file = (f'test_cases/test_stand_wiggles{i}.csv')
+    name = [metadata.iloc[2, 1], metadata.iloc[4, 1],
+            metadata.iloc[5, 1], metadata.iloc[6, 1], metadata.iloc[7, 1], metadata.iloc[8, 1]]
+    output_file = (f'test_cases/Jul_11_{name}.csv')
 
     # Merge the dataframes based on the Time column
     merged_df = pd.merge_asof(df1, df2, on='Time')
@@ -38,14 +41,14 @@ for i in range(1, int(file_pairs) + 1):
         ).iloc[i] / pd.to_numeric(merged_df['Time']).diff().iloc[i])/720  # 720 converts degree in m/s, depends on gear ratio
         merged_df.at[i, 'Inflow_velocity'] = math.sqrt(
             waterspeed**2 + heave_speed**2)
-        
+
         # Calculate the angle of attack
         if waterspeed == 0:
             nue = merged_df['Pitch_right'].iloc[i]
         else:
             nue = math.atan2(heave_speed / waterspeed)
         gamma = 0.1  # TODO: get from camber amount and pitch angle
-        merged_df.at[i,'Angle_of_attack'] = nue - gamma
+        merged_df.at[i, 'Angle_of_attack'] = nue - gamma
     merged_df['Efficiency'] = merged_df['Fx'] / merged_df['Power_consumption']
 
     # Calculate statistics and prepare them for insertion
