@@ -17,11 +17,11 @@
 - using 10JHz sampling rate for now, 80Hz can be used too */
 
 //parameters: DAT, CLK, calibration_factor, zero_factor, the higher the factor the lower the output number
-const HX711Params cell_1_params = {2,3, 28700.0, 1};
-const HX711Params cell_2_params = {4,5, 4880.0, 1};
-const HX711Params cell_3_params = {6,7, -9200.0, 1};
-const HX711Params cell_4_params = {8,9, -8300.0, 1};
-const HX711Params cell_5_params = {10,11, -4762.0, 1};
+const HX711Params cell_1_params = {2,3, 28700.0*0.505, 1};
+const HX711Params cell_2_params = {4,5, 7905.6*0.935, 1};
+const HX711Params cell_3_params = {6,7, -9200.0*0.505, 1};
+const HX711Params cell_4_params = {8,9, -8300.0*0.505, 1};
+const HX711Params cell_5_params = {10,11, -7714.4*0.934, 1};
 
 //create hx711 instance
 HX711 cell_1;
@@ -71,10 +71,10 @@ void loop() {
   float Mz = get_Mz(readings[1][0], readings[4][0]);
 
   // print the values to the serial monitor
-  float valuesToPrint[] = {Fx, Fz, Mx, My, Mz};
+  float valuesToPrint[] = {-Fx, Fz, Mx, My, Mz};
   int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
   print_floats(valuesToPrint, length);
-  delay(100); 
+  delay(20); 
 }
 
 void push_by_2() {

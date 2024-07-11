@@ -28,7 +28,7 @@ def parse_csv(file_path):
 
     # Extract average values from Statistical Evaluation
     headers = lines[stat_start].strip().split(',')
-    avg_values = lines[stat_start + 1].strip().split(',')
+    avg_values = lines[stat_start + 1].strip().split(',') #go back to +1
 
     for header, value in zip(headers, avg_values):
         average_values[header.strip()] = value.strip()
@@ -57,8 +57,8 @@ all_parameters, all_average_values = collect_data_from_folder(folder_path)
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
 x_param = 'Frequency'  # Example X-axis parameter
 y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
-z_measurement = 'Fx'  # Example Z-axis measurement
-color_measurement = 'Mz'  # Example color measurement (optional)
+z_measurement = 'Mz'  # Example Z-axis measurement
+color_measurement = 'Frequency'  # Example color measurement (optional)
 
 x_data = []
 y_data = []
@@ -73,7 +73,7 @@ for params, values in zip(all_parameters, all_average_values):
         color_measurement) or values.get(color_measurement)
 
     # Debug: Print values to check if they are being extracted correctly
-    #print(f"x: {x_value}, y: {y_value}, z: {z_value}, color: {color_value}")
+    # print(f"x: {x_value}, y: {y_value}, z: {z_value}, color: {color_value}")
 
     if x_value and y_value and z_value and color_value:
         try:

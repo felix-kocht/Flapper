@@ -12,7 +12,7 @@ port2 = '/dev/cu.usbmodem1101'  # Replace with your port
 # Variables to set by user
 target_folder = 'output_data'  # Target folder where data should be saved
 testrun_file = 'test_instructions.csv'
-used_foils = 'blue_foils'
+used_foils = 'stiff_foils'
 waterspeed = '0.0'
 
 # Variables to change only if needed
@@ -56,14 +56,10 @@ class IOManager:
     def write(self, data):
         self.serial_connection.write(data.encode(self.parse_pattern))
 
-# Function to clean data
-
 
 def clean_data(raw_data):
     cleaned_data = raw_data.replace('"', '').replace('/', '').replace('*', '')
     return cleaned_data.split(',')
-
-# Function to save to CSV file with a timestamp
 
 
 def header_to_csv(csvfile, header_line, metadata):
@@ -87,8 +83,9 @@ def save_to_csv(csvfile, data):
 def run_test_cases(io_manager1, test_cases):
     global tests_completed
     global case_number
-    time.sleep(1)
-    for i, case in enumerate(test_cases, start=1):#(test_cases[:-1], start=1):
+    # time.sleep(1) #TODO: test (why would you sleep here?)
+    # (test_cases[:-1], start=1):
+    for i, case in enumerate(test_cases, start=1):
         print(f"Running test case {i}")
         # Metadata for this test case
         case_number = i
@@ -109,6 +106,13 @@ def run_test_cases(io_manager1, test_cases):
         header_to_csv(csvfile, header_line1, metadata)
         header_to_csv(csvfile2, header_line2, metadata)
 
+        # recalibration of measurement #TODO: test
+        # data_to_send = "0"  # Send a stop signal
+        # print(f"Sending data: {data_to_send}")
+        # io_manager1.write(data_to_send)
+        # time.sleep(1)
+        # TODO: somehow restart the test stand controller
+
         # Send data to the device
         print(f"Sending data: {data_to_send}")
         io_manager1.write(data_to_send)
@@ -121,8 +125,6 @@ def run_test_cases(io_manager1, test_cases):
     io_manager1.write(data_to_send)
     tests_completed.set()
 
-# Function to load test cases
-
 
 def load_test_cases(filename):
     with open(filename, 'r') as f:
@@ -130,8 +132,6 @@ def load_test_cases(filename):
         headers = next(reader)  # Skip the header row
         test_cases = [row for row in reader]
     return test_cases
-
-# Main function
 
 
 def main():
@@ -174,5 +174,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-def do_a_test():#parameters
+
+def do_a_test():  # parameters
     return 0

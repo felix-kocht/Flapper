@@ -48,7 +48,7 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
 
 
 # Example usage:
-plot_columns('test_cases/Jul_10_0.4_30_90_0_0_0.csv',
+plot_columns('test_cases/Jul_11_0.4_15_90_0_0_0.csv',
              ['Heave_pos', 'Fx', 'Fz', 'Mx', 'My', 'Mz'], title='Various Parameters over Time')
 
 # TODO: add multiple different unit values to the y-axis

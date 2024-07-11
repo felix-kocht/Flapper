@@ -35,7 +35,7 @@ for i in range(1, int(file_pairs) + 1):
     name = [metadata.iloc[2, 1], metadata.iloc[4, 1],
             metadata.iloc[5, 1], metadata.iloc[6, 1], metadata.iloc[7, 1], metadata.iloc[8, 1]]
     name_string = '_'.join(name)
-    output_file = (f'test_cases/Jul_10_{name_string}.csv')
+    output_file = (f'test_cases/Jul_11_3_stiff{name_string}.csv')
 
     # Merge the dataframes based on the Time column
     merged_df = pd.merge_asof(df1, df2, on='Time')
@@ -56,7 +56,7 @@ for i in range(1, int(file_pairs) + 1):
             nue = math.atan2(heave_speed / waterspeed)
         gamma = 0.1  # TODO: get from camber amount and pitch angle
         merged_df.at[i, 'Angle_of_attack'] = nue - gamma
-    merged_df['Efficiency'] = merged_df['Fx'] / merged_df['Power_consumption']
+    merged_df['Efficiency'] = merged_df['Fx']*1000 / merged_df['Power_consumption']
 
     # Calculate statistics and prepare them for insertion
     statistics = calculate_statistics(merged_df)

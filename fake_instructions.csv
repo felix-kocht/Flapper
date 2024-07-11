@@ -1,4 +1,4 @@
 Frequency, heave_amp, pitch_amp, camb_amp, pitch_phase, camber_phase, turn_rate, test_duration
-0.8,40,15,90,0,0,0,2
-0.6,40,15,90,0,0,0,2
-0.4,40,15,90,0,0,0,2
+0.8,40,15,90,0,0,0,4
+0.6,40,15,90,0,0,0,4
+0.4,40,15,90,0,0,0,4
