@@ -3,3 +3,6 @@
 .Flapper_Controller/vscode/c_cpp_properties.json
 .Flapper_Controller/vscode/launch.json
 .Flapper_Controller/vscode/ipch
+.output_data
+.test_cases
+
