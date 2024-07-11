@@ -107,10 +107,10 @@ def run_test_cases(io_manager1, test_cases):
         header_to_csv(csvfile2, header_line2, metadata)
 
         # recalibration of measurement #TODO: test
-        # data_to_send = "0"  # Send a stop signal
-        # print(f"Sending data: {data_to_send}")
-        # io_manager1.write(data_to_send)
-        # time.sleep(1)
+        data_to_send = "0"  # Send a stop signal
+        print(f"Sending data: {data_to_send}")
+        io_manager1.write(data_to_send)
+        time.sleep(3)
         # TODO: somehow restart the test stand controller
 
         # Send data to the device
