@@ -10,6 +10,8 @@
             "includePath": [
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/include",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/src",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/RF24",
+                "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/RF24/utility",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit INA219",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/SD/src",
                 "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit Unified Sensor",
@@ -35,6 +37,8 @@
                 "path": [
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/include",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/src",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/RF24",
+                    "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/RF24/utility",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit INA219",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/SD/src",
                     "/Users/felixkoch/Documents/Software/GitHub/Flapper/Flapper_Controller/.pio/libdeps/megaatmega2560/Adafruit Unified Sensor",
