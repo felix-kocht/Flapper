@@ -1,17 +1,23 @@
 #include <Arduino.h>
 #include <Servo.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 #include "setpoints.h"
 #include "powerchip.h"
 
 //Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card (11,12,13), GPS
-const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, false, false, false}; //same order as above 
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 99, 99, 99}; //Pulley motor, Powersensor, radio, SD Card (11,12,13), GPS
+const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 19200;
 //End of changeable parameters
+RF24 radio(7, 8); // CE, CSN
+
+const byte address[6] = "00001";
 
 // Create servo instances
 Servo heave_servo;
@@ -25,6 +31,7 @@ void init_servos();
 void print_floats(float* values, int length);
 void read_serial_float();
 void init_peripheral(int i);
+void init_radio();
 
 // Control variables
 unsigned long start_time = 0;
@@ -85,6 +92,9 @@ void loop() {
     float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], power_reading, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
+    if (PERIPHERALS_CONNECTED[2]){
+        radio.write(&valuesToPrint, sizeof(valuesToPrint));
+    }
     delay(20);
 }
 
@@ -154,7 +164,7 @@ void init_peripheral(int i) {
             setupINA219();
             break;
         case 2:
-            // Initialize PPM receiver
+            init_radio();
             break;
         case 3:
             // Initialize SD card
@@ -165,4 +175,11 @@ void init_peripheral(int i) {
         default:
             break;
     }
+}
+
+void init_radio() {
+    radio.begin();
+    radio.openWritingPipe(address);
+    radio.setPALevel(RF24_PA_MIN);
+    radio.stopListening();
 }
