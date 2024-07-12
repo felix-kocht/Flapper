@@ -97,6 +97,13 @@ def run_test_cases(io_manager1, test_cases):
         csvfile = os.path.join(target_folder, f'output1_{i}.csv')
         csvfile2 = os.path.join(target_folder, f'output2_{i}.csv')
 
+        # recalibration of measurement #TODO: test
+        data_to_send = "0"  # Send a stop signal
+        print(f"Sending data: {data_to_send}")
+        io_manager1.write(data_to_send)
+        time.sleep(3)
+        # TODO: somehow restart the test stand controller
+
         # Data to send and duration
         data_to_send = data_to_send = ','.join(
             case[:-1])  # Adjust based on your needs
@@ -105,13 +112,6 @@ def run_test_cases(io_manager1, test_cases):
         # Save metadata and initial data to CSV
         header_to_csv(csvfile, header_line1, metadata)
         header_to_csv(csvfile2, header_line2, metadata)
-
-        # recalibration of measurement #TODO: test
-        data_to_send = "0"  # Send a stop signal
-        print(f"Sending data: {data_to_send}")
-        io_manager1.write(data_to_send)
-        time.sleep(3)
-        # TODO: somehow restart the test stand controller
 
         # Send data to the device
         print(f"Sending data: {data_to_send}")

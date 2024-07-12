@@ -18,10 +18,10 @@
 
 //parameters: DAT, CLK, calibration_factor, zero_factor, the higher the factor the lower the output number
 const HX711Params cell_1_params = {2,3, 28700.0*0.505, 1};
-const HX711Params cell_2_params = {4,5, 7500, 1};
+const HX711Params cell_2_params = {4,5, 4880.0*0.31*0.4*0.1*0.5, 1};
 const HX711Params cell_3_params = {6,7, -9200.0*0.505, 1};
 const HX711Params cell_4_params = {8,9, -8300.0*0.505, 1};
-const HX711Params cell_5_params = {10,11, -7500*1.01, 1};
+const HX711Params cell_5_params = {10,11, -4762.0*3.333*2.5, 1};
 
 //create hx711 instance
 HX711 cell_1;
