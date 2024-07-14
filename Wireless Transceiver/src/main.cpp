@@ -5,6 +5,9 @@
   by Dejan Nedelkovski, www.HowToMechatronics.com
 
   Library: TMRh20/RF24, https://github.com/tmrh20/RF24/
+
+  Tutorial: https://howtomechatronics.com/tutorials/arduino/arduino-wireless-communication-nrf24l01-tutorial/
+  Common issues: https://github.com/nRF24/RF24/blob/master/COMMON_ISSUES.md
 */
 
 #include <SPI.h>
