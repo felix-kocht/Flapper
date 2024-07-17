@@ -19,7 +19,7 @@ const int BAUD_RATE = 19200;
 //End of changeable parameters
 RF24 radio(7, 8); // CE, CSN
 
-const byte address[6] = "00001";
+const byte addresses[][6] = {"00001","00002"};
 
 // Create servo instances
 Servo heave_servo;
@@ -181,7 +181,8 @@ void init_peripheral(int i) {
 
 void init_radio() {
     radio.begin();
-    radio.openWritingPipe(address);
+    radio.openWritingPipe(addresses[1]); // 00001
+    radio.openReadingPipe(1, addresses[0]); // 00002
     radio.setPALevel(RF24_PA_MIN);
     radio.stopListening();
 }
