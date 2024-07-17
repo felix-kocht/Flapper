@@ -41,6 +41,8 @@ void setup() {
 
 void loop() {
 
+  //TODO: read serial data and send it to the transmitter
+
   delay(5);
 
   radio.stopListening();
