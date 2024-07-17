@@ -44,6 +44,16 @@ float setpoints[5] = {0};
 float (*setpoints_ptr) = setpoints; //pointer needed for use in funtions
 float heave_lowpoint = 0; //initialized so that it always starts at the lower end of the amplitude
 
+//for wireless reading
+struct Data_Package {
+  float frequency = 0.0;
+  float heave = 0.0;
+  float pitch = 0.0;
+  float camber = 0.0;
+  float pitch_phase = 0.0;
+};
+Data_Package data;
+
 void setup() {
     // Initialize Serial communication
     Serial.begin(BAUD_RATE);  
@@ -95,7 +105,15 @@ void loop() {
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
     if (PERIPHERALS_CONNECTED[2]){
+        delay(5);
+        radio.stopListening();
         radio.write(&valuesToPrint, sizeof(valuesToPrint));
+
+        delay(5);
+        radio.startListening();
+        while (!radio.available());
+        radio.read(&data, sizeof(Data_Package));
+        Serial.println(data.frequency);
     }
     delay(20);
 }
