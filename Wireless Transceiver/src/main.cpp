@@ -20,11 +20,11 @@ const byte address[6] = "00001";
 
 // Max size of this struct is 32 bytes - NRF24L01 buffer limit
 struct Data_Package {
-  float frequency = 3.1;
-  float heave = 3.1;
-  float pitch = 3.1;
-  float camber = 3.1;
-  float pitch_phase = 3.1;
+  float frequency = 0.0;
+  float heave = 0.0;
+  float pitch = 0.0;
+  float camber = 0.0;
+  float pitch_phase = 0.0;
 };
 
 Data_Package data; //Create a variable with the above structure
@@ -41,17 +41,17 @@ void loop() {
   // Check whether there is data to be received
   if (radio.available()) {
     radio.read(&data, sizeof(Data_Package)); // Read the whole data and store it into the 'data' structure
+    // Print the received data
+    Serial.print(" Frequency: ");
+    Serial.print(data.frequency);
+    Serial.print(" Heave: ");
+    Serial.print(data.heave);
+    Serial.print(" Pitch: ");
+    Serial.print(data.pitch);
+    Serial.print(" Camber: ");
+    Serial.print(data.camber);
+    Serial.print(" Pitch Phase: ");
+    Serial.print(data.pitch_phase);
+    Serial.println();
   }
-  // Print the received data
-  Serial.print(" Frequency: ");
-  Serial.print(data.frequency);
-  Serial.print(" Heave: ");
-  Serial.print(data.heave);
-  Serial.print(" Pitch: ");
-  Serial.print(data.pitch);
-  Serial.print(" Camber: ");
-  Serial.print(data.camber);
-  Serial.print(" Pitch Phase: ");
-  Serial.print(data.pitch_phase);
-  Serial.println();
 }
