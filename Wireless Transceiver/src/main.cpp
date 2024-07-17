@@ -20,11 +20,11 @@ const byte addresses[][6] = {"00001","00002"};
 
 // Max size of this struct is 32 bytes - NRF24L01 buffer limit
 struct Data_Package {
-  float frequency = 0.0;
-  float heave = 0.0;
-  float pitch = 0.0;
-  float camber = 0.0;
-  float pitch_phase = 0.0;
+  float frequency = 2.0;
+  float heave = 2.0;
+  float pitch = 2.0;
+  float camber = 2.0;
+  float pitch_phase = 2.0;
 };
 
 Data_Package data; //Create a variable with the above structure
@@ -43,16 +43,18 @@ void loop() {
 
   //TODO: read serial data and send it to the transmitter
 
-  delay(5);
+  delay(500);
 
   radio.stopListening();
   int angleValue = map(2, 0, 1023, 0, 180);
   radio.write(&angleValue, sizeof(angleValue));
 
-  delay(5);
+  delay(500);
   radio.startListening();
-  while (!radio.available());
-  radio.read(&data, sizeof(Data_Package)); // Read the whole data and store it into the 'data' structure
+  if(radio.available()){
+    radio.read(&data, sizeof(Data_Package)); // Read the whole data and store it into the 'data' structure
+  }
+  //delay(200);
   // Print the received data
   Serial.print(" Frequency: ");
   Serial.print(data.frequency);

@@ -61,11 +61,11 @@ float heave_lowpoint = 0; //initialized so that it always starts at the lower en
 
 //for wireless sending
 struct Data_Package_1 {
-  float power = 0.0;
-  float posx = 0.0;
-  float posy = 0.0;
-  float speed = 0.0;
-  float gps_fine = 0.0;
+  float power = 1.0;
+  float posx = 1.0;
+  float posy = 1.0;
+  float speed = 1.0;
+  float gps_fine = 1.0;
 }; 
 Data_Package_1 outgoing_data;
 
@@ -94,6 +94,16 @@ void setup() {
             init_peripheral(i);
         }
     }
+    //Debug
+    Serial.print("GPS first try: ");
+    Serial.print(outgoing_data.gps_fine);
+    Serial.print(" ");
+    Serial.print(outgoing_data.posx);
+    Serial.print(" ");
+    Serial.print(outgoing_data.posy);
+    Serial.print(" ");
+    Serial.print(outgoing_data.speed);
+    Serial.println();
 
     heave_lowpoint = get_minimum_heave();
     
@@ -264,56 +274,21 @@ void loop_gps() // run over and over again
   char c = GPS.read();
   // if you want to debug, this is a good time to do it!
   if (GPSECHO)
-    if (c) Serial.print(c);
+    if (c) Serial.print("c:");
   // if a sentence is received, we can check the checksum, parse it...
   if (GPS.newNMEAreceived()) {
     // a tricky thing here is if we print the NMEA sentence, or data
     // we end up not listening and catching other sentences!
     // so be very wary if using OUTPUT_ALLDATA and trying to print out data
-    Serial.print(GPS.lastNMEA()); // this also sets the newNMEAreceived() flag to false
+    //Serial.print(GPS.lastNMEA()); // this also sets the newNMEAreceived() flag to false
     if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
       return; // we can fail to parse a sentence in which case we should just wait for another
   }
 
-    //approximately every 0.5 seconds or so, save GPS to datastructure
-    if (millis() - timer > 500) {
-    outgoing_data.gps_fine = GPS.fix;
-    outgoing_data.posx = GPS.longitude;
-    outgoing_data.posy = GPS.latitude;
-    outgoing_data.speed = GPS.speed;
-
-    Serial.print("GPS: ");
-    Serial.print(outgoing_data.gps_fine);
-    Serial.print(" ");
-    Serial.print(outgoing_data.posx);
-    Serial.print(" ");
-    Serial.print(outgoing_data.posy);
-    Serial.print(" ");
-    Serial.print(outgoing_data.speed);
-    Serial.println();
-    timer = millis(); // reset the timer
-    }
-/* 
   // approximately every 2 seconds or so, print out the current stats
   if (millis() - timer > 2000) {
     timer = millis(); // reset the timer
-    Serial.print("\nTime: ");
-    if (GPS.hour < 10) { Serial.print('0'); }
-    Serial.print(GPS.hour, DEC); Serial.print(':');
-    if (GPS.minute < 10) { Serial.print('0'); }
-    Serial.print(GPS.minute, DEC); Serial.print(':');
-    if (GPS.seconds < 10) { Serial.print('0'); }
-    Serial.print(GPS.seconds, DEC); Serial.print('.');
-    if (GPS.milliseconds < 10) {
-      Serial.print("00");
-    } else if (GPS.milliseconds > 9 && GPS.milliseconds < 100) {
-      Serial.print("0");
-    }
-    Serial.println(GPS.milliseconds);
-    Serial.print("Date: ");
-    Serial.print(GPS.day, DEC); Serial.print('/');
-    Serial.print(GPS.month, DEC); Serial.print("/20");
-    Serial.println(GPS.year, DEC);
+
     Serial.print("Fix: "); Serial.print((int)GPS.fix);
     Serial.print(" quality: "); Serial.println((int)GPS.fixquality);
     if (GPS.fix) {
@@ -322,9 +297,7 @@ void loop_gps() // run over and over again
       Serial.print(", ");
       Serial.print(GPS.longitude, 4); Serial.println(GPS.lon);
       Serial.print("Speed (knots): "); Serial.println(GPS.speed);
-      Serial.print("Angle: "); Serial.println(GPS.angle);
-      Serial.print("Altitude: "); Serial.println(GPS.altitude);
-      Serial.print("Satellites: "); Serial.println((int)GPS.satellites);
-      Serial.print("Antenna status: "); Serial.println((int)GPS.antenna);
- */    
+      Serial.println();
+    }
+  }
 }
