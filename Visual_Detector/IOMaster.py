@@ -11,8 +11,8 @@ port2 = '/dev/cu.usbmodem1201'  # Replace with your port
 
 # Variables to set by user
 target_folder = 'output_data'  # Target folder where data should be saved
-testrun_file = 'test_instructions_rl.csv'
-used_foils = 'cambered_foils'
+testrun_file = 'test_instructions.csv'
+used_foils = 'cambered_foils_off'
 waterspeed = '0.0'
 
 # Variables to change only if needed
