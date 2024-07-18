@@ -13,7 +13,7 @@ max_tests = 4
 test_durations = 3
 
 parameters = {
-    'frequency': [0.2, 0.6],  # TODO: increase if safe to do so
+    'frequency': [0.2, 0.4],  # TODO: increase if safe to do so
     'pitch amplitude': [10, 80],
     'pitch phase': [-1.57, 1.57],
     'camber amplitude': [0, 60],
@@ -38,7 +38,7 @@ space = [
 ]
 
 # in space range (0 to 1): x0 is  initial guess, y0 the initial reward
-x0 = [0, 0, 0, 0, 0]
+# x0 = [0, 0, 0, 0, 0]
 # y0 = -16 #TODO: fill in if available
 
 # TODO: find best reward function
@@ -156,7 +156,7 @@ initialize_parameters()
 
 # Perform Bayesian Optimization
 res = gp_minimize(objective, space, n_calls=max_tests, random_state=0,
-                  verbose=True, n_initial_points=3, x0=x0)  # , y0=y0)
+                  verbose=True, n_initial_points=3) #, x0=x0)  # , y0=y0)
 
 # Output the best parameters found
 print("Best parameters: ", res.x)
