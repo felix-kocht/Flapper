@@ -60,7 +60,7 @@ void tune_parameters(float (*sine_params_ptr)[5]){
     // Set parameters for Camber Right servo
     sine_params_ptr[0][3] = camber_amplitude * right_turn_factor;    // Amplitude A
     sine_params_ptr[1][3] = frequency;  // Frequency f
-    sine_params_ptr[2][3] = camber_phase + M_PI ;  // pitch_phase
+    sine_params_ptr[2][3] = camber_phase ;  // pitch_phase
     sine_params_ptr[3][3] = 180/2;    // Offset
 
     // Set parameters for Camber Left servo

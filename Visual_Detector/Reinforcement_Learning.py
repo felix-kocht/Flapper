@@ -75,13 +75,11 @@ def parse_csv(file_path):
 
 
 def collect_data_from_folder(folder_path):
-    all_average_values = []
 
     for file_path in glob.glob(os.path.join(folder_path, "*.csv")):
         average_values = parse_csv(file_path)
-        all_average_values.append(average_values)
 
-    return all_average_values
+    return average_values
 
 
 def reward_function(thrust, consumption):
@@ -101,16 +99,28 @@ def initialize_parameters():
             initial_guess[key] - center)/full_range + 0.5
         i += 1
 
-# Placeholder functions for demonstration
+# we run the physical test. The parameters are given in the 0-1 range.
 
 
 def run_physical_test(param1, param2, param3, param4, param5):
 
-    # TODO get the parameters from the input and convert to file stuff
+    #converts the parameters to the real-world values
+    frequency = parameters['frequency'][0] + param1 * \
+        (parameters['frequency'][1] - parameters['frequency'][0])
+    pitch_amp = parameters['pitch amplitude'][0] + param2 * \
+        (parameters['pitch amplitude'][1] - parameters['pitch amplitude'][0])
+    pitch_phase = parameters['pitch phase'][0] + param3 * \
+        (parameters['pitch phase'][1] - parameters['pitch phase'][0])
+    camber_amp = parameters['camber amplitude'][0] + param4 * \
+        (parameters['camber amplitude'][1] - parameters['camber amplitude'][0])
+    camber_phase = parameters['camber phase'][0] + param5 * \
+        (parameters['camber phase'][1] - parameters['camber phase'][0])
+
+    # writes instructions for this testrun to the test_instructions_rl.csv file
     data = [
         ["Frequency", "heave_amp", "pitch_amp", "camb_amp",
          "pitch_phase", "camber_phase", "turn_rate", "test_duration"],
-        [0.2, 38, 20, 90, 0, 0, 0, test_durations]]
+        [frequency, 38, pitch_amp, camber_amp, pitch_phase, camber_phase, 0, test_durations]]
     with open('test_instructions_rl.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
@@ -124,10 +134,10 @@ def run_physical_test(param1, param2, param3, param4, param5):
         exec(file.read(), globals())
 
     averages = collect_data_from_folder('test_cases')
-    print(averages)
-
-    return 50, 5
-
+    Fx = float(averages['Fx'])
+    Consumption = float(averages['Power_consumption'])
+    print(Fx, Consumption)
+    return Fx, Consumption
 # Example of an objective function interfacing with the real-world setup
 
 
@@ -143,7 +153,6 @@ def objective(params):
 
 # Initialize the parameters
 initialize_parameters()
-print(x0)
 
 # Perform Bayesian Optimization
 res = gp_minimize(objective, space, n_calls=max_tests, random_state=0,
