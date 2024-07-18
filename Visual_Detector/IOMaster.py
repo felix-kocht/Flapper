@@ -6,13 +6,13 @@ from threading import Thread
 import os
 
 # ports
-port1 = '/dev/cu.usbserial-10'  # Replace with your port
-port2 = '/dev/cu.usbmodem1101'  # Replace with your port
+port1 = '/dev/cu.usbserial-110'  # Replace with your port
+port2 = '/dev/cu.usbmodem1201'  # Replace with your port
 
 # Variables to set by user
 target_folder = 'output_data'  # Target folder where data should be saved
-testrun_file = 'test_instructions.csv'
-used_foils = 'stiff_foils'
+testrun_file = 'test_instructions_rl.csv'
+used_foils = 'cambered_foils'
 waterspeed = '0.0'
 
 # Variables to change only if needed

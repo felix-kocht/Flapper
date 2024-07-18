@@ -1,0 +1,21 @@
+Used Parameters:
+Used Foils:,cambered_foils
+Waterspeed:,0.0
+Frequency:,0.2
+Heave Amplitude:,38
+Pitch Amplitude:,20
+Camber Amplitude,90
+Pitch Phase,0
+Camber Phase,0
+Turn Rate,0
+Test Duration,1
+
+Statistical Evaluation:
+Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise,Fx,Fz,Mx,My,Mz,Inflow_velocity,Angle_of_attack,Efficiency
+average,,,,,,,,,,,,,
+max,,,,,,,,,,,,,
+min,,,,,,,,,,,,,
+std. dev,,,,,,,,,,,,,
+
+Complete Data:
+Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise,Fx,Fz,Mx,My,Mz,Inflow_velocity,Angle_of_attack,Efficiency

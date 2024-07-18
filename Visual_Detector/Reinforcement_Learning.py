@@ -1,10 +1,19 @@
 import numpy as np
-import time #just for testing
 from skopt.space import Real
 from skopt import gp_minimize
+import os
+import glob
+import csv
+
+# Usage instructions:
+# in IOMaster.py change the testrun_file to 'test_instructions_rl.csv'
+
+# parameters for the optimization
+max_tests = 4
+test_durations = 3
 
 parameters = {
-    'frequency': [0.2, 0.6], #TODO: increase if safe to do so
+    'frequency': [0.2, 0.6],  # TODO: increase if safe to do so
     'pitch amplitude': [10, 80],
     'pitch phase': [-1.57, 1.57],
     'camber amplitude': [0, 60],
@@ -19,9 +28,6 @@ initial_guess = {
     'camber phase': 0,
 }
 
-max_tests = 6
-test_durations = 5
-
 # state space, all ranging from 0 to 1
 space = [
     Real(0.0, 1.0, name='param1'),
@@ -31,17 +37,61 @@ space = [
     Real(0.0, 1.0, name='param5')
 ]
 
-#in space range (0 to 1): x0 is  initial guess, y0 the initial reward
-x0 = [0,0,0,0,0]
-#y0 = -16 #TODO: fill in if available
+# in space range (0 to 1): x0 is  initial guess, y0 the initial reward
+x0 = [0, 0, 0, 0, 0]
+# y0 = -16 #TODO: fill in if available
 
-#TODO: find best reward function
-def reward_function(thrust,consumption):
+# TODO: find best reward function
+
+
+def parse_csv(file_path):
+    parameters = {}
+    average_values = {}
+
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    # Extract Used Parameters
+    for line in lines:
+        if line.startswith("Used Parameters:"):
+            param_start = lines.index(line) + 1
+        elif line.startswith("Statistical Evaluation:"):
+            stat_start = lines.index(line) + 1
+
+    for line in lines[param_start:stat_start-1]:
+        if line.strip() and ':' in line:
+            key, value = line.strip().split(':', 1)
+            parameters[key.strip()] = value.strip()
+
+    # Extract average values from Statistical Evaluation
+    headers = lines[stat_start].strip().split(',')
+    # TODO: change here if not average is needed
+    avg_values = lines[stat_start + 1].strip().split(',')
+
+    for header, value in zip(headers, avg_values):
+        average_values[header.strip()] = value.strip()
+
+    return average_values
+
+
+def collect_data_from_folder(folder_path):
+    all_average_values = []
+
+    for file_path in glob.glob(os.path.join(folder_path, "*.csv")):
+        average_values = parse_csv(file_path)
+        all_average_values.append(average_values)
+
+    return all_average_values
+
+
+def reward_function(thrust, consumption):
     if consumption == 0:
         return 0.1*thrust
     return thrust/consumption + 0.1*thrust
 
-#initializing x0 on the 0-1 range
+# initializing x0 on the 0-1 range
+
+
 def initialize_parameters():
     i = 0
     for key in parameters.keys():
@@ -52,40 +102,62 @@ def initialize_parameters():
         i += 1
 
 # Placeholder functions for demonstration
+
+
 def run_physical_test(param1, param2, param3, param4, param5):
-    #TODO
+
+    # TODO get the parameters from the input and convert to file stuff
+    data = [
+        ["Frequency", "heave_amp", "pitch_amp", "camb_amp",
+         "pitch_phase", "camber_phase", "turn_rate", "test_duration"],
+        [0.2, 38, 20, 90, 0, 0, 0, test_durations]]
+    with open('test_instructions_rl.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(data)
+
     # calls IOMaster.py to run the testrun
+    with open('Visual_Detector/IOMaster.py', 'r') as file:
+        exec(file.read(), globals())
+
     # calls result_eval.py to evaluate the results of the testrun
-    #delay for test duration
-    time.sleep(test_durations/2)
+    with open('Visual_Detector/result_eval.py', 'r') as file:
+        exec(file.read(), globals())
+
+    averages = collect_data_from_folder('test_cases')
+    print(averages)
+
     return 50, 5
 
 # Example of an objective function interfacing with the real-world setup
+
+
 def objective(params):
     # Extract parameters
     param1, param2, param3, param4, param5 = params
     print(params)
-    thrust, consumption = run_physical_test(param1, param2, param3, param4, param5)
+    thrust, consumption = run_physical_test(
+        param1, param2, param3, param4, param5)
     reward = reward_function(thrust, consumption)
     return -reward  # Minimize the negative reward to maximize the reward
+
 
 # Initialize the parameters
 initialize_parameters()
 print(x0)
 
 # Perform Bayesian Optimization
-res = gp_minimize(objective, space, n_calls=max_tests, random_state=0, verbose = True, n_initial_points = 3, x0 = x0)#, y0=y0)
+res = gp_minimize(objective, space, n_calls=max_tests, random_state=0,
+                  verbose=True, n_initial_points=3, x0=x0)  # , y0=y0)
 
 # Output the best parameters found
 print("Best parameters: ", res.x)
 print("Best reward: ", -res.fun)  # Since we minimized the negative reward
-#print("details: ", res)
+# print("details: ", res)
 
 
 # IO: #TODO: modify or create version of these files that allow for easy calling and input parameters, e.g. name of test case
-#TODO: or maybe just implement the naming of test cases via the csv file anyways
+# TODO: or maybe just implement the naming of test cases via the csv file anyways
 # writes instructions for this testrun to the test_instructions.csv file
 # calls IOMaster.py to run the testrun
 # calls result_eval.py to evaluate the results of the testrun
 # reads the test_case csv file
-

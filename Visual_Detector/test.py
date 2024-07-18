@@ -1,8 +1,14 @@
-params = [0.5, 38,20,90,0,0,0,10]
+import os
 
-for i in range(4):
-    for j in range(11):
-        print(f'{params[0]:.1f},{params[1]},{params[2]},{params[3]},{params[4]},{params[5]},{params[6]}, {params[7]}')
-        params[2] += 5
-    params[2] = 15
-    params[0] += 0.10000000000000000
+# this works now!!
+
+
+def execute_io():
+
+    if os.path.exists('Visual_Detector/IOMaster.py'):
+        with open('Visual_Detector/IOMaster.py', 'r') as file:
+            exec(file.read(), globals())
+
+
+# Execute the script and get the local scope dictionary
+io_scope = execute_io()
