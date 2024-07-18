@@ -21,7 +21,7 @@ parameters = {
 }
 
 initial_guess = {
-    'frequency': 0.5,
+    'frequency': 0.3,
     'pitch amplitude': 60,
     'pitch phase': 0,
     'camber amplitude': 50,
@@ -38,7 +38,7 @@ space = [
 ]
 
 # in space range (0 to 1): x0 is  initial guess, y0 the initial reward
-# x0 = [0, 0, 0, 0, 0]
+x0 = [0, 0, 0, 0, 0]
 # y0 = -16 #TODO: fill in if available
 
 # TODO: find best reward function
@@ -150,13 +150,13 @@ def objective(params):
     reward = reward_function(thrust, consumption)
     return -reward  # Minimize the negative reward to maximize the reward
 
-
+ç
 # Initialize the parameters
 initialize_parameters()
 
 # Perform Bayesian Optimization
 res = gp_minimize(objective, space, n_calls=max_tests, random_state=0,
-                  verbose=True, n_initial_points=3) #, x0=x0)  # , y0=y0)
+                  verbose=True, n_initial_points=3, x0=x0)  # , y0=y0)
 
 # Output the best parameters found
 print("Best parameters: ", res.x)
