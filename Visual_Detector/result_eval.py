@@ -4,9 +4,9 @@ import os
 
 
 def calculate_statistics(merged_df):
-    #omitting the first 2.5 seconds of data, as it is not representative
+    #omitting the first 1.5 seconds of data, as it is not representative
     starting_time = merged_df['Time'].iloc[0]
-    merged_df = merged_df[merged_df['Time'] > 2.5+starting_time]
+    merged_df = merged_df[merged_df['Time'] > 1.5+starting_time]
     stats = {
         'average': merged_df.mean(),
         'max': merged_df.max(),
