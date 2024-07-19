@@ -28,7 +28,8 @@ def parse_csv(file_path):
 
     # Extract average values from Statistical Evaluation
     headers = lines[stat_start].strip().split(',')
-    avg_values = lines[stat_start + 1].strip().split(',') #TODO: change here if not average is needed
+    # TODO: change here if not average is needed
+    avg_values = lines[stat_start + 1].strip().split(',')
 
     for header, value in zip(headers, avg_values):
         average_values[header.strip()] = value.strip()
@@ -51,14 +52,16 @@ def collect_data_from_folder(folder_path):
 
 
 # Example usage
-folder_path = 'test_cases'  # Update this path to the actual folder path
+# Update this path to the actual folder path
+folder_path = 'test_cases/Stiff_foils'
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
 x_param = 'Frequency'  # Example X-axis parameter
 y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
-z_measurement = 'Fx'  # Example Z-axis measurement
+z_measurement = 'Power_consumption'  # Example Z-axis measurement
 color_measurement = 'Frequency'  # Example color measurement (optional)
+dimensions = 2
 
 x_data = []
 y_data = []
@@ -89,19 +92,32 @@ for params, values in zip(all_parameters, all_average_values):
             # Handle the case where conversion to float fails
             continue
 
-# Plotting the data in 3D with color as the 4th dimension
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-sc = ax.scatter(x_data, y_data, z_data, c=color_data, cmap='viridis')
+if dimensions == 3:
+    # Plotting the data in 3D with color as the 4th dimension
+    fig = plt.figure(f'{folder_path[11:]}: {z_measurement}')
+    ax = fig.add_subplot(111, projection='3d')
+    sc = ax.scatter(x_data, y_data, z_data, c=color_data, cmap='cool')
 
-plt.colorbar(sc, ax=ax, label=color_measurement)
-ax.set_xlabel(x_param)
-ax.set_ylabel(y_measurement)
-ax.set_zlabel(z_measurement)
-plt.title(
-    f'{y_measurement}, {z_measurement} vs {x_param} with {color_measurement}')
+    plt.colorbar(sc, ax=ax, label=color_measurement)
+    ax.set_xlabel(x_param)
+    ax.set_ylabel(y_measurement)
+    ax.set_zlabel(z_measurement)
+    plt.title(
+        f'{folder_path[11:]}: {z_measurement}')
+    # changing the name from figure 1 to the name of the folder
 
-# Automatic scaling of axes
-ax.auto_scale_xyz(x_data, y_data, z_data)
 
-plt.show()
+    # Automatic scaling of axes
+    ax.auto_scale_xyz(x_data, y_data, z_data)
+
+    plt.show()
+else:
+    # Plotting the data in 2D
+    plt.figure(f'{folder_path[11:]}: {z_measurement}')
+    plt.scatter(y_data, z_data, c=color_data, cmap='cool')
+    plt.xlabel(y_measurement)
+    plt.ylabel(z_measurement)
+    plt.title(
+        f'{folder_path[11:]}: {z_measurement}')
+    plt.colorbar(label=color_measurement)
+    plt.show()
