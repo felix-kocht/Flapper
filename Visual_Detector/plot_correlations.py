@@ -53,7 +53,7 @@ def collect_data_from_folder(folder_path):
 
 # Example usage
 # Update this path to the actual folder path
-folder_path = 'test_cases/Stiff_foils'
+folder_path = 'test_cases/Wide_off'
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
