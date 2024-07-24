@@ -28,7 +28,7 @@ def parse_csv(file_path):
 
     # Extract average values from Statistical Evaluation
     headers = lines[stat_start].strip().split(',')
-    # TODO: change here if not average is needed
+    # TODO: change here if not average is needed (1 is average, 4 is std dev)
     avg_values = lines[stat_start + 1].strip().split(',')
 
     for header, value in zip(headers, avg_values):
@@ -53,15 +53,15 @@ def collect_data_from_folder(folder_path):
 
 # Example usage
 # Update this path to the actual folder path
-folder_path = 'test_cases/Wide_off'
+folder_path = 'test_cases/Stiff_foils'
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
 x_param = 'Frequency'  # Example X-axis parameter
 y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
-z_measurement = 'Power_consumption'  # Example Z-axis measurement
+z_measurement = 'Fx'  # Example Z-axis measurement
 color_measurement = 'Frequency'  # Example color measurement (optional)
-dimensions = 2
+dimensions = 3
 
 x_data = []
 y_data = []

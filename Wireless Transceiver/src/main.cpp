@@ -1,13 +1,10 @@
 /*
   Arduino Wireless Communication Tutorial
-        Example 1 - Receiver Code
+      Example 1 - Transmitter Code
 
   by Dejan Nedelkovski, www.HowToMechatronics.com
 
   Library: TMRh20/RF24, https://github.com/tmrh20/RF24/
-
-  Tutorial: https://howtomechatronics.com/tutorials/arduino/arduino-wireless-communication-nrf24l01-tutorial/
-  Common issues: https://github.com/nRF24/RF24/blob/master/COMMON_ISSUES.md
 */
 
 #include <SPI.h>
@@ -15,56 +12,58 @@
 #include <RF24.h>
 
 RF24 radio(7, 8); // CE, CSN
+const byte address[6] = "00001";
 
-const byte addresses[][6] = {"00001","00002"};
-
-// Max size of this struct is 32 bytes - NRF24L01 buffer limit
+// Define a structure to hold the data package
 struct Data_Package {
-  float frequency = 2.0;
-  float heave = 2.0;
-  float pitch = 2.0;
-  float camber = 2.0;
-  float pitch_phase = 2.0;
+  float values[7];
 };
 
-Data_Package data; //Create a variable with the above structure
+void read_serial_float();
+
+Data_Package data = {0.0, 38, 60, 90, 0, 0, 0}; // Initialize with default values; (frequency, heave, pitch, camber, pitch_phase, camber_phase, turn_rate)
+
 
 void setup() {
   Serial.begin(9600);
   radio.begin();
-  // at the Receiver
-  radio.openWritingPipe(addresses[0]); // 00002
-  radio.openReadingPipe(1, addresses[1]); // 00001
+  radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_MIN);
-  radio.startListening();
+  radio.stopListening();
 }
 
 void loop() {
+  read_serial_float(); // Read serial input and update data package
+  radio.write(&data, sizeof(Data_Package)); // Send the whole data package to the receiver
+  Serial.println("Sent data package");
+  Serial.println(data.values[0]);
+  Serial.println(data.values[1]);
+    Serial.println(data.values[2]);
+    Serial.println(data.values[3]);
+    Serial.println(data.values[4]);
+    Serial.println(data.values[5]);
+    Serial.println(data.values[6]);
 
-  //TODO: read serial data and send it to the transmitter
+  delay(500); // Wait before the next transmission
+}
 
-  delay(500);
+void read_serial_float() {
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n'); // Read the input until newline character
+    input.trim(); // Remove any leading or trailing whitespace
 
-  radio.stopListening();
-  int angleValue = map(2, 0, 1023, 0, 180);
-  radio.write(&angleValue, sizeof(angleValue));
+    // Create a mutable copy of the input string
+    char inputChars[input.length() + 1];
+    input.toCharArray(inputChars, input.length() + 1);
 
-  delay(500);
-  radio.startListening();
-  if(radio.available()){
-    radio.read(&data, sizeof(Data_Package)); // Read the whole data and store it into the 'data' structure
+    // Split the input string by commas
+    int index = 0;
+    char* token = strtok(inputChars, ",");
+
+    while (token != NULL && index < 7) { // Parse up to 7 float values
+      data.values[index] = atof(token);
+      token = strtok(NULL, ",");
+      index++;
+    }
   }
-  //delay(200);
-  // Print the received data
-  Serial.print(" Frequency: ");
-  Serial.print(data.frequency);
-  Serial.print(" Heave: ");
-  Serial.print(data.heave);
-  Serial.print(" Pitch: ");
-  Serial.print(data.pitch);
-  Serial.print(" Camber: ");
-  Serial.print(data.camber);
-  Serial.print(" Pitch Phase: ");
-  Serial.print(data.pitch_phase);
-  Serial.println();
 }
