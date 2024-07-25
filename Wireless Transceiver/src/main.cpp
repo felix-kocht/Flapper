@@ -11,7 +11,7 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-RF24 radio(7, 8); // CE, CSN
+RF24 radio(7, 8, 4000000); // CE, CSN, SPI frequency
 const byte address[6] = "00001";
 
 // Define a structure to hold the data package

@@ -7,10 +7,11 @@
 #include <RF24.h>
 
 //Changeable parameters:
+//user-relevant: read where to connect what and enable or disable peripherals
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulleymotor, Powersensor, radio reciever, SD Card (11,12,13), GPS
-const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, false, false}; //same order as above 
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 99, 3, 99, 99}; //Pulleymotor, Powersensor, radio reciever, SD Card (11,12,13), GPS
+const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 19200;
@@ -40,7 +41,7 @@ float (*setpoints_ptr) = setpoints; //pointer needed for use in funtions
 float heave_lowpoint = 0; //initialized so that it always starts at the lower end of the amplitude
 
 //Radio variables
-RF24 radio(3,4); // CE, CSN
+RF24 radio(3,4,4000000); // CE, CSN, SPI frequency
 const byte address[6] = "00001";
 struct Data_Package {
   float values[7];
@@ -92,6 +93,7 @@ void loop() {
     //only reads once lower end of sine amplitude is reached
 
     // Write target values to servos (without feedback control for now)
+    //user-relevant: add or substract degrees to the setpoints to calibrate zero pos e.g. ...write(setpoints[2]-5);
     heave_servo.write(setpoints[0]);
     pitch_servo_right.write(setpoints[1]+5);
     pitch_servo_left.write(setpoints[2]-20);
@@ -101,7 +103,7 @@ void loop() {
     // Print values for debugging: Heave, Power consumption, noise
     float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], power_reading, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
-    //print_floats(valuesToPrint, length);
+    print_floats(valuesToPrint, length);
     delay(20);
 }
 

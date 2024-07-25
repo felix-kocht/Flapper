@@ -2,7 +2,7 @@
 #include <Math.h>
 #include "setpoints.h"
 
-//Changeable parameters:
+//user-relevant: Changeable parameters:
 const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
 const float MAX_HEAVE_AMP = 40; //safety measure to avoid destruction
 const float MAX_FREQ = 1.2; //safety measure to avoid destruction
@@ -40,7 +40,7 @@ void tune_parameters(float (*sine_params_ptr)[5]){
         left_turn_factor = 1 + turn_factor;
         right_turn_factor = 1;
     }
-
+    //user-relevant: change offsets slightly for individual flaps (phases are in radian, amplitude and offset (vertically shifts sine wave) in degrees)
     // Set parameters for Heave servo
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[1][0] = frequency;  // Frequency f
