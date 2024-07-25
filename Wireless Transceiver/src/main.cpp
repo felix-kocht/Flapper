@@ -25,7 +25,7 @@ Data_Package data = {0.0, 38, 60, 90, 0, 0, 0}; // Initialize with default value
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(19200);
   radio.begin();
   radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_MIN);

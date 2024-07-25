@@ -10,7 +10,7 @@
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
 const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulleymotor, Powersensor, radio reciever, SD Card (11,12,13), GPS
-const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, false, false, false}; //same order as above 
+const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 19200;
@@ -40,7 +40,7 @@ float (*setpoints_ptr) = setpoints; //pointer needed for use in funtions
 float heave_lowpoint = 0; //initialized so that it always starts at the lower end of the amplitude
 
 //Radio variables
-RF24 radio(7, 8); // CE, CSN
+RF24 radio(3,4); // CE, CSN
 const byte address[6] = "00001";
 struct Data_Package {
   float values[7];
@@ -101,7 +101,7 @@ void loop() {
     // Print values for debugging: Heave, Power consumption, noise
     float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], power_reading, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
-    print_floats(valuesToPrint, length);
+    //print_floats(valuesToPrint, length);
     delay(20);
 }
 
