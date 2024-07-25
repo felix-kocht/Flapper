@@ -2,11 +2,14 @@
 #include <Servo.h>
 #include "setpoints.h"
 #include "powerchip.h"
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 
 //Changeable parameters:
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
-const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulley motor, Powersensor, PPM reciever, SD Card (11,12,13), GPS
+const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 3, 2, 99, 99}; //Pulleymotor, Powersensor, radio reciever, SD Card (11,12,13), GPS
 const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, false, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
@@ -24,6 +27,7 @@ Servo camber_servo_left;
 void init_servos();
 void print_floats(float* values, int length);
 void read_serial_float();
+void read_radio_float();
 void init_peripheral(int i);
 
 // Control variables
@@ -34,6 +38,14 @@ float (*sine_params_ptr)[5] = sine_params; //pointer needed for use in funtions
 float setpoints[5] = {0};
 float (*setpoints_ptr) = setpoints; //pointer needed for use in funtions
 float heave_lowpoint = 0; //initialized so that it always starts at the lower end of the amplitude
+
+//Radio variables
+RF24 radio(7, 8); // CE, CSN
+const byte address[6] = "00001";
+struct Data_Package {
+  float values[7];
+};
+Data_Package data; // Create a variable with the above structure
 
 void setup() {
     // Initialize Serial communication
@@ -63,7 +75,12 @@ void loop() {
 
     // Read serial input at every loop
     if (setpoints[0] < (heave_lowpoint + 1)) {
-        read_serial_float();
+        //use radio receiver if connected instead
+        if (PERIPHERALS_CONNECTED[2]) {
+            read_radio_float();
+        } else {
+            read_serial_float();
+        }
     }
 
     //Use peripherals //TODO: add others in a structured way
@@ -145,6 +162,30 @@ void read_serial_float() {
     }
 }
 
+void read_radio_float() {
+    if (radio.available()) {
+        radio.read(&data, sizeof(Data_Package)); // Receive the whole data package from the transmitter
+
+    // Process the received data
+    change_frequency(data.values[0]);
+    change_rest(data.values[1], data.values[2], data.values[3], data.values[4], data.values[5], data.values[6]);
+    
+    // Update heave_lowpoint and change_time
+    heave_lowpoint = get_minimum_heave();
+    change_time = millis();
+    
+    // Print the received data for debugging purposes
+    Serial.println("Received data package:");
+    Serial.println(data.values[0]);
+    Serial.println(data.values[1]);
+    Serial.println(data.values[2]);
+    Serial.println(data.values[3]);
+    Serial.println(data.values[4]);
+    Serial.println(data.values[5]);
+    Serial.println(data.values[6]);
+    }
+}
+
 void init_peripheral(int i) {
     switch (i) {
         case 0:
@@ -155,6 +196,10 @@ void init_peripheral(int i) {
             break;
         case 2:
             // Initialize PPM receiver
+            radio.begin();
+            radio.openReadingPipe(0, address);
+            radio.setPALevel(RF24_PA_MIN);
+            radio.startListening();
             break;
         case 3:
             // Initialize SD card
