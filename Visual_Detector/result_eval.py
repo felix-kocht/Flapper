@@ -2,9 +2,10 @@ import pandas as pd
 import math
 import os
 
+#final_fix.py is necessary afterwards to adjust the efficiency!
 
 def calculate_statistics(merged_df):
-    #omitting the first 1.5 seconds of data, as it is not representative
+    # omitting the first 1.5 seconds of data, as it is not representative
     starting_time = merged_df['Time'].iloc[0]
     merged_df = merged_df[merged_df['Time'] > 1.5+starting_time]
     stats = {
@@ -12,29 +13,29 @@ def calculate_statistics(merged_df):
         'max': merged_df.max(),
         'min': merged_df.min(),
         'std': merged_df.std(),
-        #'95th percentile': merged_df.quantile(0.95)
+        # '95th percentile': merged_df.quantile(0.95)
     }
     return stats
 
 
-files = [f for f in os.listdir('output_data') if os.path.isfile(
-    os.path.join('output_data', f))]
+files = [f for f in os.listdir('output_data/stingray') if os.path.isfile(
+    os.path.join('output_data/stingray', f))]
 file_pairs = len(files) / 2
 
 # for every filepair we merge them, calculate statistics and new columns and write them to a new csv
 for i in range(1, int(file_pairs) + 1):
-    df1 = pd.read_csv(f'output_data/output1_{i}.csv', skiprows=10)
-    df2 = pd.read_csv(f'output_data/output2_{i}.csv', skiprows=10)
+    df1 = pd.read_csv(f'output_data/stingray/output1_{i}.csv', skiprows=10)
+    df2 = pd.read_csv(f'output_data/stingray/output2_{i}.csv', skiprows=10)
 
     # Read the key-value pairs from the first few rows
     metadata = pd.read_csv(
-        f'output_data/output1_{i}.csv', nrows=10, header=None)
+        f'output_data/stingray/output1_{i}.csv', nrows=10, header=None)
 
-    
     # Create the output CSV content
     name = [metadata.iloc[2, 1], metadata.iloc[4, 1],
             metadata.iloc[5, 1], metadata.iloc[6, 1], metadata.iloc[7, 1], metadata.iloc[8, 1]]
     name_string = '_'.join(name)
+    #output_file = (f'test_cases_rl/case.csv')
     output_file = (f'test_cases/Jul_18_cambered{name_string}.csv')
 
     # Merge the dataframes based on the Time column
@@ -56,7 +57,8 @@ for i in range(1, int(file_pairs) + 1):
             nue = math.atan2(heave_speed / waterspeed)
         gamma = 0.1  # TODO: get from camber amount and pitch angle
         merged_df.at[i, 'Angle_of_attack'] = nue - gamma
-    merged_df['Efficiency'] = merged_df['Fx']*1000 / merged_df['Power_consumption']
+        merged_df['Efficiency'] = merged_df['Fx'] * \
+        1000 / merged_df['Power_consumption']
 
     # Calculate statistics and prepare them for insertion
     statistics = calculate_statistics(merged_df)

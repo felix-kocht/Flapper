@@ -1,0 +1,12 @@
+Used Foils:,stingray
+Waterspeed:,0.0
+Frequency:,0.6
+Heave Amplitude:,36
+Pitch Amplitude:,20.0
+Camber Amplitude,0
+Pitch Phase,1.57
+Camber Phase,0
+Turn Rate,0
+Test Duration,10
+
+Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise

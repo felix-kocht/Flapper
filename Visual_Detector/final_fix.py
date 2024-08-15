@@ -36,7 +36,7 @@ def correct_average_efficiency(folder_path):
 
 
 # Define the folder path containing the CSV files
-folder_path = 'test_cases/Wide_off'
+folder_path = 'test_cases/Wide_foils_winglets'
 
 # Run the function
 correct_average_efficiency(folder_path)

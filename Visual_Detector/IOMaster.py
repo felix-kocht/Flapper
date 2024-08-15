@@ -11,8 +11,8 @@ port2 = '/dev/cu.usbmodem1101'  # Replace with your port
 
 # Variables to set by user
 target_folder = 'output_data'  # Target folder where data should be saved
-testrun_file = 'test_instructions.csv'
-used_foils = 'wide_foils_winglets'
+testrun_file = 'test_instructions_rl.csv'
+used_foils = 'stingray'
 waterspeed = '0.0'
 
 # Variables to change only if needed
@@ -123,6 +123,7 @@ def run_test_cases(io_manager1, test_cases):
     data_to_send = "0"  # Send a stop signal
     print(f"Sending data: {data_to_send}")
     io_manager1.write(data_to_send)
+    time.sleep(3)
     tests_completed.set()
 
 

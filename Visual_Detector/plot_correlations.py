@@ -61,7 +61,7 @@ x_param = 'Frequency'  # Example X-axis parameter
 y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
 z_measurement = 'Power_consumption'  # Example Z-axis measurement
 color_measurement = 'Frequency'  # Example color measurement (optional)
-dimensions = 3
+dimensions = 2
 
 x_data = []
 y_data = []
@@ -105,7 +105,6 @@ if dimensions == 3:
     plt.title(
         f'{folder_path[11:]}: {z_measurement}')
     # changing the name from figure 1 to the name of the folder
-
 
     # Automatic scaling of axes
     ax.auto_scale_xyz(x_data, y_data, z_data)
