@@ -53,13 +53,13 @@ def collect_data_from_folder(folder_path):
 
 # Example usage
 # Update this path to the actual folder path
-folder_path = 'test_cases/Stiff_foils'
+folder_path = 'test_cases/Wide_foils_winglets'
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
 x_param = 'Frequency'  # Example X-axis parameter
 y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
-z_measurement = 'Fx'  # Example Z-axis measurement
+z_measurement = 'Power_consumption'  # Example Z-axis measurement
 color_measurement = 'Frequency'  # Example color measurement (optional)
 dimensions = 3
 

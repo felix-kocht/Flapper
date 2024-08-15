@@ -6,11 +6,12 @@ import glob
 import csv
 
 # Usage instructions:
-# in IOMaster.py change the testrun_file to 'test_instructions_rl.csv'
+# in IOMaster.py change the testrun_file to 'test_instructions_rl.csv' and adjust ports there
 
 # parameters for the optimization
 max_tests = 4
 test_durations = 3
+heave_amp = 32  # increase if safe to do so
 
 parameters = {
     'frequency': [0.2, 0.4],  # TODO: increase if safe to do so
@@ -104,7 +105,7 @@ def initialize_parameters():
 
 def run_physical_test(param1, param2, param3, param4, param5):
 
-    #converts the parameters to the real-world values
+    # converts the parameters to the real-world values
     frequency = parameters['frequency'][0] + param1 * \
         (parameters['frequency'][1] - parameters['frequency'][0])
     pitch_amp = parameters['pitch amplitude'][0] + param2 * \
@@ -120,7 +121,7 @@ def run_physical_test(param1, param2, param3, param4, param5):
     data = [
         ["Frequency", "heave_amp", "pitch_amp", "camb_amp",
          "pitch_phase", "camber_phase", "turn_rate", "test_duration"],
-        [frequency, 38, pitch_amp, camber_amp, pitch_phase, camber_phase, 0, test_durations]]
+        [frequency, heave_amp, pitch_amp, camber_amp, pitch_phase, camber_phase, 0, test_durations]]
     with open('test_instructions_rl.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
@@ -150,7 +151,7 @@ def objective(params):
     reward = reward_function(thrust, consumption)
     return -reward  # Minimize the negative reward to maximize the reward
 
-ç
+
 # Initialize the parameters
 initialize_parameters()
 
