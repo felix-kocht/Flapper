@@ -8,12 +8,15 @@ import csv
 # Usage instructions:
 # in IOMaster.py change the testrun_file to 'test_instructions_rl.csv' and adjust ports there
 # in result_eval.py change the output_file to 'test_cases_rl/case.csv'
+# afterwards copy the logs in the terminal to the RL_output.txt file and run rl_log_interpreter.py to save the steps in a csv file
 
 # parameters for the optimization
 max_tests = 30
 test_durations = 10
 heave_amp = 36  # increase if safe to do so
 
+# TODO: sharpen the ranges to get better results
+# TODO define reward function nicely
 parameters = {
     'frequency': [0.2, 0.6],  # TODO: increase if safe to do so
     'pitch amplitude': [20, 70],
@@ -41,9 +44,6 @@ space = [
 
 # in space range (0 to 1): x0 is  initial guess, y0 the initial reward
 x0 = [0, 0, 0]  # , 0, 0]
-# y0 = -16 #TODO: fill in if available
-
-# TODO: find best reward function
 
 
 def parse_csv(file_path):
@@ -161,7 +161,7 @@ initialize_parameters()
 
 # Perform Bayesian Optimization
 res = gp_minimize(objective, space, n_calls=max_tests, random_state=0,
-                  verbose=True, n_initial_points=3, x0=x0)  # , y0=y0)
+                  verbose=True, n_initial_points=3, x0=x0, acq_func="EI")  # , y0=y0) #acq_func="PI" might converge faster, but risks getting stuck in local minima
 
 # Output the best parameters found-
 print("Best parameters: ", res.x)

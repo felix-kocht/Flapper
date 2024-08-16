@@ -35,8 +35,8 @@ for i in range(1, int(file_pairs) + 1):
     name = [metadata.iloc[2, 1], metadata.iloc[4, 1],
             metadata.iloc[5, 1], metadata.iloc[6, 1], metadata.iloc[7, 1], metadata.iloc[8, 1]]
     name_string = '_'.join(name)
-    #output_file = (f'test_cases_rl/case.csv')
-    output_file = (f'test_cases/Jul_18_cambered{name_string}.csv')
+    output_file = (f'test_cases_rl/case.csv')
+    #output_file = (f'test_cases/Jul_18_cambered{name_string}.csv')
 
     # Merge the dataframes based on the Time column
     merged_df = pd.merge_asof(df1, df2, on='Time')

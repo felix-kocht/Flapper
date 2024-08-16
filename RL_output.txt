@@ -1,0 +1,322 @@
+Iteration No: 1 started. Evaluating function at provided point.
+[0.2499999999999999, 0.8, 0.5]
+Running test case 1
+Sending data: 0
+Sending data: 0.29999999999999993,36,60.0,0,0.0,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.282 1602.707
+Iteration No: 1 ended. Evaluation done at provided point.
+Time taken: 16.7318
+Function value obtained: -0.1760
+Current minimum: -0.1760
+Iteration No: 2 started. Evaluating function at random point.
+[0.5928446182250184, 0.8442657485810175, 0.857945617622757]
+Running test case 1
+Sending data: 0
+Sending data: 0.4371378472900074,36,62.21328742905088,0,1.123949239335457,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.109 1902.803
+Iteration No: 2 ended. Evaluation done at random point.
+Time taken: 16.1460
+Function value obtained: -0.0573
+Current minimum: -0.1760
+Iteration No: 3 started. Evaluating function at random point.
+[0.8472517387841256, 0.6235636967859725, 0.38438170729269994]
+Running test case 1
+Sending data: 0
+Sending data: 0.5389006955136502,36,51.17818483929862,0,-0.36304143910092224,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.496 3173.069
+Iteration No: 3 ended. Evaluation done at random point.
+Time taken: 16.1512
+Function value obtained: -0.1563
+Current minimum: -0.1760
+Iteration No: 4 started. Evaluating function at random point.
+[0.29753460654447234, 0.056712977317443194, 0.27265629458011326]
+Running test case 1
+Sending data: 0
+Sending data: 0.3190138426177889,36,22.83564886587216,0,-0.7138592350184444,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.289 1496.412
+Iteration No: 4 ended. Evaluation done at random point.
+Time taken: 16.2594
+Function value obtained: -0.1931
+Current minimum: -0.1931
+Iteration No: 5 started. Searching for the next optimal point.
+[0.3707523829149103, 0.9237728507691136, 0.8620874126716881]
+Running test case 1
+Sending data: 0
+Sending data: 0.3483009531659641,36,66.18864253845568,0,1.1369544757891006,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.126 1851.727
+Iteration No: 5 ended. Search finished for the next optimal point.
+Time taken: 16.8090
+Function value obtained: -0.0680
+Current minimum: -0.1931
+Iteration No: 6 started. Searching for the next optimal point.
+[0.0, 1.0, 0.0]
+Running test case 1
+Sending data: 0
+Sending data: 0.2,36,70.0,0,-1.57,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.152 1305.439
+Iteration No: 6 ended. Search finished for the next optimal point.
+Time taken: 16.2890
+Function value obtained: -0.1164
+Current minimum: -0.1931
+Iteration No: 7 started. Searching for the next optimal point.
+[0.0, 0.19710824475291755, 0.3303731185398245]
+Running test case 1
+Sending data: 0
+Sending data: 0.2,36,29.85541223764588,0,-0.5326284077849512,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.206 1152.015
+Iteration No: 7 ended. Search finished for the next optimal point.
+Time taken: 16.3000
+Function value obtained: -0.1788
+Current minimum: -0.1931
+Iteration No: 8 started. Searching for the next optimal point.
+[0.09811713739686098, 0.9871349278121543, 0.19505755149817003]
+Running test case 1
+Sending data: 0
+Sending data: 0.2392468549587444,36,69.35674639060771,0,-0.9575192882957462,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.281 1766.548
+Iteration No: 8 ended. Search finished for the next optimal point.
+Time taken: 16.3413
+Function value obtained: -0.1591
+Current minimum: -0.1931
+Iteration No: 9 started. Searching for the next optimal point.
+[0.9256249570654423, 0.0, 0.5969751085580047]
+Running test case 1
+Sending data: 0
+Sending data: 0.5702499828261769,36,20.0,0,0.30450184087213494,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.66 2822.742
+Iteration No: 9 ended. Search finished for the next optimal point.
+Time taken: 16.2828
+Function value obtained: -0.2338
+Current minimum: -0.2338
+Iteration No: 10 started. Searching for the next optimal point.
+[0.06693867650654728, 0.9650131997566069, 0.6471897202727745]
+Running test case 1
+Sending data: 0
+Sending data: 0.22677547060261893,36,68.25065998783035,0,0.4621757216565119,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.092 1203.652
+Iteration No: 10 ended. Search finished for the next optimal point.
+Time taken: 16.3844
+Function value obtained: -0.0764
+Current minimum: -0.2338
+Iteration No: 11 started. Searching for the next optimal point.
+[0.01931258022618101, 0.0, 0.5003428526305174]
+Running test case 1
+Sending data: 0
+Sending data: 0.2077250320904724,36,20.0,0,0.0010765572598245843,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.113 1185.469
+Iteration No: 11 ended. Search finished for the next optimal point.
+Time taken: 16.3730
+Function value obtained: -0.0953
+Current minimum: -0.2338
+Iteration No: 12 started. Searching for the next optimal point.
+[0.8856265100229587, 0.0, 0.6205034187541123]
+Running test case 1
+Sending data: 0
+Sending data: 0.5542506040091835,36,20.0,0,0.3783807348879127,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.496 2409.121
+Iteration No: 12 ended. Search finished for the next optimal point.
+Time taken: 16.3465
+Function value obtained: -0.2059
+Current minimum: -0.2338
+Iteration No: 13 started. Searching for the next optimal point.
+[0.700862193097477, 0.11946003830023984, 0.5911714817052443]
+Running test case 1
+Sending data: 0
+Sending data: 0.4803448772389908,36,25.97300191501199,0,0.28627845255446704,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.476 2076.272
+Iteration No: 13 ended. Search finished for the next optimal point.
+Time taken: 16.4070
+Function value obtained: -0.2293
+Current minimum: -0.2338
+Iteration No: 14 started. Searching for the next optimal point.
+[0.014924965085396933, 0.0, 0.5815567675070799]
+Running test case 1
+Sending data: 0
+Sending data: 0.20596998603415878,36,20.0,0,0.2560882499722308,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.118 1096.485
+Iteration No: 14 ended. Search finished for the next optimal point.
+Time taken: 16.3958
+Function value obtained: -0.1076
+Current minimum: -0.2338
+Iteration No: 15 started. Searching for the next optimal point.
+[0.8853240961284001, 0.08041664841896644, 0.5735681741996267]
+Running test case 1
+Sending data: 0
+Sending data: 0.5541296384513601,36,24.020832420948324,0,0.23100406698682785,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.584 2491.288
+Iteration No: 15 ended. Search finished for the next optimal point.
+Time taken: 16.4004
+Function value obtained: -0.2344
+Current minimum: -0.2344
+Iteration No: 16 started. Searching for the next optimal point.
+[0.8585173193316927, 0.3842478539709516, 0.5610942473599149]
+Running test case 1
+Sending data: 0
+Sending data: 0.5434069277326771,36,39.21239269854758,0,0.19183593671013277,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.577 2255.644
+Iteration No: 16 ended. Search finished for the next optimal point.
+Time taken: 16.3297
+Function value obtained: -0.2558
+Current minimum: -0.2558
+Iteration No: 17 started. Searching for the next optimal point.
+[0.8612671952531041, 1.0, 0.5481804298806054]
+Running test case 1
+Sending data: 0
+Sending data: 0.5445068781012417,36,70.0,0,0.15128654982510104,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.248 2789.242
+Iteration No: 17 ended. Search finished for the next optimal point.
+Time taken: 16.4432
+Function value obtained: -0.0889
+Current minimum: -0.2558
+Iteration No: 18 started. Searching for the next optimal point.
+[0.9894239907035994, 0.26588019131314, 0.5536300923543969]
+Running test case 1
+Sending data: 0
+Sending data: 0.5957695962814398,36,33.294009565657,0,0.16839848999280616,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.674 2752.955
+Iteration No: 18 ended. Search finished for the next optimal point.
+Time taken: 16.3228
+Function value obtained: -0.2448
+Current minimum: -0.2558
+Iteration No: 19 started. Searching for the next optimal point.
+[1.0, 0.0835263870361733, 0.42579467011122585]
+Running test case 1
+Sending data: 0
+Sending data: 0.6,36,24.176319351808665,0,-0.23300473585075077,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.711 3447.062
+Iteration No: 19 ended. Search finished for the next optimal point.
+Time taken: 16.4066
+Function value obtained: -0.2063
+Current minimum: -0.2558
+Iteration No: 20 started. Searching for the next optimal point.
+[1.0, 0.30931310218260527, 0.6497370116840585]
+Running test case 1
+Sending data: 0
+Sending data: 0.6,36,35.46565510913027,0,0.4701742166879439,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.61 2503.652
+Iteration No: 20 ended. Search finished for the next optimal point.
+Time taken: 16.3791
+Function value obtained: -0.2436
+Current minimum: -0.2558
+Iteration No: 21 started. Searching for the next optimal point.
+[0.025008988940077657, 0.0, 0.0]
+Running test case 1
+Sending data: 0
+Sending data: 0.21000359557603107,36,20.0,0,-1.57,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.132 1237.515
+Iteration No: 21 ended. Search finished for the next optimal point.
+Time taken: 16.4422
+Function value obtained: -0.1067
+Current minimum: -0.2558
+Iteration No: 22 started. Searching for the next optimal point.
+[0.7400047425712983, 0.33391149651444973, 0.5891276713901525]
+Running test case 1
+Sending data: 0
+Sending data: 0.4960018970285193,36,36.69557482572249,0,0.27986088816507904,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.489 2095.348
+Iteration No: 22 ended. Search finished for the next optimal point.
+Time taken: 16.3657
+Function value obtained: -0.2334
+Current minimum: -0.2558
+Iteration No: 23 started. Searching for the next optimal point.
+[1.0, 0.24984260581079343, 0.5909062481248586]
+Running test case 1
+Sending data: 0
+Sending data: 0.6,36,32.49213029053967,0,0.285445619112056,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+0.644 2606.5
+Iteration No: 23 ended. Search finished for the next optimal point.
+Time taken: 16.3443
+Function value obtained: -0.2471
+Current minimum: -0.2558
