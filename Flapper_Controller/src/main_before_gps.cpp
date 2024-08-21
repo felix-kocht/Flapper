@@ -95,8 +95,8 @@ void loop() {
     // Write target values to servos (without feedback control for now)
     //user-relevant: add or substract degrees to the setpoints to calibrate zero pos e.g. ...write(setpoints[2]-5);
     heave_servo.write(setpoints[0]);
-    pitch_servo_right.write(setpoints[1]+20);
-    pitch_servo_left.write(setpoints[2]-20);
+    pitch_servo_right.write(setpoints[1]+10);
+    pitch_servo_left.write(setpoints[2]-0);
     camber_servo_right.write(setpoints[3]);
     camber_servo_left.write(setpoints[4]);
 

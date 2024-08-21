@@ -18,25 +18,25 @@ def calculate_statistics(merged_df):
     return stats
 
 
-files = [f for f in os.listdir('output_data/stingray') if os.path.isfile(
-    os.path.join('output_data/stingray', f))]
+files = [f for f in os.listdir('output_data') if os.path.isfile(
+    os.path.join('output_data', f))]
 file_pairs = len(files) / 2
 
 # for every filepair we merge them, calculate statistics and new columns and write them to a new csv
 for i in range(1, int(file_pairs) + 1):
-    df1 = pd.read_csv(f'output_data/stingray/output1_{i}.csv', skiprows=10)
-    df2 = pd.read_csv(f'output_data/stingray/output2_{i}.csv', skiprows=10)
+    df1 = pd.read_csv(f'output_data/output1_{i}.csv', skiprows=10)
+    df2 = pd.read_csv(f'output_data/output2_{i}.csv', skiprows=10)
 
     # Read the key-value pairs from the first few rows
     metadata = pd.read_csv(
-        f'output_data/stingray/output1_{i}.csv', nrows=10, header=None)
+        f'output_data/output1_{i}.csv', nrows=10, header=None)
 
     # Create the output CSV content
     name = [metadata.iloc[2, 1], metadata.iloc[4, 1],
             metadata.iloc[5, 1], metadata.iloc[6, 1], metadata.iloc[7, 1], metadata.iloc[8, 1]]
     name_string = '_'.join(name)
-    output_file = (f'test_cases_rl/case.csv')
-    #output_file = (f'test_cases/Jul_18_cambered{name_string}.csv')
+    #output_file = (f'test_cases_rl/case.csv')
+    output_file = (f'test_cases/wide_stiff_{name_string}.csv')
 
     # Merge the dataframes based on the Time column
     merged_df = pd.merge_asof(df1, df2, on='Time')

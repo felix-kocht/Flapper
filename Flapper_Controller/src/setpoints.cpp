@@ -14,7 +14,7 @@ static float pitch_amplitude = 60; //degree
 static float camber_amplitude = 60; //degree (tests showed more than 60 could lead to destruction)
 static float pitch_phase = 0; //TODO define
 static float camber_phase = 0; //TODO define
-static float turn_factor = 0; //0 is straight, -2 is full left, 2 is full right, more is mayhem
+static float turn_factor = 0.15; //0 is straight, -2 is full left, 2 is full right, more is mayhem //TODO: set to 0
 //End of changeable parameters
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
