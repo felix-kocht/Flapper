@@ -1,0 +1,44 @@
+import numpy as np
+
+# Define the parameter ranges
+parameters = {
+    'frequency': [0.2, 0.8],
+    'pitch amplitude': [20, 45],
+    'pitch phase': [-1.57, 1.57],
+}
+
+# Function to normalize values to the [0, 1] range
+
+
+def normalize(value, min_val, max_val):
+    return (value - min_val) / (max_val - min_val)
+
+
+# Load the data from the CSV file
+file_path = 'RL_output_force.csv'  # Adjust this path as needed
+data = np.loadtxt(file_path, delimiter=',', skiprows=1)
+
+# Initialize the x and y vectors
+x = []
+y = []
+
+# Assuming columns 1, 3, and 5 are frequency, pitch amplitude, and pitch phase respectively
+# and column 8 is the corresponding output (reward)
+for row in data:
+    param1 = normalize(row[1], parameters['frequency']
+                       [0], parameters['frequency'][1])
+    param2 = normalize(row[3], parameters['pitch amplitude']
+                       [0], parameters['pitch amplitude'][1])
+    param3 = normalize(row[5], parameters['pitch phase']
+                       [0], parameters['pitch phase'][1])
+
+    x.append([param1, param2, param3])
+    y.append(row[8])
+
+# Convert lists to numpy arrays for further use
+x = np.array(x)
+y = np.array(y)
+
+# Print or return x and y to use them in your application
+print("x:", x)
+print("y:", y)
