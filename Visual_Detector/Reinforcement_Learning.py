@@ -44,8 +44,7 @@ space = [
 ]
 
 # in space range (0 to 1): x0 is  initial guess, y0 the initial reward
-x0 = [0, 0, 0]  # , 0, 0]
-
+x0 = [0, 0, 0]
 
 def parse_csv(file_path):
     parameters = {}
@@ -86,10 +85,11 @@ def collect_data_from_folder(folder_path):
 
 
 def reward_function(thrust, consumption):
-    if consumption == 0:
+    """ if consumption == 0:
         return thrust*0.01
     # (for testing just efficiency) + 0.1*thrust
-    return (thrust*1000)/consumption 
+    return (thrust*1000)/consumption  """
+    return thrust
 
 # initializing x0 on the 0-1 range
 
@@ -161,7 +161,7 @@ def objective(params):
 initialize_parameters()
 
 # Perform Bayesian Optimization
-res = gp_minimize(objective, space, n_calls=max_tests, random_state=1,
+res = gp_minimize(objective, space, n_calls=max_tests, random_state=2,
                   verbose=True, n_initial_points=3, acq_func="EI")  # , y0=y0) #acq_func="PI" might converge faster, but risks getting stuck in local minima
 
 # Output the best parameters found-

@@ -2,8 +2,8 @@ import csv
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+input_file = 'RL_output_force.csv'
 # Read the data from the CSV file
-input_file = 'RL_output_efficiency_defect.csv'
 
 iterations = []
 frequencies = []
@@ -16,7 +16,9 @@ with open(input_file, 'r') as csvfile:
     for row in csvreader:
         iterations.append(int(row[0]))
         # Assuming Pitch Amplitude is the 4nd column
-        frequencies.append(float(row[3]))
+        #frequencies.append(float(row[3]))
+        # Assuming Frequency is the 2nd column
+        frequencies.append(float(row[1]))
         # Assuming Pitch Phase is the 6th column
         pitch_phases.append(float(row[5]))
         # Function Value is the 9th column
@@ -38,7 +40,7 @@ cbar = plt.colorbar(sc, ax=ax)
 cbar.set_label('Iteration Number')
 
 # Set labels
-ax.set_xlabel('Pitch Amplitude')
+ax.set_xlabel('Frequency')
 ax.set_ylabel('Pitch Phase')
 ax.set_zlabel('Function Value')
 
