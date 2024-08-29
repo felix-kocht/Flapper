@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'):
     # TODO: user can change these
     scale_factors = {
-        'Heave_pos': 1,
+        'Heave_pos': 0.02,
         'Pitch_right': 1,
         'Pitch_left': 1,
         'Power_consumption': 0.1,
         'Noise': 10,
-        'Fx': 100,
+        'Fx': 1,
         'Fz': 100,
         'Mx': 1000,
         'My': 1000,
@@ -40,7 +40,7 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
             plt.plot(data_cleaned['Time'], data_cleaned[column], label=column)
 
     plt.xlabel('Time')
-    plt.ylabel('Values')
+    plt.ylabel('Force in Newton')
     plt.title(title)
     plt.legend()
     plt.grid(True)
@@ -48,7 +48,11 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
 
 
 # Example usage:
-plot_columns('test_cases/Jul_11_4_stiff0.6_15_90_0_0_0.csv',
-             ['Heave_pos', 'Fx', 'Fz', 'Mx', 'My', 'Mz'], title='Various Parameters over Time')
+#plot_columns('test_cases/wide_stiff_sharklets/wide_stiff_sharklet0.8_35_90_0_0_0.csv',
+             #['Heave_pos', 'Fx'], title='Various Parameters over Time')
+plot_columns('test_cases/Cambered_foils/Jul_18_cambered0.8_45_90_0_0_0.csv',
+                 # ['Heave_pos', 'Fx'], title='Various Parameters over Time')
+#plot_columns('test_cases_rl/case.csv',
+             ['Heave_pos', 'Fx'], title = 'With -1.12 Phase shift')
 
 # TODO: add multiple different unit values to the y-axis

@@ -16,7 +16,7 @@ used_foils = 'wide_stiff_for_real'
 waterspeed = '0.0'
 
 # Variables to change only if needed
-sample_rate = 20  # Adjust based 0.4 on your data rate in Hz
+sample_rate = 20  # Adjust based on your data rate in Hz
 header_line1 = ["Time", "Heave_pos", "Pitch_right",
                 "Pitch_left", "Power_consumption", "Noise"]  # Header line for CSV1
 header_line2 = ["Time", "Fx", "Fz",

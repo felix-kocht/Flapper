@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 
 # Load the data
-#data = pd.read_csv('GPS_data/08hz_38hd_25pitch.csv')
-data = pd.read_csv('GPS_data/turning.csv')
+#data = pd.read_csv('GPS_data/valid_stuff/0.6_45.csv')
+path = 'GPS_data/0_8_25.csv'
+data = pd.read_csv(path)
 
 # Extract all columns
 latitude = data['latitude'].values
@@ -13,6 +14,7 @@ velocity = data['velocity'].values
 time = data['time'].values
 voltage = data['voltage'].values
 current = data['current'].values
+power = -voltage*current
 
 # Compute additional data
 # Differences in coordinates (assuming small distances, curvature neglected)
@@ -47,9 +49,10 @@ plt.show()
 plt.figure(figsize=(10, 5))
 plt.plot(time[:-1], velocity[:-1], label='Velocity')
 plt.plot(time[1:], computed_velocity,
-         label='Computed velocity', linestyle='dashed')
+         label='Computed velocity')
+#plt.plot(time,power,label='Power_consumption')
 plt.xlabel('Time')
 plt.ylabel('Velocity (m/s)')
-plt.title('Velocity of the drone')
+plt.title(path)
 plt.legend()
 plt.show()

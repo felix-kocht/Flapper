@@ -11,7 +11,7 @@
 const int SERVO_PINS[5] = {9, 8, 7, 6, 5}; // heave, pitch right, pitch left, camber right, camber left
 const int NUM_PERIPHERALS = 5;
 const int PERIPHERAL_PINS[NUM_PERIPHERALS] = {4, 99, 3, 99, 99}; //Pullexymotor, Powersensor, radio reciever, SD Card (11,12,13), GPS
-const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, false, false, false}; //same order as above 
+const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, false, false, false, false}; //same order as above 
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {true, true, false, false, false}; //Lab configuration
 //const bool PERIPHERALS_CONNECTED[NUM_PERIPHERALS] = {false, true, true, true, true}; //Lake configuration
 const int BAUD_RATE = 19200;
@@ -97,11 +97,26 @@ void loop() {
     heave_servo.write(setpoints[0]);
     pitch_servo_right.write(setpoints[1]+10);
     pitch_servo_left.write(setpoints[2]-0);
+
+//capping camber movements
+    if(setpoints[3] > 150){
+        setpoints[3] = 150;
+    }
+    if(setpoints[3] < 30){
+        setpoints[3] = 30;
+    }
+    if(setpoints[4] > 150){
+        setpoints[4] = 150;
+    }
+    if(setpoints[4] < 30){
+        setpoints[4] = 30;
+    }
+        
     camber_servo_right.write(setpoints[3]);
     camber_servo_left.write(setpoints[4]);
 
     // Print values for debugging: Heave, Power consumption, noise
-    float valuesToPrint[] = {setpoints[0], setpoints[1], setpoints[2], power_reading, 0};
+    float valuesToPrint[] = {setpoints[0], setpoints[3], setpoints[4], power_reading, 0};
     int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
     print_floats(valuesToPrint, length);
     delay(20);
