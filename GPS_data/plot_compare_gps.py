@@ -36,23 +36,33 @@ for filename in os.listdir(directory):
         average_efficiencies.append(average_efficiency)
         file_labels.append(filename)
 
-# Plotting Average Velocity
+# Sort data by average velocities before plotting
+sorted_velocities_data = sorted(
+    zip(average_velocities, file_labels), key=lambda x: x[0])
+sorted_velocities, sorted_velocity_labels = zip(*sorted_velocities_data)
+
+# Plotting Average Velocity (sorted)
 plt.figure(figsize=(10, 5))
-plt.bar(file_labels, average_velocities, color='lightgray')
+plt.bar(sorted_velocity_labels, sorted_velocities, color='lightgray')
 plt.xlabel('CSV File')
 plt.ylabel('Average Velocity')
-plt.title('Average Velocity for Different Files')
+plt.title('Average Velocity for Different Files (Sorted)')
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.grid(True)
 plt.show()
 
-# Plotting Average Efficiency
+# Sort data by average efficiencies before plotting
+sorted_efficiencies_data = sorted(
+    zip(average_efficiencies, file_labels), key=lambda x: x[0])
+sorted_efficiencies, sorted_efficiency_labels = zip(*sorted_efficiencies_data)
+
+# Plotting Average Efficiency (sorted)
 plt.figure(figsize=(10, 5))
-plt.bar(file_labels, average_efficiencies, color='lightgray')
+plt.bar(sorted_efficiency_labels, sorted_efficiencies, color='lightgray')
 plt.xlabel('CSV File')
 plt.ylabel('Average Efficiency (Velocity / Power)')
-plt.title('Average Efficiency for Different Files')
+plt.title('Average Efficiency for Different Files (Sorted)')
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.grid(True)

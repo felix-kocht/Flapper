@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 
 # Load the data
-#data = pd.read_csv('GPS_data/valid_stuff/0.6_45.csv')
-path = 'GPS_data/0_8_25.csv'
+# data = pd.read_csv('GPS_data/valid_stuff/0.6_45.csv')
+path = 'GPS_data/valid_stuff/06_55.csv'
 data = pd.read_csv(path)
 
 # Extract all columns
@@ -24,7 +24,7 @@ dlon = np.diff(longitude)
 # Approximate distance calculation (1 degree of latitude ≈ 111.32 km, 1 degree of longitude ≈ 111.32 km * cos(latitude))
 lat_factor = 111320  # meters per degree latitude
 # meters per degree longitude at the given latitude
-lon_factor = 75207 # = 111320 * np.cos(np.radians(latitude[:-1]))
+lon_factor = 75207  # = 111320 * np.cos(np.radians(latitude[:-1]))
 
 distance = np.sqrt((dlat * lat_factor)**2 + (dlon * lon_factor)**2)
 
@@ -36,8 +36,9 @@ computed_velocity = distance / time_diff
 plt.figure(figsize=(10, 5))
 plt.plot(longitude, latitude)
 plt.plot(longitude[0], latitude[0], 'o', color='purple')
-#adding a midway point in the color orange
-plt.plot(longitude[int(len(longitude)/2)], latitude[int(len(latitude)/2)], 'o', color='red')
+# adding a midway point in the color orange
+plt.plot(longitude[int(len(longitude)/2)],
+         latitude[int(len(latitude)/2)], 'o', color='red')
 plt.plot(longitude[-1], latitude[-1], 'o', color='orange')
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
@@ -50,7 +51,7 @@ plt.figure(figsize=(10, 5))
 plt.plot(time[:-1], velocity[:-1], label='Velocity')
 plt.plot(time[1:], computed_velocity,
          label='Computed velocity')
-#plt.plot(time,power,label='Power_consumption')
+# plt.plot(time,power,label='Power_consumption')
 plt.xlabel('Time')
 plt.ylabel('Velocity (m/s)')
 plt.title(path)
