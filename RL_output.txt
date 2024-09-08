@@ -1,0 +1,230 @@
+Iteration No: 1 started. Evaluating function at random point.
+[0.1850820781732069, 0.931540865821112, 0.9477306115278782]
+Running test case 1
+Sending data: 0
+Sending data: 0.31104924690392416,38,43.288521645527794,0,1.4058741201975378,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+0.018 1948.076
+Iteration No: 1 ended. Evaluation done at random point.
+Time taken: 16.7954
+Function value obtained: -0.0180
+Current minimum: -0.0180
+Iteration No: 2 started. Evaluating function at random point.
+[0.4847490967837558, 0.32053643711160734, 0.15442667308933014]
+Running test case 1
+Sending data: 0
+Sending data: 0.49084945807025354,38,28.013410927790183,0,-1.0851002464995034,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+1.062 6034.977
+Iteration No: 2 ended. Evaluation done at random point.
+Time taken: 16.2416
+Function value obtained: -1.0620
+Current minimum: -1.0620
+Iteration No: 3 started. Evaluating function at random point.
+[0.6988626913672014, 0.11995054259638985, 0.4851759095998651]
+Running test case 1
+Sending data: 0
+Sending data: 0.6193176148203209,38,22.998763564909748,0,-0.046547643856423626,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.161 5575.69
+Iteration No: 3 ended. Evaluation done at random point.
+Time taken: 16.2728
+Function value obtained: -1.1610
+Current minimum: -1.1610
+Iteration No: 4 started. Searching for the next optimal point.
+[0.0, 0.0, 0.0]
+Running test case 1
+Sending data: 0
+Sending data: 0.2,38,20.0,0,-1.57,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+0.131 1768.409
+Iteration No: 4 ended. Search finished for the next optimal point.
+Time taken: 16.2983
+Function value obtained: -0.1310
+Current minimum: -1.1610
+Iteration No: 5 started. Searching for the next optimal point.
+[0.6029049560518901, 1.0, 1.0]
+Running test case 1
+Sending data: 0
+Sending data: 0.5617429736311341,38,45.0,0,1.57,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+0.015 4644.985
+Iteration No: 5 ended. Search finished for the next optimal point.
+Time taken: 16.3414
+Function value obtained: -0.0150
+Current minimum: -1.1610
+Iteration No: 6 started. Searching for the next optimal point.
+[0.8872286515974314, 0.31156996739815307, 0.4107876260079409]
+Running test case 1
+Sending data: 0
+Sending data: 0.7323371909584588,38,27.789249184953825,0,-0.2801268543350657,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+1.542 7452.015
+Iteration No: 6 ended. Search finished for the next optimal point.
+Time taken: 16.2858
+Function value obtained: -1.5420
+Current minimum: -1.5420
+Iteration No: 7 started. Searching for the next optimal point.
+[0.7105764606500984, 0.45722463361726706, 0.4364974599523176]
+Running test case 1
+Sending data: 0
+Sending data: 0.6263458763900591,38,31.430615840431678,0,-0.19939797574972284,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.281 6243.288
+Iteration No: 7 ended. Search finished for the next optimal point.
+Time taken: 16.2776
+Function value obtained: -1.2810
+Current minimum: -1.5420
+Iteration No: 8 started. Searching for the next optimal point.
+[1.0, 1.0, 0.1924611594852626]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,45.0,0,-0.9656719592162755,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.805 9634.181
+Iteration No: 8 ended. Search finished for the next optimal point.
+Time taken: 16.4641
+Function value obtained: -1.8050
+Current minimum: -1.8050
+Iteration No: 9 started. Searching for the next optimal point.
+[1.0, 1.0, 0.0]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,45.0,0,-1.57,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.616 10623.97
+Iteration No: 9 ended. Search finished for the next optimal point.
+Time taken: 16.3568
+Function value obtained: -1.6160
+Current minimum: -1.8050
+Iteration No: 10 started. Searching for the next optimal point.
+[1.0, 0.0, 0.24396879712336605]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,20.0,0,-0.8039379770326306,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.702 9716.438
+Iteration No: 10 ended. Search finished for the next optimal point.
+Time taken: 16.2586
+Function value obtained: -1.7020
+Current minimum: -1.8050
+Iteration No: 11 started. Searching for the next optimal point.
+[1.0, 1.0, 0.277991353321278]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,45.0,0,-0.6971071505711871,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.749 8587.53
+Iteration No: 11 ended. Search finished for the next optimal point.
+Time taken: 16.2797
+Function value obtained: -1.7490
+Current minimum: -1.8050
+Iteration No: 12 started. Searching for the next optimal point.
+[1.0, 1.0, 0.19823917157141108]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,45.0,0,-0.9475290012657692,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+1.684 9324.197
+Iteration No: 12 ended. Search finished for the next optimal point.
+Time taken: 16.2697
+Function value obtained: -1.6840
+Current minimum: -1.8050
+Iteration No: 13 started. Searching for the next optimal point.
+[1.0, 1.0, 0.37455723545844927]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,45.0,0,-0.3938902806604694,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+1.452 7996.97
+Iteration No: 13 ended. Search finished for the next optimal point.
+Time taken: 16.2901
+Function value obtained: -1.4520
+Current minimum: -1.8050
+Iteration No: 14 started. Searching for the next optimal point.
+[1.0, 0.0, 0.13920232078275238]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,20.0,0,-1.1329047127421576,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+/opt/anaconda3/lib/python3.11/site-packages/numpy/core/_methods.py:49: RuntimeWarning: invalid value encountered in reduce
+  return umr_sum(a, axis, dtype, out, keepdims, initial, where)
+Merged CSV written to test_cases_rl/case.csv
+1.675 10790.616
+Iteration No: 14 ended. Search finished for the next optimal point.
+Time taken: 16.2609
+Function value obtained: -1.6750
+Current minimum: -1.8050
+Iteration No: 15 started. Searching for the next optimal point.
+[1.0, 0.0, 0.1430126793984895]
+Running test case 1
+Sending data: 0
+Sending data: 0.8,38,20.0,0,-1.120940186688743,0,0
+Waiting for 10.0 seconds
+All test cases completed.
+Sending data: 0
+Merged CSV written to test_cases_rl/case.csv
+1.373 8381.152
+Iteration No: 15 ended. Search finished for the next optimal point.
+Time taken: 16.2609
+Function value obtained: -1.3730
+Current minimum: -1.8050

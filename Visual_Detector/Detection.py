@@ -3,7 +3,7 @@ import os
 from apriltag import Detector
 import cv2
 import math
-import Visual_Detector.likely_useless.Plot as Plot
+import likely_useless.Plot as Plot
 # import SerialManager as SerialManager #uncomment this and the SerialManager line in main
 
 counter = 0

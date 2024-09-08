@@ -1,7 +1,8 @@
 #include "load_cell.h"
 
 //distances between the load cells, assuming that the screwpoint is the relevant point on the front cells and the center relevant on the bottom cells 
-const float WIDTH_FRONT = 0.105*0.654; //meters (but adjusted during calibration)
+//desired NM is 0.33 Nm when using 185.5g weights
+const float WIDTH_FRONT = 0.105*0.654*0.75; //meters (but adjusted during calibration)
 const float LENGTH = 0.099; //meters
 const float WIDTH_BOTTOM = 0.179; //meters
 

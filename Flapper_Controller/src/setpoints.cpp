@@ -2,7 +2,7 @@
 #include <Math.h>
 #include "setpoints.h"
 
-//Changeable parameters:
+//user-relevant: Changeable parameters:
 const float HEAVE_PHASE = M_PI/2; //do not change, otherwise changing frequency might not work well anymore
 const float MAX_HEAVE_AMP = 40; //safety measure to avoid destruction
 const float MAX_FREQ = 1.2; //safety measure to avoid destruction
@@ -14,7 +14,7 @@ static float pitch_amplitude = 60; //degree
 static float camber_amplitude = 60; //degree (tests showed more than 60 could lead to destruction)
 static float pitch_phase = 0; //TODO define
 static float camber_phase = 0; //TODO define
-static float turn_factor = 0; //0 is straight, -2 is full left, 2 is full right, more is mayhem
+static float turn_factor = 0.15; //0 is straight, -2 is full left, 2 is full right, more is mayhem //TODO: set to 0
 //End of changeable parameters
 
 //amplitude in deg, frequency in Hz, phase in rad, time in ms, offset in deg, deadband_low in deg, deadband_high in deg (deadbands relative to offset, only pos values)
@@ -40,7 +40,7 @@ void tune_parameters(float (*sine_params_ptr)[5]){
         left_turn_factor = 1 + turn_factor;
         right_turn_factor = 1;
     }
-
+    //user-relevant: change offsets slightly for individual flaps (phases are in radian, amplitude and offset (vertically shifts sine wave) in degrees)
     // Set parameters for Heave servo
     sine_params_ptr[0][0] = heave_amplitude; // Amplitude A
     sine_params_ptr[1][0] = frequency;  // Frequency f
@@ -58,13 +58,13 @@ void tune_parameters(float (*sine_params_ptr)[5]){
     sine_params_ptr[3][2] = 180/2;    // Offset //TODO: dont hardcode offset
 
     // Set parameters for Camber Right servo
-    sine_params_ptr[0][3] = camber_amplitude * right_turn_factor;    // Amplitude A
+    sine_params_ptr[0][3] = camber_amplitude * right_turn_factor*10;    // Amplitude A
     sine_params_ptr[1][3] = frequency;  // Frequency f
-    sine_params_ptr[2][3] = camber_phase + M_PI;  // pitch_phase
+    sine_params_ptr[2][3] = camber_phase + M_PI ;  // pitch_phase
     sine_params_ptr[3][3] = 180/2;    // Offset
 
     // Set parameters for Camber Left servo
-    sine_params_ptr[0][4] = camber_amplitude * left_turn_factor;    // Amplitude A
+    sine_params_ptr[0][4] = camber_amplitude * left_turn_factor*10;    // Amplitude A
     sine_params_ptr[1][4] = frequency;  // Frequency f
     sine_params_ptr[2][4] = camber_phase;     // pitch_phase
     sine_params_ptr[3][4] = 180/2;    // Offset
