@@ -96,7 +96,7 @@ void loop() {
     //user-relevant: add or substract degrees to the setpoints to calibrate zero pos e.g. ...write(setpoints[2]-5);
     heave_servo.write(setpoints[0]);
     pitch_servo_right.write(setpoints[1]+10);
-    pitch_servo_left.write(setpoints[2]-0);
+    pitch_servo_left.write(setpoints[2]-20);
 
 //capping camber movements
     if(setpoints[3] > 150){

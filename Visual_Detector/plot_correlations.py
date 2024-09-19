@@ -59,7 +59,7 @@ all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
 x_param = 'Frequency'  # Example X-axis parameter
-y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
+y_measurement = 'Fz'  # Example Y-axis parameter
 z_measurement = 'Efficiency'  # Example Z-axis measurement
 color_measurement = 'Frequency'  # Example color measurement (optional)
 dimensions = 2
