@@ -50,9 +50,10 @@ def plot_columns(file_path, columns_to_plot, title='Specified Columns over Time'
 # Example usage:
 #plot_columns('test_cases/wide_stiff_sharklets/wide_stiff_sharklet0.8_35_90_0_0_0.csv',
              #['Heave_pos', 'Fx'], title='Various Parameters over Time')
-plot_columns('test_cases/Cambered_foils/Jul_18_cambered0.8_45_90_0_0_0.csv',
-                 # ['Heave_pos', 'Fx'], title='Various Parameters over Time')
-#plot_columns('test_cases_rl/case.csv',
+#plot_columns('test_cases/Cambered_foils/Jul_18_cambered0.8_45_90_0_0_0.csv',
+                  #['Heave_pos', 'Fx'], title='Various Parameters over Time')
+plot_columns('test_cases/asymmetric_cambered/asymmetric_cambered0.5_20_90_0_0_0.csv',
              ['Heave_pos', 'Fx'], title = 'With -1.12 Phase shift')
 
 # TODO: add multiple different unit values to the y-axis
+

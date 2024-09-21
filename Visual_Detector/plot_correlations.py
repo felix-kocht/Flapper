@@ -53,14 +53,14 @@ def collect_data_from_folder(folder_path):
 
 # Example usage
 # Update this path to the actual folder path
-folder_path = 'test_cases/Passive'
+folder_path = 'test_cases/asymmetric_cambered'
 
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
 # User specifies which parameters and measurements to use for X, Y, Z axes and color
 x_param = 'Efficiency'  # Example X-axis parameter
-y_measurement = 'Frequency'  # Example Y-axis parameter
-z_measurement = 'Fx'  # Example Z-axis measurement
+y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
+z_measurement = 'Fz'  # Example Z-axis measurement
 color_measurement = 'Frequency'  # Example color measurement (optional)
 dimensions = 2
 
@@ -116,7 +116,7 @@ else:
     plt.figure(f'{folder_path[11:]}: {z_measurement}')
     plt.scatter(y_data, z_data, c=color_data, cmap='cool')
     plt.xlabel(y_measurement)
-    plt.ylabel(z_measurement)
+    plt.ylabel("Noise level")
     plt.title(
         f'{folder_path[11:]}: {z_measurement}')
     plt.colorbar(label=color_measurement)
