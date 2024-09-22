@@ -4,7 +4,7 @@ import seaborn as sns
 
 # Read the CSV file into a DataFrame
 # Replace this path with the actual file path
-csv_file_path = 'foil_comparison_Fx.csv'
+csv_file_path = 'foil_comparison_Efficiency.csv'
 df = pd.read_csv(csv_file_path, index_col=0)
 
 # Calculate the average for each row and sort by it
@@ -39,8 +39,8 @@ plt.xticks(range(len(df_sorted.index)), df_sorted.index, rotation=45)
 
 # Set labels and title
 #plt.xlabel('Foil Type')
-plt.ylabel('Thrust [N]')
-plt.title('Thrust distribution of 40 test cases for different foil types')
+plt.ylabel('Efficiency [N/W]')
+plt.title('Efficiency distribution for different foil types over multiple tests')
 plt.legend()
 plt.tight_layout()
 
