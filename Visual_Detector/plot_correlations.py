@@ -57,7 +57,7 @@ folder_path = 'test_cases/Propeller'
 
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
-# User specifies which parameters and measurements to use for X, Y, Z axes and color
+# User specifies which parameters and measurements to use f0.222222222222222or X, Y, Z axes and color
 x_param = 'Efficiency'  # Example X-axis parameter
 y_measurement = 'Fx'  # Example Y-axis parameter
 z_measurement = 'Efficiency'  # Example Z-axis measurement

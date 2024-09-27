@@ -4,7 +4,8 @@ import numpy as np
 
 # Load the data
 # data = pd.read_csv('GPS_data/valid_stuff/0.6_45.csv')
-path = 'GPS_data/valid_stuff/06_55.csv'
+# path = 'GPS_data/valid_stuff/wide_0.6Hz_25Deg.csv'
+path = 'GPS_data/valid_stuff/wide_0.6Hz_05Deg.csv'
 data = pd.read_csv(path)
 
 # Extract all columns
