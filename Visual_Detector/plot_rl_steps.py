@@ -2,12 +2,13 @@ import csv
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-input_file = 'RL_output_efficiency.csv'
+input_file = 'RL_output_cambering.csv'
 # Read the data from the CSV file
 
 iterations = []
 frequencies = []
 pitch_phases = []
+#camber_phases = []
 function_values = []
 
 with open(input_file, 'r') as csvfile:
@@ -16,11 +17,13 @@ with open(input_file, 'r') as csvfile:
     for row in csvreader:
         iterations.append(int(row[0]))
         # Assuming Pitch Amplitude is the 4nd column
-        # frequencies.append(float(row[3]))
+        frequencies.append(float(row[3]))
         # Assuming Frequency is the 2nd column
-        frequencies.append(float(row[1]))
+        #frequencies.append(float(row[1]))
         # Assuming Pitch Phase is the 6th column
-        pitch_phases.append(float(row[5]))
+        #pitch_phases.append(float(row[5]))
+        # Assuming Camber Phase is the 7th column
+        pitch_phases.append(float(row[6]))
         # Function Value is the 9th column
         function_values.append(-float(row[8]))
 

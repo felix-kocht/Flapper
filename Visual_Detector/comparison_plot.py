@@ -39,8 +39,8 @@ plt.xticks(range(len(df_sorted.index)), df_sorted.index, rotation=45)
 
 # Set labels and title
 #plt.xlabel('Foil Type')
-plt.ylabel('Thrust [N]')
-plt.title('Thrust distribution of 40 test cases for different foil types')
+plt.ylabel('Force [N]')
+plt.title('Force distribution for different foil types over multiple tests')
 plt.legend()
 plt.tight_layout()
 

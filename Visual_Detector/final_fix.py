@@ -25,18 +25,19 @@ def correct_average_efficiency(folder_path):
 
                 # Update the dataframe with the corrected value
                 df.loc[0, 'Efficiency'] = corrected_average_efficiency
+        
 
                 with open(file_path, 'w') as file:
                     file.writelines(metadata)
                 df.to_csv(file_path, mode='a', index=False)
 
-                print(f"Processed {filename} successfully.")
+                print(f"Processed {filename} successfully with average efficiency: {corrected_average_efficiency}")
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
 
 # Define the folder path containing the CSV files
-folder_path = 'test_cases/wide_stiff'
+folder_path = 'test_cases/asymmetric_cambered_filtered'
 
 # Run the function
 correct_average_efficiency(folder_path)

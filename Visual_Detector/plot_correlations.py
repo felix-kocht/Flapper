@@ -53,15 +53,15 @@ def collect_data_from_folder(folder_path):
 
 # Example usage
 # Update this path to the actual folder path
-folder_path = 'test_cases/wide_stiff'
+folder_path = 'test_cases/Propeller'
 
 all_parameters, all_average_values = collect_data_from_folder(folder_path)
 
-# User specifies which parameters and measurements to use for X, Y, Z axes and color
-x_param = 'Frequency'  # Example X-axis parameter
-y_measurement = 'Pitch Amplitude'  # Example Y-axis parameter
+# User specifies which parameters and measurements to use f0.222222222222222or X, Y, Z axes and color
+x_param = 'Efficiency'  # Example X-axis parameter
+y_measurement = 'Fx'  # Example Y-axis parameter
 z_measurement = 'Efficiency'  # Example Z-axis measurement
-color_measurement = 'Frequency'  # Example color measurement (optional)
+color_measurement = 'Power_consumption'  # Example color measurement (optional)
 dimensions = 2
 
 x_data = []

@@ -23,7 +23,7 @@
 const HX711Params cell_2_params = {4,5, -9999*0.85, 1};
 //const HX711Params cell_3_params = {6,7, 9999, 1};
 //const HX711Params cell_4_params = {8,9, 9999, 1};
-const HX711Params cell_5_params = {10,11, -9999*0.90, 1};
+const HX711Params cell_5_params = {10,11, -9999*0.89, 1};
 
 //create hx711 instance
 //HX711 cell_1;
@@ -31,6 +31,12 @@ HX711 cell_2;
 //HX711 cell_3;
 //HX711 cell_4;
 HX711 cell_5;
+
+// Define the analog pin where the noise sensor is connected
+const int noiseSensorPin = A0;  // Change this to the correct pin if needed
+
+// Variable to store the sensor value
+int sensorValue = 0;
 
 //function prototypes
 void push_by_2();
@@ -72,8 +78,14 @@ void loop() {
   //float My = get_My(readings[0][0], readings[2][0], readings[3][0]);
   float Mz = get_Mz(readings[1][0], readings[4][0]);
 
+  // Read the analog value from the noise sensor
+  sensorValue = analogRead(noiseSensorPin);
+  
+  // Adjust sensitivty
+  float noise = sensorValue * 0.1;
+
   // print the values to the serial monitor
-  float valuesToPrint[] = {Fx, 0, readings[1][0], readings[4][0] , Mz};
+  float valuesToPrint[] = {Fx, noise, readings[1][0], readings[4][0] , Mz};
   //float valuesToPrint[] = {-Fx, Fz, Mx, My, Mz};
   int length = sizeof(valuesToPrint) / sizeof(valuesToPrint[0]);
   print_floats(valuesToPrint, length);

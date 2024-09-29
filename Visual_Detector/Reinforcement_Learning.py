@@ -19,11 +19,11 @@ heave_amp = 38  # increase if safe to do so
 # TODO: sharpen the ranges to get better results
 # TODO define reward function nicely
 parameters = {
-    'frequency': [0.2, 0.8],  # TODO: increase if safe to do so
+    'frequency': [0.2, 0.6],  # TODO: increase if safe to do so
     'pitch amplitude': [20, 45],
     'pitch phase': [-1.57, 1.57],
-    # 'camber amplitude': [0, 60],
-    # 'camber phase': [-1.57, 1.57],
+    #'camber amplitude': [0, 60],
+    'camber phase': [-1.57, 1.57],
 }
 
 initial_guess = {
@@ -31,20 +31,20 @@ initial_guess = {
     'pitch amplitude': 60,
     'pitch phase': 0,
     # 'camber amplitude': 0,
-    # 'camber phase': 0,
+    'camber phase': 0,
 }
 
 # state space, all ranging from 0 to 1
 space = [
     Real(0.0, 1.0, name='param1'),
     Real(0.0, 1.0, name='param2'),
-    Real(0.0, 1.0, name='param3')  # ,
-    # Real(0.0, 1.0, name='param4'),
+    Real(0.0, 1.0, name='param3'),
+    Real(0.0, 1.0, name='param4')
     # Real(0.0, 1.0, name='param5')
 ]
 
 # in space range (0 to 1): x0 is  initial guess, y0 the initial reward
-x0 = [0, 0, 0]
+x0 = [0, 0, 0, 0]
 
 def parse_csv(file_path):
     parameters = {}
@@ -89,7 +89,8 @@ def reward_function(thrust, consumption):
         return thrust*0.01
     # (for testing just efficiency) + 0.1*thrust
     return (thrust*1000)/consumption  """
-    return thrust
+    #return thrust
+    return (thrust*1000)/consumption
 
 # initializing x0 on the 0-1 range
 
@@ -106,7 +107,7 @@ def initialize_parameters():
 # we run the physical test. The parameters are given in the 0-1 range.
 
 
-def run_physical_test(param1, param2, param3):  # , param4, param5):
+def run_physical_test(param1, param2, param3, param4):  # , param4, param5):
 
     # converts the parameters to the real-world values
     frequency = parameters['frequency'][0] + param1 * \
@@ -116,11 +117,10 @@ def run_physical_test(param1, param2, param3):  # , param4, param5):
     pitch_phase = parameters['pitch phase'][0] + param3 * \
         (parameters['pitch phase'][1] - parameters['pitch phase'][0])
     camber_amp = 0
-    camber_phase = 0
+    #camber_phase = 0
    # camber_amp = parameters['camber amplitude'][0] + param4 * \
     #    (parameters['camber amplitude'][1] - parameters['camber amplitude'][0])
-   # camber_phase = parameters['camber phase'][0] + param5 * \
-    #   (parameters['camber phase'][1] - parameters['camber phase'][0])
+    camber_phase = parameters['camber phase'][0] + param4 * (parameters['camber phase'][1] - parameters['camber phase'][0])
 
     # writes instructions for this testrun to the test_instructions_rl.csv file
     data = [
@@ -149,10 +149,10 @@ def run_physical_test(param1, param2, param3):  # , param4, param5):
 
 def objective(params):
     # Extract parameters
-    param1, param2, param3 = params  # , param4, param5 = params
+    param1, param2, param3, param4 = params  # , param4, param5 = params
     print(params)
     thrust, consumption = run_physical_test(
-        param1, param2, param3)  # , param4, param5)
+        param1, param2, param3, param4)  # , param4, param5)
     reward = reward_function(thrust, consumption)
     return -reward  # Minimize the negative reward to maximize the reward
 

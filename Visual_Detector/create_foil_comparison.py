@@ -72,7 +72,7 @@ def create_csv(directory, header):
         print(f'column created for {folder}')
 
 
-create_csv('test_cases', 'Efficiency')
+create_csv('test_cases', 'Fx')
 
 
 """ all_parameters, all_average_values = collect_data_from_folder('test_cases/wide_stiff')

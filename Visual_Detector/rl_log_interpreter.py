@@ -4,7 +4,7 @@ import os
 
 # Define the input and output file paths
 input_file = 'RL_output.txt'
-base_output_file = 'RL_output.csv'
+base_output_file = 'RL_output_cambering.csv'
 
 # Check if the output file exists and determine a new file name if necessary
 output_file = base_output_file

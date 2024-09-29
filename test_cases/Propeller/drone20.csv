@@ -1,0 +1,18 @@
+Used Parameters:
+Used Foils:,propellers
+Waterspeed:,0.0
+Frequency:,0.1
+Heave Amplitude:,38
+Pitch Amplitude:,20
+Camber Amplitude,90
+Pitch Phase,0
+Camber Phase,0
+Turn Rate,0
+Test Duration,10
+
+Statistical Evaluation:
+Time,Heave_pos,Pitch_right,Pitch_left,Power_consumption,Noise,Fx,Fz,Mx,My,Mz,Inflow_velocity,Angle_of_attack,Efficiency
+average,66.817,88.880,134.216,47011.16,0.000,3.79,4.998,-0.051,0.003,-0.002,1.164,88.780,0.081
+max,150.000,150.000,2028.000,47011.10,0.000,3.79,5.200,0.040,0.020,-0.000,2.996,149.900,0.222
+min,0.000,30.000,30.000,1155.63,0.000,0.12,4.600,-0.130,0.000,-0.010,0.000,29.900,0.081
+std. dev,52.865,59.757,264.237,16284.19,0.000,1.27,0.120,0.043,0.006,0.004,1.001,59.757,0.048
